@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Lonera Website Prototype",
+  "schemaVersion": 1,
+  "description": "Lonera prototype — voice-first, bilingual (한국어/English) marketplace UI for Calgary's Korean community, with large-text and high-contrast accessibility controls.",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lonera — Calgary's Trusted Local Marketplace</title>
+<meta name="description" content="Lonera connects Calgary's Korean community with real ID-verified, reviewed local businesses — for rentals, immigration help, cleaning, and more. Speak, tap, or type; no app skills required.">
+<meta property="og:title" content="Lonera — Calgary's Trusted Local Marketplace">
+<meta property="og:description" content="Verified, bilingual, voice-first local services for Calgary's Korean community.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e2582d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --scale: 1;
+    --ink: #14181f;
+    --ink-deep: #0a0d12;
+    --accent: #dd5a30;
+    --accent-deep: #b8451f;
+    --accent-tint: #fbe4d8;
+    --amber: #c1870f;
+    --amber-tint: #f6e6bf;
+    --teal: #1f6f63;
+    --teal-tint: #dcefe9;
+    --blue: #29578f;
+    --blue-tint: #e3edf9;
+    --paper: #faf7f1;
+    --card: #ffffff;
+    --text: #1d2129;
+    --muted: #666f7d;
+    --border: #e7e0d1;
+    --danger: #b5342a;
+    --radius: 20px;
+    --radius-sm: 14px;
+    --shadow: 0 10px 28px rgba(20,24,31,0.08);
+  }
+  body.high-contrast{
+    --ink:#000000; --ink-deep:#000000; --accent:#a8380f; --accent-deep:#7a290a; --accent-tint:#ffe2d3;
+    --amber:#7a5600; --amber-tint:#fff0c2; --teal:#00473c; --teal-tint:#d1f0e6; --blue:#0d3a66; --blue-tint:#d9e8fb;
+    --paper:#ffffff; --card:#ffffff; --text:#000000; --muted:#111111; --border:#000000; --shadow:none;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family: "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--text); line-height:1.55;
+    font-size: calc(16px * var(--scale));
+    padding-bottom: 78px;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.high-contrast .card,body.high-contrast .tile,body.high-contrast .badge,body.high-contrast .listing-card{ border:3px solid #000 !important; }
+  img,svg{max-width:100%;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;}
+  h1,h2,h3{letter-spacing:-0.01em;}
+  :focus-visible{ outline:3px solid var(--teal); outline-offset:2px; }
+  .skip-link{ position:absolute; left:-999px; top:auto; background:#000; color:#fff; padding:12px 20px; z-index:999; border-radius:0 0 10px 0; font-weight:800; }
+  .skip-link:focus{ left:0; top:0; }
+
+  /* ===== Icon system ===== */
+  .icon{ width:1.15em; height:1.15em; display:inline-block; vertical-align:-0.2em; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  .icon.filled{ fill:currentColor; stroke:none; }
+  .icon-lg{ width:1.6em; height:1.6em; }
+  .icon-xl{ width:2.1em; height:2.1em; }
+
+  /* ===== Top bar ===== */
+  header.topbar{ background:var(--ink); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:60; box-shadow:var(--shadow); }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.45rem * var(--scale)); letter-spacing:-0.01em; }
+  .brand .mark{ width:40px;height:40px;border-radius:12px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
+  .brand .mark .icon{ width:22px;height:22px; stroke-width:2.1; }
+  .brand small{ display:block;font-weight:500;font-size: calc(0.72rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
+  .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+  .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.88rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:44px; }
+  .ctrl-btn:hover{background:rgba(255,255,255,0.2);}
+  .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+  /* ===== Hero ===== */
+  .hero{ background:linear-gradient(165deg,var(--ink) 0%, var(--ink-deep) 100%); color:#fff; padding:48px 20px 56px; text-align:center; position:relative; overflow:hidden; }
+  .hero h1{ font-size: calc(2.35rem * var(--scale)); margin:0 0 12px; font-weight:800; }
+  .hero p.tagline{ font-size: calc(1.1rem * var(--scale)); color:#c7d0da; max-width:620px; margin:0 auto 22px; }
+  .readaloud-btn{ background:rgba(255,255,255,0.12); color:#fff; border:1.5px solid rgba(255,255,255,0.32); border-radius:999px; padding:10px 18px; font-weight:700; font-size: calc(0.88rem * var(--scale)); margin-bottom:26px; min-height:44px; display:inline-flex; align-items:center; gap:8px; }
+  .readaloud-btn.active{ background:var(--danger); border-color:var(--danger); }
+
+  .path-buttons{ display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px; }
+  .path-btn{ background:#fff; color:var(--ink); border:none; border-radius:var(--radius-sm); padding:18px 26px; font-size: calc(1.02rem * var(--scale)); font-weight:800; display:flex; flex-direction:column; align-items:center; gap:8px; min-width:210px; box-shadow:0 10px 26px rgba(0,0,0,0.28); min-height:88px; justify-content:center; }
+  .path-btn .icon{ color:var(--accent); }
+  .path-btn.secondary{ background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.5); box-shadow:none; }
+  .path-btn.secondary .icon{ color:#fff; }
+
+  .search-panel{ background:#fff; color:var(--text); border-radius:26px; max-width:620px; margin:0 auto; padding:30px 26px; box-shadow:0 24px 54px rgba(0,0,0,0.32); }
+  .search-panel h2{ margin:0 0 4px; font-size: calc(1.2rem * var(--scale)); color:var(--ink); }
+  .search-panel p.hint{ margin:0 0 18px; color:var(--muted); font-size: calc(0.94rem * var(--scale)); }
+  .mic-wrap{ display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:18px; }
+  #micBtn{ width:108px;height:108px;border-radius:50%;border:none; background:var(--teal); color:#fff; display:flex;align-items:center;justify-content:center; box-shadow:0 12px 28px rgba(31,111,99,0.4); transition:transform .15s ease; }
+  #micBtn .icon{ width:38px;height:38px; stroke-width:1.6; }
+  #micBtn:hover{transform:scale(1.04);}
+  #micBtn.listening{ background:var(--danger); animation:pulse 1.2s infinite; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(181,52,42,0.45);} 70%{box-shadow:0 0 0 22px rgba(181,52,42,0);} 100%{box-shadow:0 0 0 0 rgba(181,52,42,0);} }
+  #micLabel{font-weight:800;color:var(--ink);font-size: calc(1rem * var(--scale));}
+  #voiceStatus{ min-height:26px; color:var(--teal); font-weight:700; font-size: calc(0.94rem * var(--scale)); }
+  .type-alt{ display:flex;gap:8px; border-top:1px solid var(--border); padding-top:16px; }
+  .type-alt input{ flex:1; padding:14px 16px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size: calc(1rem * var(--scale)); min-height:52px; }
+  .type-alt button{ background:var(--ink); color:#fff; border:none; border-radius:var(--radius-sm); padding:0 22px; font-weight:800; font-size: calc(1rem * var(--scale)); min-height:52px; min-width:90px; }
+
+  /* ===== Trust strip + stats ===== */
+  .trust-strip{ display:flex;justify-content:center;flex-wrap:wrap;gap:26px; padding:28px 20px;background:#fff;border-bottom:1px solid var(--border); }
+  .trust-item{ display:flex;align-items:center;gap:12px;max-width:260px; }
+  .trust-item .icon-wrap{ width:46px;height:46px;border-radius:13px; display:flex;align-items:center;justify-content:center; flex-shrink:0; }
+  .trust-item:nth-child(1) .icon-wrap{ background:var(--blue-tint); color:var(--blue); }
+  .trust-item:nth-child(2) .icon-wrap{ background:var(--teal-tint); color:var(--teal); }
+  .trust-item:nth-child(3) .icon-wrap{ background:var(--accent-tint); color:var(--accent-deep); }
+  .trust-item .label{font-weight:800;font-size: calc(0.95rem * var(--scale));color:var(--ink);}
+  .trust-item .sub{font-size: calc(0.82rem * var(--scale));color:var(--muted);}
+
+  .stats-bar{ background:var(--ink-deep); color:#fff; padding:28px 20px; display:flex; flex-wrap:wrap; justify-content:center; gap:38px; text-align:center; }
+  .stat{min-width:150px;}
+  .stat .num{font-size: calc(1.7rem * var(--scale)); font-weight:800; color:#f4b489;}
+  .stat .lbl{font-size: calc(0.82rem * var(--scale)); color:#aab4c0;}
+  .progress-wrap{ max-width:420px; margin:6px auto 0; text-align:left; }
+  .progress-track{ background:rgba(255,255,255,0.16); border-radius:999px; height:12px; overflow:hidden; margin-top:6px; }
+  .progress-fill{ background:var(--accent); height:100%; border-radius:999px; }
+  .demo-note{ font-size: calc(0.72rem * var(--scale)); color:#7d8a99; text-align:center; margin-top:12px; width:100%; }
+
+  section.block{padding:46px 20px;max-width:1080px;margin:0 auto;}
+  section.block h2.section-title{ text-align:center; font-size: calc(1.65rem * var(--scale)); color:var(--ink); margin:0 0 8px; }
+  section.block p.section-sub{ text-align:center;color:var(--muted);margin:0 0 32px; font-size: calc(1rem * var(--scale)); }
+
+  .steps{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+  .step{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:28px;max-width:280px;text-align:center;box-shadow:var(--shadow); }
+  .step .num-wrap{ width:44px;height:44px;border-radius:12px;background:var(--ink);color:#fff; display:flex;align-items:center;justify-content:center;font-weight:800;margin:0 auto 14px; font-size: calc(1.05rem * var(--scale)); }
+  .step h3{margin:0 0 8px;font-size: calc(1.05rem * var(--scale));color:var(--ink);}
+  .step p{margin:0;color:var(--muted);font-size: calc(0.92rem * var(--scale));}
+
+  .tier-label{ display:inline-flex;align-items:center;gap:8px; background:var(--ink);color:#fff;padding:9px 18px; border-radius:999px; font-weight:800;font-size: calc(0.88rem * var(--scale));margin-bottom:18px; }
+  .tier-label.tier2{background:var(--teal);}
+  .tier-desc{color:var(--muted);margin:0 0 20px;font-size: calc(0.92rem * var(--scale));}
+  .tile-grid{ display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px;margin-bottom:42px; }
+  .tile{ background:var(--card);border:1.5px solid var(--border);border-radius:16px; padding:22px 12px;text-align:center; min-height:126px; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; transition:border-color .15s ease, transform .15s ease; }
+  .tile:hover, .tile:focus{border-color:var(--teal); transform:translateY(-2px); outline:none;}
+  .tile .icon{ color:var(--accent-deep); width:1.9em; height:1.9em; }
+  .tile .name{font-weight:700;font-size: calc(0.9rem * var(--scale));color:var(--ink);}
+  .tile .price{font-size: calc(0.72rem * var(--scale));color:var(--muted);}
+
+  #results{min-height:40px;}
+  .results-heading{ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px; }
+  .results-heading h2{margin:0;font-size: calc(1.3rem * var(--scale));color:var(--ink);}
+  .clear-btn{ background:none;border:1.5px solid var(--border);border-radius:999px;padding:8px 16px; font-weight:700;font-size: calc(0.85rem * var(--scale));color:var(--muted);min-height:40px; }
+  .listing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px;}
+  .listing-card{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px;position:relative; }
+  .fav-btn{ position:absolute; top:16px; right:16px; background:none; border:none; color:var(--border); min-height:36px; min-width:36px; padding:0; }
+  .fav-btn .icon{width:1.4em;height:1.4em;}
+  .fav-btn.active{color:var(--danger);}
+  .listing-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer;}
+  .listing-top .avatar{ width:52px;height:52px;border-radius:14px;background:var(--ink);color:#fff; display:flex;align-items:center;justify-content:center;font-weight:800;font-size: calc(1.2rem * var(--scale)); flex-shrink:0; }
+  .listing-name{font-weight:800;color:var(--ink);font-size: calc(1.04rem * var(--scale));}
+  .listing-cat{color:var(--muted);font-size: calc(0.84rem * var(--scale));}
+  .rating-line{display:flex;align-items:center;gap:6px;font-size: calc(0.86rem * var(--scale));color:var(--muted);cursor:pointer;}
+  .star-row{display:inline-flex;gap:1px;color:var(--amber);}
+  .star-row .icon{width:0.95em;height:0.95em;}
+  .meta-line{display:flex;gap:12px;flex-wrap:wrap;font-size: calc(0.8rem * var(--scale));color:var(--muted);align-items:center;}
+  .meta-line span{display:inline-flex;align-items:center;gap:4px;}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;}
+  .badge{ font-size: calc(0.74rem * var(--scale));font-weight:800;padding:5px 11px;border-radius:999px; display:flex;align-items:center;gap:5px; }
+  .badge .icon{width:0.95em;height:0.95em;}
+  .badge.id{background:var(--blue-tint);color:var(--blue);}
+  .badge.gold{background:var(--amber-tint);color:#7a5709;}
+  .badge.escrow{background:var(--teal-tint);color:var(--teal);}
+  .badge.lang{background:#f1e9fb;color:#5b3a94;}
+  .listing-blurb{color:var(--text);font-size: calc(0.92rem * var(--scale));margin:0;cursor:pointer;}
+  .listing-actions{display:flex;gap:10px;margin-top:6px;}
+  .listing-actions button{ flex:1;border-radius:var(--radius-sm);border:none;padding:12px 10px;font-weight:800; font-size: calc(0.9rem * var(--scale));min-height:46px; display:inline-flex;align-items:center;justify-content:center;gap:7px; }
+  .btn-call{background:var(--teal);color:#fff;}
+  .btn-msg{background:var(--ink);color:#fff;}
+  .empty-msg{color:var(--muted);text-align:center;padding:30px;font-size: calc(1rem * var(--scale));}
+
+  /* ===== Modal ===== */
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(10,13,18,0.62); z-index:100; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open{display:flex;}
+  .modal-box{ background:#fff; border-radius:24px; max-width:520px; width:100%; max-height:88vh; overflow-y:auto; padding:28px; position:relative; box-shadow:0 32px 74px rgba(0,0,0,0.4); }
+  .modal-close{ position:absolute; top:16px; right:16px; background:var(--paper); border:none; border-radius:50%; width:40px;height:40px;color:var(--ink); display:flex;align-items:center;justify-content:center; }
+  .modal-box h3{color:var(--ink); margin:8px 0 4px; font-size: calc(1.3rem * var(--scale));}
+  .modal-box .modal-price{ font-weight:800; color:var(--teal); font-size: calc(1rem * var(--scale)); margin:4px 0 6px; display:flex;align-items:center;gap:6px; }
+  .modal-review{ background:var(--paper); border-radius:14px; padding:14px; margin-bottom:10px; font-size: calc(0.88rem * var(--scale)); }
+  .report-link{ display:inline-flex; align-items:center; gap:6px; margin-top:14px; color:var(--danger); font-weight:700; font-size: calc(0.85rem * var(--scale)); background:none; border:none; padding:0; text-decoration:underline; }
+  #reportConfirm{ display:none; background:#fdeeed; color:var(--danger); padding:12px; border-radius:12px; margin-top:10px; font-size: calc(0.85rem * var(--scale)); font-weight:700; }
+
+  /* ===== FAQ ===== */
+  .faq-item{ background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; }
+  .faq-q{ width:100%; text-align:left; background:none; border:none; padding:17px 18px; font-weight:800; color:var(--ink); font-size: calc(0.98rem * var(--scale)); display:flex; justify-content:space-between; align-items:center; min-height:52px; gap:10px; }
+  .faq-q .icon{ transition:transform .15s ease; flex-shrink:0; }
+  .faq-a{ display:none; padding:0 18px 16px; color:var(--muted); font-size: calc(0.9rem * var(--scale)); }
+  .faq-item.open .faq-a{display:block;}
+  .faq-item.open .faq-q .icon{transform:rotate(180deg);}
+
+  .provider-cta{ background:linear-gradient(135deg,var(--accent),var(--accent-deep)); color:#fff;border-radius:26px;padding:38px 26px; text-align:center;margin:0 auto;max-width:820px; }
+  .provider-cta h2{margin:0 0 10px;font-size: calc(1.5rem * var(--scale));}
+  .provider-cta p{margin:0 0 20px;font-size: calc(1rem * var(--scale));color:#fde3d7;}
+  .provider-cta .compare-line{font-weight:800;font-size:calc(0.85rem * var(--scale));margin:0 0 20px;color:#fff;}
+  .provider-cta button{ background:var(--ink);color:#fff;border:none;border-radius:var(--radius-sm); padding:16px 26px;font-weight:800;font-size: calc(1.05rem * var(--scale));min-height:54px; }
+
+  #providerForm{ display:none; background:#fff;border-radius:var(--radius);padding:26px;max-width:520px;margin:24px auto 0; box-shadow:var(--shadow);border:1px solid var(--border);text-align:left; }
+  #providerForm.open{display:block;}
+  #providerForm label{ display:block;font-weight:700;margin:14px 0 6px;color:var(--ink);font-size: calc(0.92rem * var(--scale)); }
+  #providerForm input, #providerForm select{ width:100%;padding:12px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size: calc(1rem * var(--scale)); min-height:48px; }
+  #providerForm .submit-btn{ margin-top:20px;width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm); padding:14px;font-weight:800;font-size: calc(1.05rem * var(--scale));min-height:52px; }
+  #providerThanks{display:none;background:var(--teal-tint);color:var(--teal);padding:18px;border-radius:14px;font-weight:700;text-align:center;margin-top:16px;}
+
+  footer{ background:var(--ink-deep);color:#b7c0cc;padding:36px 20px;text-align:center; font-size: calc(0.88rem * var(--scale)); }
+  footer .foot-brand{font-weight:800;color:#fff;font-size: calc(1.1rem * var(--scale));margin-bottom:8px;}
+  footer .foot-links{margin-top:14px;color:#7d8a99;font-size: calc(0.8rem * var(--scale));}
+
+  /* ===== Bottom mobile nav ===== */
+  .bottom-nav{ display:none; position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); z-index:70; box-shadow:0 -4px 16px rgba(0,0,0,0.08); }
+  .bottom-nav .row{ display:flex; }
+  .bottom-nav button{ flex:1; background:none; border:none; padding:10px 4px 8px; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--muted); font-weight:700; font-size: calc(0.7rem * var(--scale)); min-height:60px; }
+  .bottom-nav button.active{color:var(--teal);}
+  @media (max-width:760px){ .bottom-nav{display:block;} }
+
+  .sr-only{ position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden; clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+
+  @media (max-width:600px){ .hero h1{font-size: calc(1.85rem * var(--scale));} .path-btn{min-width:160px;} }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link" data-i18n="skipLink">Skip to main content</a>
+
+<!-- SVG ICON SPRITE (no emoji anywhere on this site) -->
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="ic-mark" viewBox="0 0 24 24"><path d="M7 4v16h6M7 20h11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+    <symbol id="ic-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/><path d="M8 21h8"/></symbol>
+    <symbol id="ic-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.2 9a4 4 0 0 1 0 6"/><path d="M18.6 6.7a8 8 0 0 1 0 10.6"/></symbol>
+    <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></symbol>
+    <symbol id="ic-store" viewBox="0 0 24 24"><path d="M4 9l1.3-4.5h13.4L20 9"/><path d="M4 9v10h16V9"/><path d="M9.5 19v-5.5h5V19"/><path d="M4 9c0 1.7 1.3 3 3 3s3-1.3 3-3M10 9c0 1.7 1.3 3 3 3s3-1.3 3-3M16 9c0 1.7 1.3 3 3 3s1-1.3 1-3"/></symbol>
+    <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3.2v5.6c0 5-3.3 7.8-7 9-3.7-1.2-7-4-7-9V6.2L12 3z"/><path d="M9 12.2l2.2 2.2L15.5 10"/></symbol>
+    <symbol id="ic-id" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.1"/><path d="M6 16c0-2 1.5-3.1 3-3.1s3 1.1 3 3.1"/><path d="M14.3 9.3h4.2"/><path d="M14.3 13.1h4.2"/></symbol>
+    <symbol id="ic-chat" viewBox="0 0 24 24"><path d="M4 5.5h16v11H8.5L4 20.5z"/></symbol>
+    <symbol id="ic-star" viewBox="0 0 24 24"><polygon points="12,3.2 14.7,9.3 21.3,10 16.4,14.4 17.8,21 12,17.6 6.2,21 7.6,14.4 2.7,10 9.3,9.3"/></symbol>
+    <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></symbol>
+    <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="ic-close" viewBox="0 0 24 24"><path d="M5.5 5.5l13 13"/><path d="M18.5 5.5l-13 13"/></symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24"><path d="M5.3 4h3.6l1.2 4.4-2.5 1.7a12.4 12.4 0 0 0 6.3 6.3l1.7-2.5 4.4 1.2v3.6c0 1.1-1 2-2.1 1.9C10.6 19.7 4.3 13.4 3.4 6.1 3.3 5 4.2 4 5.3 4z"/></symbol>
+    <symbol id="ic-flag" viewBox="0 0 24 24"><path d="M6 3v18"/><path d="M6 4.5h12.5l-3 4 3 4H6"/></symbol>
+    <symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.7 7-12.3A7 7 0 0 0 5 8.7C5 14.3 12 21 12 21z"/><circle cx="12" cy="8.7" r="2.4"/></symbol>
+    <symbol id="ic-tag" viewBox="0 0 24 24"><path d="M3 12.3L12.3 3H20v7.7L10.7 20 3 12.3z"/><circle cx="15.2" cy="7.8" r="1.3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-home" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/></symbol>
+    <symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></symbol>
+    <symbol id="ic-cat-rentals" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10.3V20h5.2v-5.4h1.6V20H18v-9.7"/></symbol>
+    <symbol id="ic-cat-immigration" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.2"/><circle cx="12" cy="10" r="3"/><path d="M9.3 17h5.4"/></symbol>
+    <symbol id="ic-cat-law" viewBox="0 0 24 24"><path d="M12 3v17.5"/><path d="M6 6.5h12"/><path d="M6 6.5l-3 6h6l-3-6z"/><path d="M18 6.5l-3 6h6l-3-6z"/><path d="M8 20.5h8"/></symbol>
+    <symbol id="ic-cat-accounting" viewBox="0 0 24 24"><path d="M6 2.5h12v19l-3-2-3 2-3-2-3 2v-19z"/><path d="M9 7.5h6"/><path d="M9 11.5h6"/><path d="M9 15.5h4"/></symbol>
+    <symbol id="ic-cat-construction" viewBox="0 0 24 24"><path d="M14.6 6.4a3.9 3.9 0 0 1-5.2 5.2L4.5 16.5l3 3 4.9-4.9a3.9 3.9 0 0 1 5.2-5.2l-2.9 2.9-2-2 2.9-2.9z"/></symbol>
+    <symbol id="ic-cat-catering" viewBox="0 0 24 24"><path d="M7.5 2v8.5a1.8 1.8 0 0 0 3.6 0V2"/><path d="M9.3 2v6.5"/><path d="M17 2c-2 0-3.2 2.1-3.2 5s1.2 4.3 3.2 4.3V22"/></symbol>
+    <symbol id="ic-cat-hair" viewBox="0 0 24 24"><circle cx="6.3" cy="6" r="2.2"/><circle cx="6.3" cy="18" r="2.2"/><path d="M20 4L8.4 12"/><path d="M20 20L8.4 12"/></symbol>
+    <symbol id="ic-cat-tutoring" viewBox="0 0 24 24"><path d="M12 5.8c-2.1-1.6-5-2.1-8.3-1.1v13.6c3.3-1 6.2-.5 8.3 1.1 2.1-1.6 5-2.1 8.3-1.1V4.7c-3.3-1-6.2-.5-8.3 1.1z"/><path d="M12 5.8v13.6"/></symbol>
+    <symbol id="ic-cat-cleaning" viewBox="0 0 24 24"><path d="M14.5 3L20 8.5l-8 8-6 2 2-6 6.5-9.5z"/><path d="M5.5 18.5l2.7-2.7"/><path d="M4.5 21.5l1.8-3.6"/></symbol>
+    <symbol id="ic-cat-caregiving" viewBox="0 0 24 24"><path d="M3.5 13.8c2.3-2.8 5.7-2.8 8.5 0 2.8-2.8 6.2-2.8 8.5 0"/><path d="M12 6.3l1.5 1.9-1.5 1.9-1.5-1.9z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-cat-health" viewBox="0 0 24 24"><path d="M3 12.5h4l2-6.5 4 13 2-6.5h6"/></symbol>
+    <symbol id="ic-cat-doctor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9"/><path d="M7.5 12h9"/></symbol>
+    <symbol id="ic-cat-tourism" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.3 8.7l-2 4.6-4.6 2 2-4.6z"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="mark"><svg class="icon" aria-hidden="true"><use href="#ic-mark"/></svg></div>
+    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Local Marketplace</small></div>
+  </div>
+  <div class="topbar-controls">
+    <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
+    <button class="ctrl-btn" id="fontMinus">A−</button>
+    <button class="ctrl-btn" id="fontPlus">A+</button>
+    <button class="ctrl-btn" id="contrastToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-contrast"/></svg><span data-i18n="contrastBtn">High Contrast</span></button>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="homeAnchor">
+  <h1 data-i18n="heroTitle">Find help you can trust — just ask.</h1>
+  <p class="tagline" data-i18n="heroTag">Verified local businesses for Calgary's Korean community. Speak, tap, or type — however is easiest for you.</p>
+  <button class="readaloud-btn" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
+
+  <div class="path-buttons">
+    <button class="path-btn" id="needHelpBtn"><svg class="icon-xl" aria-hidden="true"><use href="#ic-search"/></svg><span data-i18n="pathNeed">I need a service</span></button>
+    <button class="path-btn secondary" id="runBizBtn"><svg class="icon-xl" aria-hidden="true"><use href="#ic-store"/></svg><span data-i18n="pathBiz">I run a business</span></button>
+  </div>
+
+  <div class="search-panel">
+    <h2 data-i18n="searchTitle">Just say what you need</h2>
+    <p class="hint" data-i18n="searchHint">Tap the microphone and speak naturally — like "I need a house cleaner" or "이사할 집을 찾아요."</p>
+    <div class="mic-wrap">
+      <button id="micBtn"><svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg></button>
+      <div id="micLabel" data-i18n="micLabel">Tap to speak</div>
+      <div id="voiceStatus" aria-live="polite"></div>
+    </div>
+    <div class="type-alt">
+      <label for="textSearch" class="sr-only">Search by typing</label>
+      <input type="text" id="textSearch" data-i18n-placeholder="typePlaceholder" placeholder="Or type here...">
+      <button id="textSearchBtn" data-i18n="searchBtn">Search</button>
+    </div>
+  </div>
+</section>
+
+<div class="trust-strip">
+  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-id"/></svg></div><div><div class="label" data-i18n="trust1title">Real ID Verified</div><div class="sub" data-i18n="trust1sub">Every provider's identity is checked before they can list</div></div></div>
+  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-shield"/></svg></div><div><div class="label" data-i18n="trust2title">Payment Protection</div><div class="sub" data-i18n="trust2sub">For bigger bookings, your payment is held safely until the job is done</div></div></div>
+  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-chat"/></svg></div><div><div class="label" data-i18n="trust3title">Bilingual Support</div><div class="sub" data-i18n="trust3sub">Everything works in Korean and English, side by side</div></div></div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">62</div><div class="lbl" data-i18n="stat1">Verified Businesses</div></div>
+  <div class="stat"><div class="num">41</div><div class="lbl" data-i18n="stat2">Protected Bookings Completed</div></div>
+  <div class="stat">
+    <div class="num">178 / 300</div>
+    <div class="lbl" data-i18n="stat3">Users until Founding fees begin</div>
+    <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:59%"></div></div></div>
+  </div>
+  <div class="demo-note" data-i18n="demoNote">(Preview numbers — this counter will be real and live once Lonera launches.)</div>
+</div>
+
+<section class="block">
+  <h2 class="section-title" data-i18n="howTitle">How Lonera works</h2>
+  <p class="section-sub" data-i18n="howSub">Three simple steps. No app skills required.</p>
+  <div class="steps">
+    <div class="step"><div class="num-wrap">1</div><h3 data-i18n="step1title">Speak or tap</h3><p data-i18n="step1sub">Tell Lonera what you need — out loud, or by tapping a picture below.</p></div>
+    <div class="step"><div class="num-wrap">2</div><h3 data-i18n="step2title">See trusted matches</h3><p data-i18n="step2sub">Only verified, reviewed local providers show up — no scams, no guesswork.</p></div>
+    <div class="step"><div class="num-wrap">3</div><h3 data-i18n="step3title">Call or book safely</h3><p data-i18n="step3sub">Reach out directly, or book with payment protection for bigger jobs.</p></div>
+  </div>
+</section>
+
+<section class="block" id="categoriesBlock">
+  <h2 class="section-title" data-i18n="catTitle">Browse by picture</h2>
+  <p class="section-sub" data-i18n="catSub">Don't want to speak or type? Just tap what you need.</p>
+  <span class="tier-label"><svg class="icon" aria-hidden="true"><use href="#ic-shield"/></svg><span data-i18n="tier1label">Protected Bookings</span></span>
+  <p class="tier-desc" data-i18n="tier1desc">Bigger jobs — your payment is held safely until the work is finished.</p>
+  <div class="tile-grid" id="tier1Grid"></div>
+  <span class="tier-label tier2"><svg class="icon" aria-hidden="true"><use href="#ic-check"/></svg><span data-i18n="tier2label">Everyday Services</span></span>
+  <p class="tier-desc" data-i18n="tier2desc">Every-day help — all verified, all reviewed by real neighbours.</p>
+  <div class="tile-grid" id="tier2Grid"></div>
+</section>
+
+<section class="block">
+  <div id="results">
+    <div class="results-heading">
+      <h2 id="resultsTitle" data-i18n="featuredTitle">Featured Founding Providers</h2>
+      <button class="clear-btn" id="clearBtn" style="display:none;" data-i18n="clearBtn">Show featured instead</button>
+    </div>
+    <div class="listing-grid" id="listingGrid"></div>
+  </div>
+</section>
+
+<section class="block">
+  <h2 class="section-title" data-i18n="faqTitle">Common questions</h2>
+  <p class="section-sub" data-i18n="faqSub">Straight answers, no fine print.</p>
+  <div id="faqList" style="max-width:680px;margin:0 auto;"></div>
+</section>
+
+<section class="block">
+  <div class="provider-cta">
+    <h2 data-i18n="ctaTitle">Run a business? Join as a Founding Provider.</h2>
+    <p data-i18n="ctaSub">Free until we reach 300 Calgary users — then commission starts at just 8% (instead of 12%) and drops automatically as your job gets bigger.</p>
+    <p class="compare-line" data-i18n="ctaCompare">Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate starts at 8% and steps down as your job grows — never more than $3,000 on one booking.</p>
+    <button id="ctaJoinBtn" data-i18n="ctaBtn">Join Now — It's Free</button>
+  </div>
+
+  <form id="providerForm" aria-label="Founding Provider signup">
+    <h3 style="margin-top:0;color:var(--ink);" data-i18n="formTitle">Tell us about your business</h3>
+    <label for="pName" data-i18n="formName">Your name</label>
+    <input type="text" id="pName" required>
+    <label for="pBiz" data-i18n="formBiz">Business name</label>
+    <input type="text" id="pBiz" required>
+    <label for="pCat" data-i18n="formCat">Category</label>
+    <select id="pCat"></select>
+    <label for="pPhone" data-i18n="formPhone">Phone or KakaoTalk ID</label>
+    <input type="text" id="pPhone" required>
+    <button type="submit" class="submit-btn" data-i18n="formSubmit">Join as Founding Provider</button>
+    <div id="providerThanks" data-i18n="formThanks">Thank you! This is a preview site — a real Lonera team member will follow up with you soon.</div>
+  </form>
+</section>
+
+<section class="block" id="aboutBlock">
+  <h2 class="section-title" data-i18n="aboutTitle">Who's behind Lonera</h2>
+  <div style="max-width:680px;margin:0 auto;text-align:center;color:var(--muted);font-size:calc(1rem * var(--scale));">
+    <p data-i18n="aboutP1">Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families struggle to find local help they could trust in a new country.</p>
+    <p data-i18n="aboutP2">We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected until the work is actually done.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="foot-brand">Lonera 로네라</div>
+  <div data-i18n="footTag">Built by two Calgary students, for the community that raised us.</div>
+  <div class="foot-links" data-i18n="footNote">This is an early preview of the Lonera platform — not all listings are live yet.</div>
+  <div class="foot-links" data-i18n="footContact">Questions or feedback? Reach us any time at hello@lonera.ca</div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <button class="modal-close" id="modalClose"><svg class="icon" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    <div class="badges" id="modalBadges"></div>
+    <h3 id="modalName"></h3>
+    <div class="listing-cat" id="modalCat"></div>
+    <div class="rating-line" style="margin:8px 0;"><span class="star-row" id="modalStars"></span><span id="modalRatingText"></span></div>
+    <div class="modal-price" id="modalPrice"></div>
+    <p class="listing-blurb" id="modalBlurb"></p>
+    <div id="modalReviews"></div>
+    <div class="listing-actions">
+      <button class="btn-call" id="modalCall"><svg class="icon" aria-hidden="true"><use href="#ic-phone"/></svg><span data-i18n="call">Call</span></button>
+      <button class="btn-msg" id="modalMsg"><svg class="icon" aria-hidden="true"><use href="#ic-chat"/></svg><span data-i18n="message">Message</span></button>
+    </div>
+    <button class="report-link" id="reportBtn"><svg class="icon" aria-hidden="true"><use href="#ic-flag"/></svg><span data-i18n="reportLink">Report a concern about this listing</span></button>
+    <div id="reportConfirm" data-i18n="reportConfirmMsg">Thanks — our team reviews every report within 24 hours.</div>
+  </div>
+</div>
+
+<nav class="bottom-nav" aria-label="Primary">
+  <div class="row">
+    <button id="navHome" class="active"><svg class="icon" aria-hidden="true"><use href="#ic-home"/></svg><span data-i18n="navHome">Home</span></button>
+    <button id="navSearch"><svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg><span data-i18n="navSearch">Search</span></button>
+    <button id="navCats"><svg class="icon" aria-hidden="true"><use href="#ic-grid"/></svg><span data-i18n="navCats">Browse</span></button>
+    <button id="navFav"><svg class="icon" aria-hidden="true"><use href="#ic-heart"/></svg><span data-i18n="navFav">Saved</span></button>
+    <button id="navBiz"><svg class="icon" aria-hidden="true"><use href="#ic-store"/></svg><span data-i18n="navBiz">Business</span></button>
+  </div>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  const T = {
+    en: {
+      brandName:"Lonera", brandTag:"Calgary's Trusted Local Marketplace",
+      langBtn:"한국어", contrastBtn:"High Contrast", readAloud:"Read this page to me", readAloudStop:"Stop reading",
+      skipLink:"Skip to main content",
+      heroTitle:"Find help you can trust — just ask.",
+      heroTag:"Verified local businesses for Calgary's Korean community. Speak, tap, or type — however is easiest for you.",
+      pathNeed:"I need a service", pathBiz:"I run a business",
+      searchTitle:"Just say what you need",
+      searchHint:'Tap the microphone and speak naturally — like "I need a house cleaner" or "I need to find an apartment."',
+      micLabel:"Tap to speak", typePlaceholder:"Or type here...", searchBtn:"Search",
+      trust1title:"Real ID Verified", trust1sub:"Every provider's identity is checked before they can list",
+      trust2title:"Payment Protection", trust2sub:"For bigger bookings, your payment is held safely until the job is done",
+      trust3title:"Bilingual Support", trust3sub:"Everything works in Korean and English, side by side",
+      stat1:"Verified Businesses", stat2:"Protected Bookings Completed", stat3:"Users until Founding fees begin",
+      demoNote:"(Preview numbers — this counter will be real and live once Lonera launches.)",
+      howTitle:"How Lonera works", howSub:"Three simple steps. No app skills required.",
+      step1title:"Speak or tap", step1sub:"Tell Lonera what you need — out loud, or by tapping a picture below.",
+      step2title:"See trusted matches", step2sub:"Only verified, reviewed local providers show up — no scams, no guesswork.",
+      step3title:"Call or book safely", step3sub:"Reach out directly, or book with payment protection for bigger jobs.",
+      catTitle:"Browse by picture", catSub:"Don't want to speak or type? Just tap what you need.",
+      tier1label:"Protected Bookings", tier1desc:"Bigger jobs — your payment is held safely until the work is finished.",
+      tier2label:"Everyday Services", tier2desc:"Every-day help — all verified, all reviewed by real neighbours.",
+      featuredTitle:"Featured Founding Providers", clearBtn:"Show featured instead",
+      faqTitle:"Common questions", faqSub:"Straight answers, no fine print.",
+      aboutTitle:"Who's behind Lonera",
+      aboutP1:"Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families struggle to find local help they could trust in a new country.",
+      aboutP2:"We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected until the work is actually done.",
+      footContact:"Questions or feedback? Reach us any time at hello@lonera.ca",
+      ctaTitle:"Run a business? Join as a Founding Provider.",
+      ctaSub:"Free until we reach 300 Calgary users — then commission starts at just 8% (instead of 12%) and drops automatically as your job gets bigger.",
+      ctaCompare:"Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate starts at 8% and steps down as your job grows — never more than $3,000 on one booking.",
+      ctaBtn:"Join Now — It's Free",
+      micDenied:"We need microphone access to listen — please allow it in your browser, or type instead.",
+      formTitle:"Tell us about your business", formName:"Your name", formBiz:"Business name",
+      formCat:"Category", formPhone:"Phone or KakaoTalk ID", formSubmit:"Join as Founding Provider",
+      formThanks:"Thank you! This is a preview site — a real Lonera team member will follow up with you soon.",
+      footTag:"Built by two Calgary students, for the community that raised us.",
+      footNote:"This is an early preview of the Lonera platform — not all listings are live yet.",
+      listeningMsg:"Listening...", heardMsg:'I heard: "%s"', noMatchMsg:"I'm not sure what you need — try browsing the pictures below instead.",
+      matchMsg:'Here are trusted matches for "%s"', noSupportMsg:"Voice search isn't supported in this browser yet — please type instead.",
+      call:"Call", message:"Message", reportLink:"Report a concern about this listing",
+      reportConfirmMsg:"Thanks — our team reviews every report within 24 hours.",
+      navHome:"Home", navSearch:"Search", navCats:"Browse", navFav:"Saved", navBiz:"Business",
+      savedTitle:"Your saved providers", noSaved:"Nothing saved yet — tap the heart on any listing to save it here.",
+      reviews:"reviews", langSpoken:"Speaks", langKo:"Korean", langEn:"English",
+      micAria:"Start voice search", closeAria:"Close", saveAria:"Save", savedAria:"Saved",
+      fontMinusAria:"Decrease text size", fontPlusAria:"Increase text size",
+      reviewText:["Very professional and on time.","Explained everything clearly in Korean.","Fair price, no surprises.","Would book again without hesitation.","Fast to respond and easy to reach."]
+    },
+    ko: {
+      brandName:"로네라", brandTag:"캘거리에서 가장 믿을 수 있는 지역 마켓플레이스",
+      langBtn:"English", contrastBtn:"고대비 모드", readAloud:"이 페이지를 읽어주세요", readAloudStop:"읽기 중지",
+      skipLink:"본문으로 바로가기",
+      heroTitle:"믿을 수 있는 도움, 말 한마디면 충분해요.",
+      heroTag:"캘거리 한인 커뮤니티를 위한 검증된 지역 업체. 말하거나, 누르거나, 입력하세요 — 편한 방법으로요.",
+      pathNeed:"서비스가 필요해요", pathBiz:"업체를 운영해요",
+      searchTitle:"필요한 것을 말씀해 주세요",
+      searchHint:'마이크를 누르고 자연스럽게 말씀해 주세요 — "청소해줄 사람이 필요해요" 또는 "이사할 집을 찾아요" 처럼요.',
+      micLabel:"눌러서 말하기", typePlaceholder:"또는 여기에 입력하세요...", searchBtn:"검색",
+      trust1title:"실명 인증 완료", trust1sub:"모든 업체는 등록 전 실명 인증을 거칩니다",
+      trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 안전하게 보관됩니다",
+      trust3title:"한/영 이중 지원", trust3sub:"모든 기능이 한국어와 영어로 동시에 제공됩니다",
+      stat1:"검증된 업체 수", stat2:"완료된 안전결제 예약", stat3:"파운딩 수수료 시작까지 남은 사용자",
+      demoNote:"(미리보기 수치입니다 — 실제 출시 후에는 실시간 데이터로 업데이트됩니다.)",
+      howTitle:"로네라 이용 방법", howSub:"아주 간단한 3단계. 앱 사용법을 몰라도 괜찮아요.",
+      step1title:"말하거나 누르기", step1sub:"필요한 것을 말씀하시거나, 아래 그림을 눌러주세요.",
+      step2title:"검증된 결과 확인", step2sub:"검증되고 후기가 있는 업체만 보여드립니다 — 사기 걱정 없이요.",
+      step3title:"안전하게 연락 또는 예약", step3sub:"바로 연락하시거나, 큰 예약은 결제 보호와 함께 진행하세요.",
+      catTitle:"그림으로 찾아보기", catSub:"말하거나 입력하기 어려우시면, 필요한 그림을 눌러주세요.",
+      tier1label:"안전 결제 예약", tier1desc:"큰 예약 — 작업이 끝날 때까지 결제 금액이 안전하게 보관됩니다.",
+      tier2label:"일상 서비스", tier2desc:"일상적인 도움 — 모두 검증되고 이웃들의 후기가 있어요.",
+      featuredTitle:"추천 파운딩 프로바이더", clearBtn:"추천 목록 다시 보기",
+      faqTitle:"자주 묻는 질문", faqSub:"복잡한 설명 없이, 명확한 답변만 드려요.",
+      aboutTitle:"로네라를 만든 사람들",
+      aboutP1:"로네라는 캘거리에서 나고 자란 두 학생, TK Lim과 Connor Kim이 시작했습니다. 저희 가족이 새로운 나라에서 믿을 수 있는 지역 업체를 찾기 위해 고생하는 모습을 보며 자랐습니다.",
+      aboutP2:"저희는 큰 회사가 아니라, 커뮤니티에 진짜 필요한 것을 만들려는 두 사람일 뿐입니다. 모든 업체는 등록 전 실명 인증을 거치며, 큰 예약은 작업이 완료될 때까지 안전하게 보호됩니다.",
+      footContact:"질문이나 의견이 있으시면 언제든 hello@lonera.ca 로 연락해 주세요.",
+      ctaTitle:"업체를 운영하시나요? 파운딩 프로바이더로 함께해요.",
+      ctaSub:"캘거리 사용자 300명이 될 때까지 무료 — 이후에는 수수료가 12% 대신 8%부터 시작되며, 작업 규모가 커질수록 자동으로 낮아집니다.",
+      ctaCompare:"대부분의 지역 서비스 앱은 작업 규모와 상관없이 20~31%를 고정으로 가져갑니다. 로네라의 파운딩 요금은 8%부터 시작해 작업이 커질수록 낮아지며, 한 건당 최대 $3,000를 넘지 않습니다.",
+      ctaBtn:"지금 무료로 시작하기",
+      micDenied:"음성을 듣기 위해 마이크 권한이 필요해요 — 브라우저에서 허용해 주시거나, 대신 입력해 주세요.",
+      formTitle:"업체 정보를 알려주세요", formName:"이름", formBiz:"업체명",
+      formCat:"카테고리", formPhone:"전화번호 또는 카카오톡 ID", formSubmit:"파운딩 프로바이더로 등록",
+      formThanks:"감사합니다! 이 사이트는 미리보기 버전입니다 — 로네라 팀이 곧 연락드리겠습니다.",
+      footTag:"우리를 키워준 커뮤니티를 위해, 캘거리 학생 두 명이 만들었습니다.",
+      footNote:"이 사이트는 로네라 플랫폼의 초기 미리보기입니다 — 아직 모든 업체가 등록되지 않았습니다.",
+      listeningMsg:"듣고 있어요...", heardMsg:'이렇게 들었어요: "%s"', noMatchMsg:"무엇이 필요하신지 잘 모르겠어요 — 아래 그림에서 찾아보세요.",
+      matchMsg:'"%s"에 대한 검증된 결과예요', noSupportMsg:"이 브라우저에서는 음성 검색이 지원되지 않아요 — 대신 입력해 주세요.",
+      call:"전화하기", message:"메시지 보내기", reportLink:"이 업체에 대해 문제를 신고할게요",
+      reportConfirmMsg:"감사합니다 — 팀이 24시간 이내에 확인할게요.",
+      navHome:"홈", navSearch:"검색", navCats:"둘러보기", navFav:"저장됨", navBiz:"업체",
+      savedTitle:"저장한 업체", noSaved:"아직 저장한 항목이 없어요 — 하트를 눌러 저장해보세요.",
+      reviews:"개 후기", langSpoken:"가능 언어", langKo:"한국어", langEn:"영어",
+      micAria:"음성 검색 시작", closeAria:"닫기", saveAria:"저장", savedAria:"저장됨",
+      fontMinusAria:"글자 크기 줄이기", fontPlusAria:"글자 크기 키우기",
+      reviewText:["매우 친절하고 시간을 잘 지켰어요.","한국어로 자세히 설명해 주셨어요.","가격이 합리적이고 추가 비용이 없었어요.","다음에도 꼭 다시 이용하고 싶어요.","연락이 빠르고 소통이 편했어요."]
+    }
+  };
+
+  let lang = "en";
+  let scale = 1;
+  let reading = false;
+  let currentModalListing = null;
+  const favorites = new Set();
+
+  function icon(id, cls){ return `<svg class="icon ${cls||''}" aria-hidden="true"><use href="#${id}"/></svg>`; }
+
+  function applyI18n(){
+    document.documentElement.lang = lang === "ko" ? "ko" : "en";
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const key = el.getAttribute("data-i18n");
+      if(T[lang][key] !== undefined) el.textContent = T[lang][key];
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
+      const key = el.getAttribute("data-i18n-placeholder");
+      if(T[lang][key] !== undefined) el.setAttribute("placeholder", T[lang][key]);
+    });
+    document.getElementById("readAloudBtn").querySelector("span").textContent = reading ? T[lang].readAloudStop : T[lang].readAloud;
+    document.getElementById("micBtn").setAttribute("aria-label", T[lang].micAria);
+    document.getElementById("modalClose").setAttribute("aria-label", T[lang].closeAria);
+    document.getElementById("fontMinus").setAttribute("aria-label", T[lang].fontMinusAria);
+    document.getElementById("fontPlus").setAttribute("aria-label", T[lang].fontPlusAria);
+    renderCategoryTiles();
+    renderListings(currentListings);
+    renderFAQ();
+    populateProviderCatSelect();
+    if(document.getElementById("modalOverlay").classList.contains("open") && currentModalListing){
+      openModal(currentModalListing);
+    }
+  }
+
+  const CATEGORIES = [
+    {id:"rentals", en:"Rentals & Housing", ko:"렌탈 및 주거", tier:1, ic:"ic-cat-rentals", price:"$800–$1,800/mo",
+      kw:["rent","rental","house","apartment","room","housing","condo","townhouse","집","방","아파트","렌트","주거","임대","이사"]},
+    {id:"immigration", en:"Immigration Help", ko:"이민 상담", tier:1, ic:"ic-cat-immigration", price:"$300–$2,000",
+      kw:["immigration","visa","pr","citizenship","이민","비자","영주권"]},
+    {id:"law", en:"Legal Services", ko:"법률 서비스", tier:1, ic:"ic-cat-law", price:"$200–$500/hr",
+      kw:["law","lawyer","legal","법률","변호사","소송"]},
+    {id:"accounting", en:"Accounting & Tax", ko:"회계 및 세금", tier:1, ic:"ic-cat-accounting", price:"$150–$600",
+      kw:["accounting","tax","cpa","bookkeeping","회계","세금","세무"]},
+    {id:"construction", en:"Construction & Renovation", ko:"건축 및 리노베이션", tier:1, ic:"ic-cat-construction", price:"$2,000+",
+      kw:["construction","renovation","contractor","basement","건축","리노베이션","인테리어","공사"]},
+    {id:"catering", en:"Catering", ko:"케이터링", tier:1, ic:"ic-cat-catering", price:"$300–$1,000/event",
+      kw:["catering","food","event","party","케이터링","출장뷔페","음식"]},
+    {id:"hair", en:"Hair & Beauty", ko:"미용실", tier:2, ic:"ic-cat-hair", price:"$30–$120",
+      kw:["hair","salon","beauty","haircut","미용","헤어","미용실"]},
+    {id:"tutoring", en:"Tutoring", ko:"과외", tier:2, ic:"ic-cat-tutoring", price:"$30–$60/hr",
+      kw:["tutor","tutoring","math","english","study","과외","수학","영어","공부"]},
+    {id:"cleaning", en:"House Cleaning", ko:"청소", tier:2, ic:"ic-cat-cleaning", price:"$100–$220/visit",
+      kw:["clean","cleaning","maid","housekeeping","청소"]},
+    {id:"caregiving", en:"Caregiving", ko:"돌봄 서비스", tier:2, ic:"ic-cat-caregiving", price:"$25–$35/hr",
+      kw:["care","caregiver","elder","babysit","nanny","childcare","돌봄","육아","베이비시터"]},
+    {id:"health", en:"Health & Wellness", ko:"건강 및 웰니스", tier:2, ic:"ic-cat-health", price:"$60–$120",
+      kw:["massage","physio","chiro","wellness","마사지","건강","웰니스"]},
+    {id:"doctor", en:"Doctor & Dental", ko:"병원 및 치과", tier:2, ic:"ic-cat-doctor", price:"Insurance / varies",
+      kw:["doctor","dental","dentist","clinic","medical","병원","치과","의사"]},
+    {id:"tourism", en:"Tours & Travel", ko:"여행 및 투어", tier:2, ic:"ic-cat-tourism", price:"$80–$250/person",
+      kw:["tour","travel","trip","banff","vacation","여행","투어","밴프"]}
+  ];
+
+  // Fictional demo listings (illustrative preview data only — not real businesses)
+  const LISTINGS = [
+    {key:"rentals-1", cat:"rentals", nameEn:"Maple Grove Property Group", nameKo:"메이플 그로브 부동산", gold:true, escrow:true, rating:4.9, reviewCount:38, area:"NW Calgary", langs:["ko","en"],
+      blurbEn:"Furnished rooms & townhouses near downtown. Bilingual leasing agent.", blurbKo:"다운타운 근처 가구 완비 방 및 타운하우스. 한/영 이중 상담 가능."},
+    {key:"immigration-1", cat:"immigration", nameEn:"Bright Path Immigration", nameKo:"브라이트패스 이민상담", gold:true, escrow:true, rating:4.8, reviewCount:52, area:"City-wide", langs:["ko","en"],
+      blurbEn:"RCIC-licensed consultant, work permits & PR applications.", blurbKo:"RCIC 공인 컨설턴트, 취업 비자 및 영주권 신청 지원."},
+    {key:"cleaning-1", cat:"cleaning", nameEn:"Sparkle Home Services", nameKo:"스파클 홈 서비스", gold:true, escrow:false, rating:4.7, reviewCount:21, area:"SE Calgary", langs:["en"],
+      blurbEn:"Weekly & move-out cleaning, fully insured team.", blurbKo:"주간 청소 및 이사 청소, 보험 가입 완료된 팀."},
+    {key:"hair-1", cat:"hair", nameEn:"Studio Haneul Hair", nameKo:"스튜디오 하늘 헤어", gold:false, escrow:false, rating:4.9, reviewCount:64, area:"Downtown", langs:["ko","en"],
+      blurbEn:"Korean-style cuts & color, walk-ins welcome.", blurbKo:"한국식 커트 및 염색, 워크인 환영."},
+    {key:"law-1", cat:"law", nameEn:"Anchor Point Law", nameKo:"앵커포인트 법률사무소", gold:true, escrow:true, rating:4.6, reviewCount:17, area:"Downtown", langs:["en"],
+      blurbEn:"Family law & small business contracts.", blurbKo:"가족법 및 소상공인 계약 전문."},
+    {key:"tutoring-1", cat:"tutoring", nameEn:"Northstar Learning", nameKo:"노스스타 학습센터", gold:false, escrow:false, rating:4.8, reviewCount:29, area:"NW Calgary", langs:["ko","en"],
+      blurbEn:"Math & English tutoring, all ages.", blurbKo:"전 연령 대상 수학 및 영어 과외."},
+    {key:"construction-1", cat:"construction", nameEn:"TrueBuild Renovations", nameKo:"트루빌드 리노베이션", gold:true, escrow:true, rating:4.9, reviewCount:44, area:"City-wide", langs:["ko","en"],
+      blurbEn:"Basement development & additions, Red Seal certified.", blurbKo:"지하실 개발 및 증축, 레드씰 자격 보유."},
+    {key:"doctor-1", cat:"doctor", nameEn:"Riverbend Dental Care", nameKo:"리버벤드 치과", gold:false, escrow:false, rating:4.7, reviewCount:33, area:"SW Calgary", langs:["ko","en"],
+      blurbEn:"Family dentistry, Korean-speaking front desk.", blurbKo:"가족 치과, 한국어 상담 가능."},
+    {key:"tourism-1", cat:"tourism", nameEn:"Rocky Trails Tours", nameKo:"로키 트레일 투어", gold:false, escrow:true, rating:4.9, reviewCount:71, area:"City-wide", langs:["ko","en"],
+      blurbEn:"Banff & Lake Louise day trips, small groups.", blurbKo:"밴프 및 레이크루이스 당일 투어, 소규모 그룹."},
+    {key:"caregiving-1", cat:"caregiving", nameEn:"Gentle Hands Care", nameKo:"젠틀핸즈 돌봄센터", gold:false, escrow:false, rating:4.8, reviewCount:19, area:"NE Calgary", langs:["ko"],
+      blurbEn:"Elder companion care & light housekeeping.", blurbKo:"어르신 동행 돌봄 및 가벼운 가사 지원."},
+    {key:"accounting-1", cat:"accounting", nameEn:"Clearview Accounting", nameKo:"클리어뷰 회계", gold:false, escrow:true, rating:4.6, reviewCount:24, area:"City-wide", langs:["ko","en"],
+      blurbEn:"Small business bookkeeping & personal tax filing.", blurbKo:"소상공인 기장 및 개인 세금 신고."},
+    {key:"catering-1", cat:"catering", nameEn:"Home Table Catering", nameKo:"홈테이블 케이터링", gold:true, escrow:true, rating:4.9, reviewCount:41, area:"City-wide", langs:["ko"],
+      blurbEn:"Korean home-style catering for events of all sizes.", blurbKo:"각종 행사를 위한 한국 가정식 케이터링."},
+    {key:"health-1", cat:"health", nameEn:"Balance Wellness Studio", nameKo:"밸런스 웰니스 스튜디오", gold:false, escrow:false, rating:4.7, reviewCount:26, area:"SW Calgary", langs:["en"],
+      blurbEn:"Massage therapy & chiropractic care.", blurbKo:"마사지 테라피 및 카이로프랙틱 케어."}
+  ];
+
+  const FEATURED_IDS = ["rentals","immigration","construction","catering"];
+  let currentListings = LISTINGS.filter(l => FEATURED_IDS.includes(l.cat) && l.gold);
+
+  function catOf(l){ return CATEGORIES.find(c=>c.id===l.cat); }
+  function catName(cat){ return lang === "ko" ? cat.ko : cat.en; }
+  function listingName(l){ return lang === "ko" ? l.nameKo : l.nameEn; }
+  function listingBlurb(l){ return lang === "ko" ? l.blurbKo : l.blurbEn; }
+  function starRow(rating){
+    const full = Math.round(rating);
+    let html = "";
+    for(let i=0;i<5;i++){ html += `<svg class="icon ${i<full?'filled':''}" aria-hidden="true"><use href="#ic-star"/></svg>`; }
+    return html;
+  }
+  function langBadges(l){
+    return (l.langs||[]).map(code=>{
+      const label = code === "ko" ? T[lang].langKo : T[lang].langEn;
+      return `<span class="badge lang">${icon("ic-chat")}${label}</span>`;
+    }).join("");
+  }
+
+  function renderCategoryTiles(){
+    const t1 = document.getElementById("tier1Grid");
+    const t2 = document.getElementById("tier2Grid");
+    t1.innerHTML = ""; t2.innerHTML = "";
+    CATEGORIES.forEach(cat=>{
+      const btn = document.createElement("button");
+      btn.className = "tile";
+      btn.type = "button";
+      btn.innerHTML = `${icon(cat.ic)}<span class="name">${catName(cat)}</span><span class="price">${cat.price}</span>`;
+      btn.addEventListener("click", ()=> showCategory(cat.id));
+      (cat.tier === 1 ? t1 : t2).appendChild(btn);
+    });
+  }
+
+  function showCategory(catId){
+    const matches = LISTINGS.filter(l => l.cat === catId);
+    const cat = CATEGORIES.find(c=>c.id===catId);
+    document.getElementById("resultsTitle").textContent = catName(cat);
+    document.getElementById("clearBtn").style.display = "inline-block";
+    currentListings = matches;
+    renderListings(matches);
+    document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function renderListings(list){
+    const grid = document.getElementById("listingGrid");
+    grid.innerHTML = "";
+    if(!list || list.length === 0){
+      grid.innerHTML = `<div class="empty-msg">${lang==="ko" ? "결과가 없어요. 다른 카테고리를 눌러보세요." : "No matches yet — try another category."}</div>`;
+      return;
+    }
+    list.forEach(l=>{
+      const card = document.createElement("div");
+      card.className = "listing-card";
+      const initial = listingName(l).trim()[0] || "?";
+      const isFav = favorites.has(l.key);
+      card.innerHTML = `
+        <button class="fav-btn ${isFav?'active':''}" data-key="${l.key}" aria-label="${isFav?T[lang].savedAria:T[lang].saveAria}">${icon("ic-heart", isFav?'filled':'')}</button>
+        <div class="listing-top" data-key="${l.key}">
+          <div class="avatar">${initial}</div>
+          <div style="flex:1;">
+            <div class="listing-name">${listingName(l)}</div>
+            <div class="listing-cat">${catName(catOf(l))}</div>
+          </div>
+        </div>
+        <div class="rating-line" data-key="${l.key}"><span class="star-row">${starRow(l.rating)}</span> ${l.rating} (${l.reviewCount} ${T[lang].reviews})</div>
+        <div class="meta-line">
+          <span>${icon("ic-pin")}${l.area}</span>
+          <span>${icon("ic-tag")}${catOf(l).price}</span>
+        </div>
+        <div class="badges">
+          <span class="badge id">${icon("ic-id")}${lang==="ko"?"인증":"Verified"}</span>
+          ${l.gold ? `<span class="badge gold">${icon("ic-star","filled")}${lang==="ko"?"파운딩":"Founding"}</span>` : ""}
+          ${l.escrow ? `<span class="badge escrow">${icon("ic-shield")}${lang==="ko"?"안전결제":"Protected"}</span>` : ""}
+          ${langBadges(l)}
+        </div>
+        <p class="listing-blurb" data-key="${l.key}">${listingBlurb(l)}</p>
+        <div class="listing-actions">
+          <button class="btn-call">${icon("ic-phone")}${T[lang].call}</button>
+          <button class="btn-msg">${icon("ic-chat")}${T[lang].message}</button>
+        </div>
+      `;
+      card.querySelectorAll("[data-key]").forEach(el=> el.addEventListener("click", ()=> openModal(l)));
+      card.querySelector(".fav-btn").addEventListener("click", (e)=>{ e.stopPropagation(); toggleFav(l.key); });
+      grid.appendChild(card);
+    });
+  }
+
+  function toggleFav(key){
+    if(favorites.has(key)) favorites.delete(key); else favorites.add(key);
+    renderListings(currentListings);
+  }
+
+  document.getElementById("clearBtn").addEventListener("click", ()=>{
+    currentListings = LISTINGS.filter(l => FEATURED_IDS.includes(l.cat) && l.gold);
+    document.getElementById("resultsTitle").textContent = T[lang].featuredTitle;
+    document.getElementById("clearBtn").style.display = "none";
+    renderListings(currentListings);
+  });
+
+  const overlay = document.getElementById("modalOverlay");
+  function openModal(l){
+    currentModalListing = l;
+    const cat = catOf(l);
+    document.getElementById("modalName").textContent = listingName(l);
+    document.getElementById("modalCat").textContent = catName(cat) + " · " + l.area;
+    document.getElementById("modalStars").innerHTML = starRow(l.rating);
+    document.getElementById("modalRatingText").textContent = `${l.rating} (${l.reviewCount} ${T[lang].reviews})`;
+    document.getElementById("modalPrice").innerHTML = icon("ic-tag") + cat.price;
+    document.getElementById("modalBlurb").textContent = listingBlurb(l);
+    document.getElementById("modalBadges").innerHTML = `
+      <span class="badge id">${icon("ic-id")}${lang==="ko"?"인증":"Verified"}</span>
+      ${l.gold ? `<span class="badge gold">${icon("ic-star","filled")}${lang==="ko"?"파운딩":"Founding"}</span>` : ""}
+      ${l.escrow ? `<span class="badge escrow">${icon("ic-shield")}${lang==="ko"?"안전결제":"Protected"}</span>` : ""}
+      ${langBadges(l)}
+    `;
+    const revs = T[lang].reviewText.slice(0,2);
+    document.getElementById("modalReviews").innerHTML = revs.map(r=>`<div class="modal-review"><span class="star-row">${starRow(l.rating)}</span><br>${r}</div>`).join("");
+    document.getElementById("reportConfirm").style.display = "none";
+    overlay.classList.add("open");
+    document.getElementById("modalClose").focus();
+  }
+  document.getElementById("modalClose").addEventListener("click", ()=>{ overlay.classList.remove("open"); currentModalListing=null; });
+  overlay.addEventListener("click", (e)=>{ if(e.target === overlay){ overlay.classList.remove("open"); currentModalListing=null; } });
+  document.addEventListener("keydown", (e)=>{ if(e.key === "Escape"){ overlay.classList.remove("open"); currentModalListing=null; } });
+  document.getElementById("reportBtn").addEventListener("click", ()=>{ document.getElementById("reportConfirm").style.display = "block"; });
+
+  const FAQS = {
+    en:[
+      {q:"Is my payment actually safe?", a:"For Protected Bookings (rentals, legal, immigration, accounting, construction, catering), your payment is held by Lonera and only released to the provider once the work is confirmed complete — not before."},
+      {q:"What if a provider doesn't show up?", a:"You're covered under the Protected Booking guarantee for those categories — held funds are refunded if the job doesn't happen as agreed."},
+      {q:"Is my ID information private?", a:"Yes. Your ID is used only to verify you're a real person, it's encrypted, never sold, and you can request it be deleted at any time."},
+      {q:"Do I have to pay to just look around?", a:"No. Browsing, searching, and contacting Everyday Services providers (hair, tutoring, cleaning, and more) is completely free."}
+    ],
+    ko:[
+      {q:"결제가 정말 안전한가요?", a:"안전 결제 예약 카테고리(렌탈, 법률, 이민, 회계, 건축, 케이터링)의 경우, 결제 금액은 로네라가 보관하며 작업이 완료 확인된 후에만 업체에 지급됩니다."},
+      {q:"업체가 나타나지 않으면 어떻게 되나요?", a:"해당 카테고리는 안전 결제 예약 보장이 적용되어, 약속대로 진행되지 않으면 보관된 금액이 환불됩니다."},
+      {q:"제 신분증 정보는 안전한가요?", a:"네. 신분증은 실명 확인 용도로만 사용되며 암호화되어 저장되고, 절대 판매되지 않으며 언제든 삭제를 요청하실 수 있습니다."},
+      {q:"그냥 둘러보기만 해도 비용이 드나요?", a:"아니요. 일상 서비스(미용, 과외, 청소 등) 업체를 검색하고 연락하는 것은 완전히 무료입니다."}
+    ]
+  };
+  function renderFAQ(){
+    const wrap = document.getElementById("faqList");
+    wrap.innerHTML = "";
+    FAQS[lang].forEach((item)=>{
+      const div = document.createElement("div");
+      div.className = "faq-item";
+      div.innerHTML = `<button class="faq-q">${item.q}${icon("ic-chevron")}</button><div class="faq-a">${item.a}</div>`;
+      div.querySelector(".faq-q").addEventListener("click", ()=>{
+        const isOpen = div.classList.contains("open");
+        wrap.querySelectorAll(".faq-item").forEach(x=>x.classList.remove("open"));
+        if(!isOpen) div.classList.add("open");
+      });
+      wrap.appendChild(div);
+    });
+  }
+
+  function findMatches(query){
+    const q = query.toLowerCase();
+    let bestCat = null, bestScore = 0;
+    CATEGORIES.forEach(cat=>{
+      let score = 0;
+      cat.kw.forEach(k=>{ if(q.includes(k.toLowerCase())) score++; });
+      if(score > bestScore){ bestScore = score; bestCat = cat; }
+    });
+    return bestCat;
+  }
+
+  function runSearch(query){
+    if(!query || !query.trim()) return;
+    const cat = findMatches(query);
+    if(cat){
+      const matches = LISTINGS.filter(l=>l.cat===cat.id);
+      currentListings = matches;
+      document.getElementById("resultsTitle").textContent = catName(cat);
+      document.getElementById("clearBtn").style.display = "inline-block";
+      renderListings(matches);
+      speak(T[lang].matchMsg.replace("%s", query));
+    } else {
+      renderListings([]);
+      document.getElementById("resultsTitle").textContent = lang==="ko" ? "검색 결과" : "Search results";
+      document.getElementById("clearBtn").style.display = "inline-block";
+      speak(T[lang].noMatchMsg);
+    }
+    document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  document.getElementById("textSearchBtn").addEventListener("click", ()=> runSearch(document.getElementById("textSearch").value));
+  document.getElementById("textSearch").addEventListener("keydown", (e)=>{ if(e.key === "Enter") runSearch(e.target.value); });
+  document.getElementById("needHelpBtn").addEventListener("click", ()=> document.querySelector(".search-panel").scrollIntoView({behavior:"smooth", block:"center"}));
+  document.getElementById("runBizBtn").addEventListener("click", openProviderForm);
+  document.getElementById("ctaJoinBtn").addEventListener("click", openProviderForm);
+
+  function openProviderForm(){
+    const form = document.getElementById("providerForm");
+    form.classList.add("open");
+    form.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+
+  function populateProviderCatSelect(){
+    const sel = document.getElementById("pCat");
+    sel.innerHTML = "";
+    CATEGORIES.forEach(cat=>{
+      const opt = document.createElement("option");
+      opt.value = cat.id;
+      opt.textContent = catName(cat);
+      sel.appendChild(opt);
+    });
+  }
+
+  document.getElementById("providerForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    document.getElementById("providerThanks").style.display = "block";
+    this.querySelectorAll("input").forEach(i=>i.value="");
+  });
+
+  const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = null, listening = false;
+
+  if(SpeechRecognitionAPI){
+    recognition = new SpeechRecognitionAPI();
+    recognition.continuous = false; recognition.interimResults = false; recognition.maxAlternatives = 1;
+    recognition.onstart = function(){
+      listening = true;
+      document.getElementById("micBtn").classList.add("listening");
+      document.getElementById("voiceStatus").textContent = T[lang].listeningMsg;
+    };
+    recognition.onresult = function(event){
+      const transcript = event.results[0][0].transcript;
+      document.getElementById("voiceStatus").textContent = T[lang].heardMsg.replace("%s", transcript);
+      document.getElementById("textSearch").value = transcript;
+      runSearch(transcript);
+    };
+    recognition.onerror = function(event){
+      const msg = (event && event.error === "not-allowed") ? T[lang].micDenied : T[lang].noSupportMsg;
+      document.getElementById("voiceStatus").textContent = msg;
+    };
+    recognition.onend = function(){ listening = false; document.getElementById("micBtn").classList.remove("listening"); };
+  }
+
+  document.getElementById("micBtn").addEventListener("click", function(){
+    if(!recognition){ document.getElementById("voiceStatus").textContent = T[lang].noSupportMsg; return; }
+    if(listening){ recognition.stop(); return; }
+    recognition.lang = lang === "ko" ? "ko-KR" : "en-CA";
+    try{ recognition.start(); } catch(e){}
+  });
+
+  function speak(text){
+    if(!("speechSynthesis" in window)) return;
+    try{
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = lang === "ko" ? "ko-KR" : "en-CA";
+      utter.rate = 0.95;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utter);
+    }catch(e){}
+  }
+
+  document.getElementById("readAloudBtn").addEventListener("click", function(){
+    if(!("speechSynthesis" in window)) return;
+    if(reading){
+      window.speechSynthesis.cancel();
+      reading = false;
+      this.classList.remove("active");
+      this.querySelector("span").textContent = T[lang].readAloud;
+      return;
+    }
+    const parts = [
+      T[lang].heroTitle, T[lang].heroTag,
+      T[lang].trust1title + ". " + T[lang].trust1sub,
+      T[lang].trust2title + ". " + T[lang].trust2sub,
+      T[lang].trust3title + ". " + T[lang].trust3sub,
+      T[lang].howTitle + ". " + T[lang].step1title + ". " + T[lang].step2title + ". " + T[lang].step3title
+    ];
+    const utter = new SpeechSynthesisUtterance(parts.join(". "));
+    utter.lang = lang === "ko" ? "ko-KR" : "en-CA";
+    utter.rate = 0.95;
+    utter.onend = ()=>{ reading = false; document.getElementById("readAloudBtn").classList.remove("active"); document.getElementById("readAloudBtn").querySelector("span").textContent = T[lang].readAloud; };
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+    reading = true;
+    this.classList.add("active");
+    this.querySelector("span").textContent = T[lang].readAloudStop;
+  });
+
+  document.getElementById("langToggle").addEventListener("click", function(){
+    lang = lang === "en" ? "ko" : "en";
+    this.setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
+    if(reading){ window.speechSynthesis.cancel(); reading = false; }
+    applyI18n();
+  });
+  document.getElementById("contrastToggle").addEventListener("click", function(){
+    const on = document.body.classList.toggle("high-contrast");
+    this.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  document.getElementById("fontPlus").addEventListener("click", function(){
+    scale = Math.min(1.5, scale + 0.1);
+    document.documentElement.style.setProperty("--scale", scale);
+  });
+  document.getElementById("fontMinus").addEventListener("click", function(){
+    scale = Math.max(0.85, scale - 0.1);
+    document.documentElement.style.setProperty("--scale", scale);
+  });
+
+  function setActiveNav(id){
+    document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+  document.getElementById("navHome").addEventListener("click", ()=>{ setActiveNav("navHome"); document.getElementById("homeAnchor").scrollIntoView({behavior:"smooth"}); });
+  document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-panel").scrollIntoView({behavior:"smooth", block:"center"}); });
+  document.getElementById("navCats").addEventListener("click", ()=>{ setActiveNav("navCats"); document.getElementById("categoriesBlock").scrollIntoView({behavior:"smooth"}); });
+  document.getElementById("navFav").addEventListener("click", ()=>{
+    setActiveNav("navFav");
+    const favList = LISTINGS.filter(l=>favorites.has(l.key));
+    currentListings = favList;
+    document.getElementById("resultsTitle").textContent = T[lang].savedTitle;
+    document.getElementById("clearBtn").style.display = "inline-block";
+    if(favList.length === 0){ document.getElementById("listingGrid").innerHTML = `<div class="empty-msg">${T[lang].noSaved}</div>`; }
+    else{ renderListings(favList); }
+    document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  document.getElementById("navBiz").addEventListener("click", ()=>{ setActiveNav("navBiz"); openProviderForm(); });
+
+  applyI18n();
+})();
+</script>
+</body>
+</html>
