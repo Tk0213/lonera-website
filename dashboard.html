@@ -98,6 +98,18 @@
   .status-pill{ font-size:calc(0.76rem * var(--scale)); font-weight:800; padding:5px 12px; border-radius:999px; display:inline-block; }
   .status-pill.accepted{ background:var(--teal-tint); color:var(--teal); }
   .status-pill.declined{ background:var(--border); color:var(--muted); }
+  .status-pill.pending{ background:var(--amber-tint); color:#7a5709; }
+  .status-pill.resolved{ background:var(--teal-tint); color:var(--teal); }
+
+  .notif-wrap{ position:relative; }
+  .notif-badge{ position:absolute; top:2px; right:2px; background:var(--danger); color:#fff; border-radius:999px; font-size:calc(0.62rem * var(--scale)); font-weight:800; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
+  .notif-panel{ position:absolute; top:calc(100% + 10px); right:0; width:320px; max-width:88vw; background:#fff; color:var(--text); border-radius:var(--radius); box-shadow:0 24px 54px rgba(0,0,0,0.32); border:1px solid var(--border); z-index:80; max-height:60vh; overflow-y:auto; }
+  .notif-panel h4{ margin:0; padding:16px 18px 10px; font-size:calc(1rem * var(--scale)); color:var(--ink); }
+  .notif-item{ display:flex; gap:10px; padding:12px 18px; border-top:1px solid var(--border); align-items:flex-start; }
+  .notif-item .icon-wrap{ width:34px;height:34px;border-radius:10px;background:var(--paper);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .notif-item .t{ font-weight:700; font-size:calc(0.88rem * var(--scale)); color:var(--ink); }
+  .notif-item .s{ font-size:calc(0.78rem * var(--scale)); color:var(--muted); margin-top:2px; }
+  .notif-empty{ padding:22px 18px; color:var(--muted); font-size:calc(0.88rem * var(--scale)); text-align:center; }
 
   .live-request-row{ display:flex; align-items:flex-start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); }
   .live-request-row:last-child{ border-bottom:none; }
@@ -166,6 +178,8 @@
     <symbol id="d-community" viewBox="0 0 24 24"><path d="M3 6.5h11v7H8.5L5 17v-3.5H3z"/><path d="M13.5 9.5H21v6h-2.2v3l-3-3H16"/></symbol>
     <symbol id="d-star" viewBox="0 0 24 24"><polygon points="12,3.2 14.7,9.3 21.3,10 16.4,14.4 17.8,21 12,17.6 6.2,21 7.6,14.4 2.7,10 9.3,9.3"/></symbol>
     <symbol id="d-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></symbol>
+    <symbol id="d-ticket" viewBox="0 0 24 24"><path d="M3 9V6.5a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 21 6.5V9a2 2 0 0 0 0 6v2.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5V15a2 2 0 0 0 0-6z"/><path d="M9 5v14" stroke-dasharray="2.5 2.5"/></symbol>
+    <symbol id="d-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 6.5H4c.5-.5 2-2 2-6.5z"/><path d="M9.5 19.5a2.5 2.5 0 0 0 5 0"/></symbol>
   </defs>
 </svg>
 
@@ -175,6 +189,13 @@
     <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Provider Dashboard</small></div>
   </div>
   <div class="topbar-controls">
+    <div class="notif-wrap">
+      <button class="ctrl-btn" id="notifBtn" aria-pressed="false" aria-label="Notifications"><svg class="icon" aria-hidden="true"><use href="#d-bell"/></svg><span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
+      <div class="notif-panel" id="notifPanel" style="display:none;">
+        <h4 data-i18n="notifTitle">Notifications</h4>
+        <div id="notifList"></div>
+      </div>
+    </div>
     <a class="ctrl-btn" href="index.html#providerBlock"><svg class="icon" aria-hidden="true"><use href="#d-back"/></svg><span data-i18n="backBtn">Back to Lonera</span></a>
     <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#d-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
     <button class="ctrl-btn" id="fontMinus" aria-label="Decrease text size">A−</button>
@@ -206,6 +227,7 @@
       <button class="nav-item" data-target="insights"><svg class="icon" aria-hidden="true"><use href="#d-insights"/></svg><span data-i18n="navInsights">Insights</span></button>
       <button class="nav-item" data-target="verification"><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg><span data-i18n="navVerification">Verification</span></button>
       <button class="nav-item" data-target="community"><svg class="icon" aria-hidden="true"><use href="#d-community"/></svg><span data-i18n="navCommunity">Community</span></button>
+      <button class="nav-item" data-target="support"><svg class="icon" aria-hidden="true"><use href="#d-ticket"/></svg><span data-i18n="navSupport">Support</span></button>
     </div>
   </aside>
 
@@ -385,10 +407,26 @@
 
     <!-- COMMUNITY -->
     <section class="section" id="sec-community">
-      <div class="main-header"><div><h1><span data-i18n="communityTitle">Community</span><span class="phase-tag" data-i18n="phaseComingSoon">Coming soon</span></h1><p data-i18n="communitySub">A shared board by community and language — for news, events, and questions.</p></div></div>
-      <div class="community-post"><span class="tag" data-i18n="post1Tag">Korean community</span><h3 data-i18n="post1Title">Chuseok pop-up market — NE Calgary, Sept 20</h3><p data-i18n="post1Desc">Local providers can apply for a free table to meet new clients in person.</p></div>
-      <div class="community-post"><span class="tag" data-i18n="post2Tag">Filipino community</span><h3 data-i18n="post2Title">Looking for recommendations: kids' Tagalog tutor</h3><p data-i18n="post2Desc">Posted by a parent in SE Calgary — 6 replies</p></div>
-      <div class="community-post"><span class="tag" data-i18n="post3Tag">Platform update</span><h3 data-i18n="post3Title">New: Punjabi language support launching next month</h3><p data-i18n="post3Desc">Posted by the Lonera team</p></div>
+      <div class="main-header"><div><h1><span data-i18n="communityTitle">Community</span></h1><p data-i18n="communitySub2">What customers are asking and sharing on Lonera — read-only here, they post from the main site.</p></div></div>
+      <div id="dashCommunityFeed"></div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section class="section" id="sec-support">
+      <div class="main-header"><div><h1 data-i18n="supportTitle">Support</h1><p data-i18n="supportSubDash">Questions, concerns, or suggestions for the Lonera team.</p></div></div>
+      <div class="card">
+        <label for="dashTicketCategory" class="sr-only" data-i18n="ticketCategoryLabel">Category</label>
+        <select id="dashTicketCategory" style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:calc(0.96rem * var(--scale));font-family:inherit;background:#fff;margin-bottom:10px;">
+          <option value="question" data-i18n="ticketCatQuestion">Question</option>
+          <option value="concern" data-i18n="ticketCatConcern">Concern</option>
+          <option value="suggestion" data-i18n="ticketCatSuggestion">Suggestion</option>
+          <option value="complaint" data-i18n="ticketCatComplaint">Complaint</option>
+        </select>
+        <textarea id="dashTicketInput" rows="3" data-i18n-placeholder="ticketPlaceholder" placeholder="Tell us what's going on..." style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);font-size:calc(0.96rem * var(--scale));font-family:inherit;resize:vertical;min-height:90px;margin-bottom:10px;"></textarea>
+        <button id="dashTicketSubmitBtn" class="btn primary" data-i18n="ticketSubmitBtn">Submit ticket</button>
+      </div>
+      <div id="dashTicketConfirm" class="empty-hint" style="display:none;"></div>
+      <div id="dashTicketList"></div>
     </section>
 
   </main>
@@ -432,6 +470,16 @@
       newRequestFrom:"New request from a customer", aiTag:"Cleaned up by Lonera AI",
       statusAccepted:"Accepted", statusDeclined:"Declined",
       timeJustNow:"Just now", timeMinAgo:"%s min ago", timeHourAgo:"%s hr ago", timeDayAgo:"%s day ago",
+      navSupport:"Support",
+      communitySub2:"What customers are asking and sharing on Lonera — read-only here, they post from the main site.",
+      supportSubDash:"Questions, concerns, or suggestions for the Lonera team.",
+      ticketCategoryLabel:"Category", ticketCatQuestion:"Question", ticketCatConcern:"Concern", ticketCatSuggestion:"Suggestion", ticketCatComplaint:"Complaint",
+      ticketPlaceholder:"Tell us what's going on...", ticketSubmitBtn:"Submit ticket",
+      ticketSubmittedMsg:"Thanks — we've got it. Your reference number is",
+      ticketPending:"Pending", ticketResolved:"Resolved",
+      notifTitle:"Notifications", notifEmpty:"Nothing new right now.",
+      notifTicketResolved:"Ticket %s marked Resolved", notifTicketPending:"Ticket %s is pending a reply",
+      notifRequestsPending:"%s new request(s) waiting",
       quotesTitle:"Quotes", quotesSub:"Custom pricing for bigger jobs before they're booked.",
       quote1Title:"Basement move-out clean — Anchor Point Law", quote1Sub:"Sent Aug 14 · $280 quoted",
       quote2Title:"Post-construction clean — TrueBuild client", quote2Sub:"Sent Aug 12 · $450 quoted",
@@ -489,6 +537,16 @@
       newRequestFrom:"고객으로부터 새 요청", aiTag:"로네라 AI가 다듬음",
       statusAccepted:"수락됨", statusDeclined:"거절됨",
       timeJustNow:"방금 전", timeMinAgo:"%s분 전", timeHourAgo:"%s시간 전", timeDayAgo:"%s일 전",
+      navSupport:"고객센터",
+      communitySub2:"로네라에서 고객들이 묻고 나누는 내용이에요 — 여기서는 읽기 전용이며, 게시는 메인 사이트에서 이루어집니다.",
+      supportSubDash:"로네라 팀에게 질문, 우려사항, 제안을 남겨주세요.",
+      ticketCategoryLabel:"카테고리", ticketCatQuestion:"질문", ticketCatConcern:"우려사항", ticketCatSuggestion:"제안", ticketCatComplaint:"불만",
+      ticketPlaceholder:"무슨 일인지 알려주세요...", ticketSubmitBtn:"티켓 제출",
+      ticketSubmittedMsg:"감사합니다 — 접수되었어요. 참조번호는",
+      ticketPending:"대기 중", ticketResolved:"해결됨",
+      notifTitle:"알림", notifEmpty:"새로운 알림이 없어요.",
+      notifTicketResolved:"티켓 %s이 해결됨으로 표시되었어요", notifTicketPending:"티켓 %s이 답변을 기다리고 있어요",
+      notifRequestsPending:"새 요청 %s건이 대기 중이에요",
       quotesTitle:"견적", quotesSub:"예약 전, 큰 작업에 대한 맞춤 견적이에요.",
       quote1Title:"지하실 이사 청소 — Anchor Point Law", quote1Sub:"8월 14일 발송 · $280 견적",
       quote2Title:"공사 후 청소 — TrueBuild 고객", quote2Sub:"8월 12일 발송 · $450 견적",
@@ -534,8 +592,35 @@
     if(diffMin < 1) return DT[lang].timeJustNow;
     if(diffMin < 60) return DT[lang].timeMinAgo.replace("%s", diffMin);
     const diffHr = Math.floor(diffMin/60);
-    if(diffHr < 24) return DT[lang].timeHourAgo.replace("%s", diffHr);
-    return DT[lang].timeDayAgo.replace("%s", Math.floor(diffHr/24));
+    if(diffHr < 24) return DT[lang].timeHourAgo.replace("%s", diffHr).replace(/\bhr\b/, diffHr===1?"hr":"hrs");
+    const diffDay = Math.floor(diffHr/24);
+    return DT[lang].timeDayAgo.replace("%s", diffDay).replace(/\bday\b/, diffDay===1?"day":"days");
+  }
+  function cleanupNote(raw){
+    let text = raw.trim().replace(/\s+/g, " ");
+    if(!text) return "";
+    if(/[가-힣]/.test(text)){
+      if(!/[.!?…]$/.test(text)) text += ".";
+      return text;
+    }
+    const parts = text.split(/([.!?]+)/).filter(s=>s.length);
+    const sentences = [];
+    let current = "";
+    for(let i=0;i<parts.length;i++){
+      current += parts[i];
+      if(/^[.!?]+$/.test(parts[i]) || i===parts.length-1){
+        if(current.trim()) sentences.push(current.trim());
+        current = "";
+      }
+    }
+    return sentences.map(s=>{
+      s = s.trim();
+      if(!s) return s;
+      s = s.charAt(0).toUpperCase() + s.slice(1);
+      s = s.replace(/\bi\b/g, "I").replace(/\bi'/g, "I'");
+      if(!/[.!?]$/.test(s)) s += ".";
+      return s;
+    }).join(" ");
   }
   function updatePendingStat(list){
     const pendingCount = list.filter(r=>r.status==="pending").length;
@@ -593,6 +678,114 @@
     });
   }
 
+  const COMMUNITY_KEY = "lonera_community";
+  const COMMUNITY_SEED = [
+    {tagEn:"Korean community", tagKo:"한인 커뮤니티", textEn:"Chuseok pop-up market — NE Calgary, Sept 20. Local providers can apply for a free table.", textKo:"추석 팝업 마켓 — NE 캘거리, 9월 20일. 지역 업체는 무료 부스를 신청할 수 있어요.", ts: Date.now() - 86400000*2},
+    {tagEn:"Filipino community", tagKo:"필리핀 커뮤니티", textEn:"Looking for recommendations: kids' Tagalog tutor in SE Calgary?", textKo:"SE 캘거리에서 아이들 타갈로그어 과외 선생님 추천 부탁드려요.", ts: Date.now() - 86400000*4},
+    {tagEn:"Platform update", tagKo:"플랫폼 업데이트", textEn:"New: Punjabi language support launching next month.", textKo:"신규: 펀자브어 지원이 다음 달 시작됩니다.", ts: Date.now() - 86400000*6}
+  ];
+  function loadCommunity(){
+    try{ const stored = JSON.parse(localStorage.getItem(COMMUNITY_KEY)); if(stored && stored.length) return stored; }catch(e){}
+    return COMMUNITY_SEED;
+  }
+  function renderDashCommunityFeed(){
+    const wrap = document.getElementById("dashCommunityFeed");
+    if(!wrap) return;
+    const list = loadCommunity();
+    wrap.innerHTML = list.map(p=>{
+      const tag = escapeHtml(lang==="ko" ? p.tagKo : p.tagEn);
+      const text = escapeHtml(lang==="ko" ? p.textKo : p.textEn);
+      return `<div class="community-post"><span class="tag">${tag}</span><p>${text}</p><div class="s" style="margin-top:6px;">${timeAgo(p.ts)}</div></div>`;
+    }).join("");
+  }
+
+  const TICKETS_KEY = "lonera_tickets";
+  const TICKETS_SEED = [
+    {refNumber:"LNR-2091", category:"question", note:"How do I change the language my listing shows in?", cleaned:"How do I change the language my listing shows in?", status:"resolved", submittedBy:"provider", ts: Date.now() - 86400000*3}
+  ];
+  function loadTickets(){
+    try{ const stored = JSON.parse(localStorage.getItem(TICKETS_KEY)); if(stored) return stored; }catch(e){}
+    return TICKETS_SEED.slice();
+  }
+  function saveTickets(list){ localStorage.setItem(TICKETS_KEY, JSON.stringify(list)); }
+  function generateTicketRef(){ return "LNR-" + Math.floor(1000 + Math.random()*9000); }
+  function submitTicket(category, raw, submittedBy){
+    const cleaned = cleanupNote(raw);
+    const ref = generateTicketRef();
+    const list = loadTickets();
+    list.unshift({ refNumber: ref, category: category||"question", note: raw, cleaned, status:"pending", submittedBy: submittedBy||"provider", ts: Date.now() });
+    saveTickets(list);
+    renderDashTicketList();
+    renderNotifications();
+    return { ref, cleaned };
+  }
+  function renderDashTicketList(){
+    const wrap = document.getElementById("dashTicketList");
+    if(!wrap) return;
+    const list = loadTickets();
+    if(!list.length){ wrap.innerHTML = ""; return; }
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = list.map(t=>{
+      const statusLabel = t.status === "resolved" ? DT[lang].ticketResolved : DT[lang].ticketPending;
+      return `<div class="list-row"><div class="info"><div class="t">${escapeHtml(t.refNumber)}</div><div class="s">${escapeHtml(t.cleaned)}</div></div><span class="status-pill ${t.status}">${statusLabel}</span></div>`;
+    }).join("");
+    wrap.innerHTML = "";
+    wrap.appendChild(card);
+  }
+  document.getElementById("dashTicketSubmitBtn").addEventListener("click", ()=>{
+    const raw = document.getElementById("dashTicketInput").value.trim();
+    if(!raw) return;
+    const category = document.getElementById("dashTicketCategory").value;
+    const { ref } = submitTicket(category, raw, "provider");
+    const confirmBox = document.getElementById("dashTicketConfirm");
+    confirmBox.innerHTML = `${DT[lang].ticketSubmittedMsg} <strong>${ref}</strong>`;
+    confirmBox.style.display = "block";
+    document.getElementById("dashTicketInput").value = "";
+  });
+
+  function renderNotifications(){
+    const listEl = document.getElementById("notifList");
+    const badgeEl = document.getElementById("notifBadge");
+    if(!listEl) return;
+    const requests = loadRequests();
+    const tickets = loadTickets().filter(t=>t.submittedBy === "provider");
+    const pendingRequests = requests.filter(r=>r.status==="pending").length;
+    const items = [];
+    if(pendingRequests > 0){
+      items.push({icon:"d-inbox", title: DT[lang].notifRequestsPending.replace("%s", pendingRequests), sub: DT[lang].navRequests});
+    }
+    tickets.slice(0,5).forEach(t=>{
+      const isResolved = t.status === "resolved";
+      items.push({
+        icon: isResolved ? "d-check" : "d-ticket",
+        title: isResolved ? DT[lang].notifTicketResolved.replace("%s", t.refNumber) : DT[lang].notifTicketPending.replace("%s", t.refNumber),
+        sub: timeAgo(t.ts)
+      });
+    });
+    if(!items.length){
+      listEl.innerHTML = `<div class="notif-empty">${DT[lang].notifEmpty}</div>`;
+    } else {
+      listEl.innerHTML = items.map(it=>`<div class="notif-item"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#${it.icon}"/></svg></div><div><div class="t">${escapeHtml(it.title)}</div><div class="s">${escapeHtml(it.sub)}</div></div></div>`).join("");
+    }
+    const unread = pendingRequests + tickets.filter(t=>t.status==="resolved").length;
+    if(badgeEl){
+      if(unread > 0){ badgeEl.textContent = unread; badgeEl.style.display = "flex"; }
+      else { badgeEl.style.display = "none"; }
+    }
+  }
+  document.getElementById("notifBtn").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    const panel = document.getElementById("notifPanel");
+    const open = panel.style.display === "block";
+    panel.style.display = open ? "none" : "block";
+    document.getElementById("notifBtn").setAttribute("aria-pressed", open ? "false" : "true");
+  });
+  document.addEventListener("click", (e)=>{
+    const wrap = document.querySelector(".notif-wrap");
+    if(wrap && !wrap.contains(e.target)) document.getElementById("notifPanel").style.display = "none";
+  });
+
   function applyI18n(){
     document.documentElement.lang = lang === "ko" ? "ko" : "en";
     document.getElementById("langToggle").setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
@@ -602,6 +795,9 @@
       if(DT[lang][key] !== undefined) el.textContent = DT[lang][key];
     });
     renderLiveRequests();
+    renderDashCommunityFeed();
+    renderDashTicketList();
+    renderNotifications();
   }
 
   document.getElementById("langToggle").addEventListener("click", function(){

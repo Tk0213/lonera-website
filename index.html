@@ -258,6 +258,46 @@
   footer .foot-brand{font-weight:800;color:#fff;font-size: calc(1.1rem * var(--scale));margin-bottom:8px;}
   footer .foot-links{margin-top:14px;color:#7d8a99;font-size: calc(0.8rem * var(--scale));}
 
+  /* ===== Notifications ===== */
+  .notif-wrap{ position:relative; }
+  .notif-badge{ position:absolute; top:2px; right:2px; background:var(--danger); color:#fff; border-radius:999px; font-size:calc(0.62rem * var(--scale)); font-weight:800; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
+  .notif-panel{ position:absolute; top:calc(100% + 10px); right:0; width:320px; max-width:88vw; background:#fff; color:var(--text); border-radius:var(--radius); box-shadow:0 24px 54px rgba(0,0,0,0.32); border:1px solid var(--border); z-index:80; max-height:60vh; overflow-y:auto; }
+  .notif-panel h4{ margin:0; padding:16px 18px 10px; font-size:calc(1rem * var(--scale)); color:var(--ink); }
+  .notif-item{ display:flex; gap:10px; padding:12px 18px; border-top:1px solid var(--border); align-items:flex-start; }
+  .notif-item .icon-wrap{ width:34px;height:34px;border-radius:10px;background:var(--paper);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .notif-item .t{ font-weight:700; font-size:calc(0.88rem * var(--scale)); color:var(--ink); }
+  .notif-item .s{ font-size:calc(0.78rem * var(--scale)); color:var(--muted); margin-top:2px; }
+  .notif-empty{ padding:22px 18px; color:var(--muted); font-size:calc(0.88rem * var(--scale)); text-align:center; }
+
+  /* ===== Community ===== */
+  .community-compose{ display:flex; gap:8px; max-width:680px; margin:0 auto 26px; }
+  .community-compose input{ flex:1; padding:14px 16px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size: calc(1rem * var(--scale)); min-height:52px; }
+  .community-compose button{ background:var(--ink); color:#fff; border:none; border-radius:var(--radius-sm); padding:0 22px; font-weight:800; font-size: calc(1rem * var(--scale)); min-height:52px; min-width:90px; }
+  .community-confirm{ max-width:680px; margin:0 auto 22px; background:var(--card); border:1.5px solid var(--teal); border-radius:var(--radius); padding:20px; }
+  .community-confirm-label{ font-weight:800; color:var(--ink); margin:0 0 10px; }
+  .community-confirm-actions{ display:flex; gap:10px; margin-top:14px; }
+  .btn-cancel{ background:none; border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:12px 18px; font-weight:800; color:var(--muted); font-size:calc(0.9rem * var(--scale)); }
+  .community-feed{ max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
+  .community-post-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; }
+  .community-post-card .tag{ display:inline-block; font-size:calc(0.72rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .community-post-card p{ margin:0; color:var(--text); font-size:calc(0.94rem * var(--scale)); }
+  .community-post-card .meta{ margin-top:8px; color:var(--muted); font-size:calc(0.78rem * var(--scale)); }
+
+  /* ===== Support / Tickets ===== */
+  .support-form{ max-width:680px; margin:0 auto 22px; display:flex; flex-direction:column; gap:10px; }
+  .support-form select{ padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size: calc(0.96rem * var(--scale)); font-family:inherit; background:#fff; }
+  .support-form textarea{ padding:14px 16px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size: calc(0.96rem * var(--scale)); font-family:inherit; resize:vertical; min-height:90px; }
+  .support-form button{ align-self:flex-start; background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); padding:14px 24px; font-weight:800; font-size: calc(1rem * var(--scale)); min-height:50px; }
+  .ticket-confirm{ max-width:680px; margin:0 auto 22px; background:var(--teal-tint); color:var(--teal); border-radius:var(--radius); padding:18px 20px; font-weight:700; }
+  .ticket-confirm .ref{ font-weight:800; font-size:calc(1.1rem * var(--scale)); display:block; margin-top:4px; }
+  .ticket-list{ max-width:680px; margin:0 auto; display:flex; flex-direction:column; gap:10px; }
+  .ticket-row{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .ticket-row .ref-num{ font-weight:800; color:var(--ink); font-size:calc(0.9rem * var(--scale)); }
+  .ticket-row .note{ color:var(--muted); font-size:calc(0.86rem * var(--scale)); margin-top:4px; }
+  .ticket-status{ font-size:calc(0.74rem * var(--scale)); font-weight:800; padding:5px 11px; border-radius:999px; white-space:nowrap; flex-shrink:0; }
+  .ticket-status.pending{ background:var(--amber-tint); color:#7a5709; }
+  .ticket-status.resolved{ background:var(--teal-tint); color:var(--teal); }
+
   /* ===== Bottom mobile nav ===== */
   .bottom-nav{ display:none; position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); z-index:70; box-shadow:0 -4px 16px rgba(0,0,0,0.08); }
   .bottom-nav .row{ display:flex; }
@@ -279,6 +319,8 @@
     <symbol id="ic-mark" viewBox="0 0 24 24"><path d="M7 4v16h6M7 20h11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
     <symbol id="ic-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 6.5H4c.5-.5 2-2 2-6.5z"/><path d="M9.5 19.5a2.5 2.5 0 0 0 5 0"/></symbol>
+    <symbol id="ic-ticket" viewBox="0 0 24 24"><path d="M3 9V6.5a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 21 6.5V9a2 2 0 0 0 0 6v2.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5V15a2 2 0 0 0 0-6z"/><path d="M9 5v14" stroke-dasharray="2.5 2.5"/></symbol>
     <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/><path d="M8 21h8"/></symbol>
     <symbol id="ic-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.2 9a4 4 0 0 1 0 6"/><path d="M18.6 6.7a8 8 0 0 1 0 10.6"/></symbol>
     <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></symbol>
@@ -319,6 +361,13 @@
     <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Marketplace for Newcomers</small></div>
   </div>
   <div class="topbar-controls">
+    <div class="notif-wrap">
+      <button class="ctrl-btn" id="notifBtn" aria-pressed="false" aria-label="Notifications"><svg class="icon" aria-hidden="true"><use href="#ic-bell"/></svg><span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
+      <div class="notif-panel" id="notifPanel" style="display:none;">
+        <h4 data-i18n="notifTitle">Notifications</h4>
+        <div id="notifList"></div>
+      </div>
+    </div>
     <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
     <button class="ctrl-btn" id="fontMinus">A−</button>
     <button class="ctrl-btn" id="fontPlus">A+</button>
@@ -414,6 +463,44 @@
   <h2 class="section-title" data-i18n="faqTitle">Common questions</h2>
   <p class="section-sub" data-i18n="faqSub">Straight answers, no fine print.</p>
   <div id="faqList" style="max-width:680px;margin:0 auto;"></div>
+</section>
+
+<section class="block" id="communityBlock">
+  <h2 class="section-title" data-i18n="communityTitle">Community</h2>
+  <p class="section-sub" data-i18n="communitySub">Ask a question, share what you know — for every newcomer community in Calgary. You can also just say it into the mic above, like "ask the community where to find a Korean dentist."</p>
+  <div id="communityConfirmBox" class="community-confirm" style="display:none;">
+    <p class="community-confirm-label" data-i18n="communityConfirmLabel">Post this to the community?</p>
+    <blockquote id="communityConfirmText" class="request-note-quote"></blockquote>
+    <div class="community-confirm-actions">
+      <button id="communityConfirmPost" class="btn-choose" data-i18n="communityPostBtn">Post</button>
+      <button id="communityConfirmCancel" class="btn-cancel" data-i18n="cancelBtn">Cancel</button>
+    </div>
+  </div>
+  <div class="community-compose">
+    <label for="communityInput" class="sr-only" data-i18n="communityComposeLabel">Ask the community</label>
+    <input type="text" id="communityInput" data-i18n-placeholder="communityComposePlaceholder" placeholder="e.g. Where can I find a Korean dentist in NW Calgary?">
+    <button id="communityPostBtn" data-i18n="communityPostBtn">Post</button>
+  </div>
+  <div id="communityFeed" class="community-feed"></div>
+</section>
+
+<section class="block" id="supportBlock">
+  <h2 class="section-title" data-i18n="supportTitle">Get help</h2>
+  <p class="section-sub" data-i18n="supportSub">Questions, concerns, or suggestions for the Lonera team — we read every one. Or say "I want to ask the platform a question about..." into the mic above.</p>
+  <div class="support-form">
+    <label for="ticketCategory" class="sr-only" data-i18n="ticketCategoryLabel">Category</label>
+    <select id="ticketCategory">
+      <option value="question" data-i18n="ticketCatQuestion">Question</option>
+      <option value="concern" data-i18n="ticketCatConcern">Concern</option>
+      <option value="suggestion" data-i18n="ticketCatSuggestion">Suggestion</option>
+      <option value="complaint" data-i18n="ticketCatComplaint">Complaint</option>
+    </select>
+    <label for="ticketInput" class="sr-only" data-i18n="ticketInputLabel">Describe your question or concern</label>
+    <textarea id="ticketInput" rows="3" data-i18n-placeholder="ticketPlaceholder" placeholder="Tell us what's going on..."></textarea>
+    <button id="ticketSubmitBtn" data-i18n="ticketSubmitBtn">Submit ticket</button>
+  </div>
+  <div id="ticketConfirm" class="ticket-confirm" style="display:none;"></div>
+  <div id="ticketList" class="ticket-list"></div>
 </section>
 
 <section class="block" id="providerBlock">
@@ -539,6 +626,19 @@
       requestSendBtn:"Send request",
       requestSentLabel:"Sent to %s. Here's what they'll see:",
       requestCleanupNote:"(Cleaned up for grammar only — your meaning stays exactly the same.)",
+      timeJustNow:"Just now", timeMinAgo:"%s min ago", timeHourAgo:"%s hr ago", timeDayAgo:"%s day ago",
+      notifTitle:"Notifications", notifEmpty:"Nothing new right now.",
+      notifTicketResolved:"Ticket %s marked Resolved", notifTicketPending:"Ticket %s is pending a reply",
+      communityTitle:"Community", communitySub:'Ask a question, share what you know — for every newcomer community in Calgary. You can also just say it into the mic above, like "ask the community where to find a Korean dentist."',
+      communityConfirmLabel:"Post this to the community?", communityPostBtn:"Post", cancelBtn:"Cancel",
+      communityComposeLabel:"Ask the community", communityComposePlaceholder:"e.g. Where can I find a Korean dentist in NW Calgary?",
+      voiceCommunityMsg:"Here's what I heard, cleaned up — post it if that looks right.",
+      supportTitle:"Get help", supportSub:'Questions, concerns, or suggestions for the Lonera team — we read every one. Or say "I want to ask the platform a question about..." into the mic above.',
+      ticketCategoryLabel:"Category", ticketCatQuestion:"Question", ticketCatConcern:"Concern", ticketCatSuggestion:"Suggestion", ticketCatComplaint:"Complaint",
+      ticketInputLabel:"Describe your question or concern", ticketPlaceholder:"Tell us what's going on...",
+      ticketSubmitBtn:"Submit ticket", ticketSubmittedMsg:"Thanks — we've got it. Your reference number is",
+      ticketPending:"Pending", ticketResolved:"Resolved",
+      voiceTicketMsg:"Done — your ticket %s has been submitted.",
       trust1title:"Real ID Verified", trust1sub:"Every provider's identity is checked before they can list",
       trust2title:"Payment Protection", trust2sub:"For bigger bookings, your money is held in escrow until the job is done — never pay a stranger upfront",
       trust3title:"Multilingual Support", trust3sub:"Fully working in Korean and English today — Tagalog, Hindi, Punjabi, and Mandarin launching soon",
@@ -608,6 +708,19 @@
       requestSendBtn:"요청 보내기",
       requestSentLabel:"%s에게 전송했어요. 업체가 보게 될 내용이에요:",
       requestCleanupNote:"(문법만 다듬었어요 — 의미는 그대로예요.)",
+      timeJustNow:"방금 전", timeMinAgo:"%s분 전", timeHourAgo:"%s시간 전", timeDayAgo:"%s일 전",
+      notifTitle:"알림", notifEmpty:"새로운 알림이 없어요.",
+      notifTicketResolved:"티켓 %s이 해결됨으로 표시되었어요", notifTicketPending:"티켓 %s이 답변을 기다리고 있어요",
+      communityTitle:"커뮤니티", communitySub:'질문하거나 아는 것을 나눠보세요 — 캘거리의 모든 이민자 커뮤니티를 위한 공간이에요. 위 마이크에 "한국어 치과 어디 있는지 커뮤니티에 물어봐줘" 처럼 말씀하셔도 돼요.',
+      communityConfirmLabel:"이 내용을 커뮤니티에 올릴까요?", communityPostBtn:"게시하기", cancelBtn:"취소",
+      communityComposeLabel:"커뮤니티에 물어보기", communityComposePlaceholder:"예: NW 캘거리에서 한국어 되는 치과 어디 있나요?",
+      voiceCommunityMsg:"들은 내용을 다듬었어요 — 맞으면 게시해 주세요.",
+      supportTitle:"고객센터", supportSub:'로네라 팀에게 질문, 우려사항, 제안을 남겨주세요 — 모두 확인합니다. 위 마이크에 "플랫폼에 이런 질문을 하고 싶어요" 처럼 말씀하셔도 돼요.',
+      ticketCategoryLabel:"카테고리", ticketCatQuestion:"질문", ticketCatConcern:"우려사항", ticketCatSuggestion:"제안", ticketCatComplaint:"불만",
+      ticketInputLabel:"질문이나 우려사항을 설명해 주세요", ticketPlaceholder:"무슨 일인지 알려주세요...",
+      ticketSubmitBtn:"티켓 제출", ticketSubmittedMsg:"감사합니다 — 접수되었어요. 참조번호는",
+      ticketPending:"대기 중", ticketResolved:"해결됨",
+      voiceTicketMsg:"완료했어요 — 티켓 %s이 제출되었어요.",
       trust1title:"실명 인증 완료", trust1sub:"모든 업체는 등록 전 실명 인증을 거칩니다",
       trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 에스크로에 안전하게 보관됩니다 — 낯선 사람에게 미리 결제할 필요 없어요",
       trust3title:"다국어 지원", trust3sub:"현재 한국어·영어로 완전히 이용 가능하며, 타갈로그어·힌디어·펀자브어·중국어(만다린)는 곧 지원 예정입니다",
@@ -689,6 +802,9 @@
     renderFAQ();
     renderCtaPerks();
     populateProviderCatSelect();
+    renderCommunityFeed();
+    renderTicketList();
+    renderNotifications();
     if(document.getElementById("modalOverlay").classList.contains("open") && currentModalListing){
       openModal(currentModalListing);
     }
@@ -1128,20 +1244,175 @@
     document.getElementById("requestSentConfirm").style.display = "block";
   });
 
+  /* ===== Community + Support tickets + Notifications ===== */
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function timeAgo(ts){
+    const diffMin = Math.max(0, Math.floor((Date.now()-ts)/60000));
+    if(diffMin < 1) return T[lang].timeJustNow;
+    if(diffMin < 60) return T[lang].timeMinAgo.replace("%s", diffMin);
+    const diffHr = Math.floor(diffMin/60);
+    if(diffHr < 24) return T[lang].timeHourAgo.replace("%s", diffHr).replace(/\bhr\b/, diffHr===1?"hr":"hrs");
+    const diffDay = Math.floor(diffHr/24);
+    return T[lang].timeDayAgo.replace("%s", diffDay).replace(/\bday\b/, diffDay===1?"day":"days");
+  }
+
+  const COMMUNITY_KEY = "lonera_community";
+  const COMMUNITY_SEED = [
+    {tagEn:"Korean community", tagKo:"한인 커뮤니티", textEn:"Chuseok pop-up market — NE Calgary, Sept 20. Local providers can apply for a free table.", textKo:"추석 팝업 마켓 — NE 캘거리, 9월 20일. 지역 업체는 무료 부스를 신청할 수 있어요.", ts: Date.now() - 86400000*2, seeded:true},
+    {tagEn:"Filipino community", tagKo:"필리핀 커뮤니티", textEn:"Looking for recommendations: kids' Tagalog tutor in SE Calgary?", textKo:"SE 캘거리에서 아이들 타갈로그어 과외 선생님 추천 부탁드려요.", ts: Date.now() - 86400000*4, seeded:true},
+    {tagEn:"Platform update", tagKo:"플랫폼 업데이트", textEn:"New: Punjabi language support launching next month.", textKo:"신규: 펀자브어 지원이 다음 달 시작됩니다.", ts: Date.now() - 86400000*6, seeded:true}
+  ];
+  function loadCommunity(){
+    try{ const stored = JSON.parse(localStorage.getItem(COMMUNITY_KEY)); if(stored && stored.length) return stored; }catch(e){}
+    return COMMUNITY_SEED;
+  }
+  function saveCommunityPost(cleaned){
+    const list = loadCommunity();
+    list.unshift({ tagEn:"Community question", tagKo:"커뮤니티 질문", textEn:cleaned, textKo:cleaned, ts: Date.now(), seeded:false });
+    localStorage.setItem(COMMUNITY_KEY, JSON.stringify(list.slice(0, 40)));
+  }
+  function renderCommunityFeed(){
+    const wrap = document.getElementById("communityFeed");
+    if(!wrap) return;
+    const list = loadCommunity();
+    wrap.innerHTML = list.map(p=>{
+      const tag = escapeHtml(lang==="ko" ? p.tagKo : p.tagEn);
+      const text = escapeHtml(lang==="ko" ? p.textKo : p.textEn);
+      return `<div class="community-post-card"><span class="tag">${tag}</span><p>${text}</p><div class="meta">${timeAgo(p.ts)}</div></div>`;
+    }).join("");
+  }
+  function openCommunityConfirm(cleaned){
+    document.getElementById("communityConfirmText").textContent = cleaned;
+    document.getElementById("communityConfirmBox").style.display = "block";
+    document.getElementById("communityConfirmBox").scrollIntoView({behavior:"smooth", block:"center"});
+    document.getElementById("communityConfirmPost").onclick = ()=>{
+      saveCommunityPost(cleaned);
+      renderCommunityFeed();
+      renderNotifications();
+      document.getElementById("communityConfirmBox").style.display = "none";
+    };
+  }
+  document.getElementById("communityConfirmCancel").addEventListener("click", ()=>{
+    document.getElementById("communityConfirmBox").style.display = "none";
+  });
+  document.getElementById("communityPostBtn").addEventListener("click", ()=>{
+    const raw = document.getElementById("communityInput").value.trim();
+    if(!raw) return;
+    saveCommunityPost(cleanupNote(raw));
+    document.getElementById("communityInput").value = "";
+    renderCommunityFeed();
+    renderNotifications();
+  });
+
+  const TICKETS_KEY = "lonera_tickets";
+  const TICKETS_SEED = [
+    {refNumber:"LNR-2091", category:"question", note:"How do I change the language my listing shows in?", cleaned:"How do I change the language my listing shows in?", status:"resolved", submittedBy:"provider", ts: Date.now() - 86400000*3}
+  ];
+  function loadTickets(){
+    try{ const stored = JSON.parse(localStorage.getItem(TICKETS_KEY)); if(stored) return stored; }catch(e){}
+    return TICKETS_SEED.slice();
+  }
+  function saveTickets(list){ localStorage.setItem(TICKETS_KEY, JSON.stringify(list)); }
+  function generateTicketRef(){
+    return "LNR-" + Math.floor(1000 + Math.random()*9000);
+  }
+  function submitTicket(category, raw, submittedBy){
+    const cleaned = cleanupNote(raw);
+    const ref = generateTicketRef();
+    const list = loadTickets();
+    list.unshift({ refNumber: ref, category: category||"question", note: raw, cleaned, status:"pending", submittedBy: submittedBy||"customer", ts: Date.now() });
+    saveTickets(list);
+    renderTicketList();
+    renderNotifications();
+    return { ref, cleaned };
+  }
+  function renderTicketList(){
+    const wrap = document.getElementById("ticketList");
+    if(!wrap) return;
+    const list = loadTickets();
+    if(!list.length){ wrap.innerHTML = ""; return; }
+    wrap.innerHTML = list.map(t=>{
+      const statusLabel = t.status === "resolved" ? T[lang].ticketResolved : T[lang].ticketPending;
+      return `<div class="ticket-row">
+        <div><div class="ref-num">${escapeHtml(t.refNumber)}</div><div class="note">${escapeHtml(t.cleaned)}</div></div>
+        <span class="ticket-status ${t.status}">${statusLabel}</span>
+      </div>`;
+    }).join("");
+  }
+  document.getElementById("ticketSubmitBtn").addEventListener("click", ()=>{
+    const raw = document.getElementById("ticketInput").value.trim();
+    if(!raw) return;
+    const category = document.getElementById("ticketCategory").value;
+    const { ref } = submitTicket(category, raw, "customer");
+    const confirmBox = document.getElementById("ticketConfirm");
+    confirmBox.innerHTML = `${T[lang].ticketSubmittedMsg}<span class="ref">${ref}</span>`;
+    confirmBox.style.display = "block";
+    document.getElementById("ticketInput").value = "";
+  });
+
+  function renderNotifications(){
+    const listEl = document.getElementById("notifList");
+    const badgeEl = document.getElementById("notifBadge");
+    if(!listEl) return;
+    const tickets = loadTickets();
+    const items = tickets.slice(0, 6).map(t=>{
+      const isResolved = t.status === "resolved";
+      return {
+        icon: isResolved ? "ic-check" : "ic-ticket",
+        title: isResolved ? T[lang].notifTicketResolved.replace("%s", t.refNumber) : T[lang].notifTicketPending.replace("%s", t.refNumber),
+        sub: timeAgo(t.ts)
+      };
+    });
+    if(!items.length){
+      listEl.innerHTML = `<div class="notif-empty">${T[lang].notifEmpty}</div>`;
+    } else {
+      listEl.innerHTML = items.map(it=>`<div class="notif-item"><div class="icon-wrap">${icon(it.icon)}</div><div><div class="t">${escapeHtml(it.title)}</div><div class="s">${it.sub}</div></div></div>`).join("");
+    }
+    const unread = tickets.filter(t=>t.status==="resolved").length;
+    if(badgeEl){
+      if(unread > 0){ badgeEl.textContent = unread; badgeEl.style.display = "flex"; }
+      else { badgeEl.style.display = "none"; }
+    }
+  }
+  document.getElementById("notifBtn").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    const panel = document.getElementById("notifPanel");
+    const open = panel.style.display === "block";
+    panel.style.display = open ? "none" : "block";
+    document.getElementById("notifBtn").setAttribute("aria-pressed", open ? "false" : "true");
+  });
+  document.addEventListener("click", (e)=>{
+    const wrap = document.querySelector(".notif-wrap");
+    if(wrap && !wrap.contains(e.target)) document.getElementById("notifPanel").style.display = "none";
+  });
+
+  const COMMUNITY_INTENT_KW = ["ask this in the community","ask the community","post this in the community","post to the community","community question","커뮤니티에 물어","커뮤니티에 올려","커뮤니티 질문","커뮤니티에 질문"];
+  const TICKET_INTENT_KW = ["ask a question to the platform","submit a ticket","report an issue","i have a concern","file a complaint","contact support","플랫폼에 문의","티켓 제출","문제 신고","고객센터에 문의"];
+
+  function detectVoiceIntent(q){
+    for(const kw of COMMUNITY_INTENT_KW){ if(q.includes(kw)) return {type:"community", trigger:kw}; }
+    for(const kw of TICKET_INTENT_KW){ if(q.includes(kw)) return {type:"ticket", trigger:kw}; }
+    return null;
+  }
+
   const FAQS = {
     en:[
       {q:"Is my payment actually safe?", a:"For Protected Bookings (rentals, legal, immigration, accounting, construction, catering), your payment is held by Lonera and only released to the provider once the work is confirmed complete — not before."},
       {q:"What if a provider doesn't show up?", a:"You're covered under the Protected Booking guarantee for those categories — held funds are refunded if the job doesn't happen as agreed."},
       {q:"Is my ID information private?", a:"Yes. Your ID is used only to verify you're a real person, it's encrypted, never sold, and you can request it be deleted at any time."},
       {q:"Do I have to pay to just look around?", a:"No. Browsing, searching, and contacting Everyday Services providers (hair, tutoring, cleaning, and more) is completely free."},
-      {q:"How is Lonera different from Facebook groups, Kijiji, or CN Dream?", a:"We deeply respect community spaces like CN Dream that have served Calgary's Korean community for decades — we're not trying to replace them. Facebook groups, Kijiji, and community boards don't verify who's posting, listings go stale with no way to tell if a spot is already filled, and there's no protection if a deposit or payment goes wrong. Lonera adds real ID verification, escrow payment protection, and multilingual search on top of that same community spirit — for Korean, Filipino, South Asian, Chinese, and other newcomer communities across Calgary."}
+      {q:"How is Lonera different from Facebook groups, Kijiji, or CN Dream?", a:"We deeply respect community spaces like CN Dream that have served Calgary's Korean community for decades — we're not trying to replace them. Facebook groups, Kijiji, and community boards don't verify who's posting, listings go stale with no way to tell if a spot is already filled, and there's no protection if a deposit or payment goes wrong. Lonera adds real ID verification, escrow payment protection, and multilingual search on top of that same community spirit — for Korean, Filipino, South Asian, Chinese, and other newcomer communities across Calgary."},
+      {q:"How do you keep out fake accounts and stop abusive or harassing behavior?", a:"Every provider goes through real ID verification before they can list — that alone filters out most fake accounts. On top of that, every listing, community post, and message has a Report option, reports go to a real person on our team within 24 hours, and repeat or serious offenders are removed. We're also building automated screening to flag likely fake accounts and abusive language for faster human review — but we won't claim that's fully live until it actually is. Right now, trust and safety here is: verified identity + easy reporting + a human who reads every report."}
     ],
     ko:[
       {q:"결제가 정말 안전한가요?", a:"안전 결제 예약 카테고리(렌탈, 법률, 이민, 회계, 건축, 케이터링)의 경우, 결제 금액은 로네라가 보관하며 작업이 완료 확인된 후에만 업체에 지급됩니다."},
       {q:"업체가 나타나지 않으면 어떻게 되나요?", a:"해당 카테고리는 안전 결제 예약 보장이 적용되어, 약속대로 진행되지 않으면 보관된 금액이 환불됩니다."},
       {q:"제 신분증 정보는 안전한가요?", a:"네. 신분증은 실명 확인 용도로만 사용되며 암호화되어 저장되고, 절대 판매되지 않으며 언제든 삭제를 요청하실 수 있습니다."},
       {q:"그냥 둘러보기만 해도 비용이 드나요?", a:"아니요. 일상 서비스(미용, 과외, 청소 등) 업체를 검색하고 연락하는 것은 완전히 무료입니다."},
-      {q:"로네라는 페이스북 그룹, Kijiji, CN Dream과 무엇이 다른가요?", a:"저희는 수십 년간 캘거리 한인 커뮤니티를 지탱해 온 CN Dream 같은 공간을 깊이 존중하며, 그것을 대체하려는 것이 아닙니다. 페이스북 그룹이나 Kijiji, 커뮤니티 게시판은 게시자의 신원을 확인하지 않고, 이미 마감된 글인지 알 수 없으며, 보증금이나 결제에 문제가 생겨도 보호받을 방법이 없습니다. 로네라는 그와 같은 커뮤니티 정신 위에 실명 인증, 에스크로 결제 보호, 다국어 검색을 더해 한인은 물론 필리핀, 남아시아, 중국계 등 캘거리의 다양한 이민자 커뮤니티를 위해 만들어졌습니다."}
+      {q:"로네라는 페이스북 그룹, Kijiji, CN Dream과 무엇이 다른가요?", a:"저희는 수십 년간 캘거리 한인 커뮤니티를 지탱해 온 CN Dream 같은 공간을 깊이 존중하며, 그것을 대체하려는 것이 아닙니다. 페이스북 그룹이나 Kijiji, 커뮤니티 게시판은 게시자의 신원을 확인하지 않고, 이미 마감된 글인지 알 수 없으며, 보증금이나 결제에 문제가 생겨도 보호받을 방법이 없습니다. 로네라는 그와 같은 커뮤니티 정신 위에 실명 인증, 에스크로 결제 보호, 다국어 검색을 더해 한인은 물론 필리핀, 남아시아, 중국계 등 캘거리의 다양한 이민자 커뮤니티를 위해 만들어졌습니다."},
+      {q:"가짜 계정이나 괴롭힘·악용 행위는 어떻게 막나요?", a:"모든 업체는 등록 전 실명 인증을 거칩니다 — 이것만으로도 대부분의 가짜 계정을 걸러낼 수 있어요. 또한 모든 리스팅, 커뮤니티 게시글, 메시지에는 신고 기능이 있고, 신고는 24시간 이내에 실제 담당자가 확인하며, 반복적이거나 심각한 위반자는 퇴출됩니다. 가짜 계정과 악의적인 언어를 더 빠르게 감지해 사람이 검토할 수 있도록 자동 감지 시스템도 개발 중입니다 — 다만 아직 완전히 작동하지 않는 것을 작동한다고 말씀드리진 않을게요. 지금 시점의 신뢰·안전 체계는: 실명 인증 + 간편한 신고 기능 + 모든 신고를 확인하는 실제 담당자입니다."}
     ]
   };
   function renderFAQ(){
@@ -1213,8 +1484,34 @@
     return null;
   }
 
+  function extractAfterTrigger(query, trigger){
+    const idx = query.toLowerCase().indexOf(trigger);
+    if(idx === -1) return query.trim();
+    const rest = query.slice(idx + trigger.length).replace(/^[\s,:.\-]+/, "");
+    return rest.trim() || query.trim();
+  }
+
   function runSearch(query){
     if(!query || !query.trim()) return;
+    const qFull = query.toLowerCase();
+    const intent = detectVoiceIntent(qFull);
+    if(intent){
+      const content = extractAfterTrigger(query, intent.trigger);
+      if(intent.type === "community"){
+        const cleaned = cleanupNote(content);
+        document.getElementById("communityBlock").scrollIntoView({behavior:"smooth", block:"start"});
+        openCommunityConfirm(cleaned);
+        speak(T[lang].voiceCommunityMsg);
+      } else {
+        const { ref } = submitTicket("question", content, "customer");
+        document.getElementById("supportBlock").scrollIntoView({behavior:"smooth", block:"start"});
+        const confirmBox = document.getElementById("ticketConfirm");
+        confirmBox.innerHTML = `${T[lang].ticketSubmittedMsg}<span class="ref">${ref}</span>`;
+        confirmBox.style.display = "block";
+        speak(T[lang].voiceTicketMsg.replace("%s", ref));
+      }
+      return;
+    }
     const cat = findMatches(query);
     const q = query.toLowerCase();
     const dayOffset = detectDayOffset(q);
