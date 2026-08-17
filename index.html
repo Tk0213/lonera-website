@@ -3,7 +3,7 @@
 {
   "name": "Lonera Website Prototype",
   "schemaVersion": 1,
-  "description": "Lonera prototype — voice-first, bilingual (한국어/English) marketplace UI for Calgary's Korean community, with large-text and high-contrast accessibility controls.",
+  "description": "Lonera prototype — voice-first, multilingual marketplace UI for Calgary's newcomer and immigrant communities (Korean, Filipino, South Asian, Chinese, and more), with large-text and high-contrast accessibility controls.",
   "mcpTools": [],
   "mcpServerNames": []
 }
@@ -12,10 +12,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lonera — Calgary's Trusted Local Marketplace</title>
-<meta name="description" content="Lonera connects Calgary's Korean community with real ID-verified, reviewed local businesses — for rentals, immigration help, cleaning, and more. Speak, tap, or type; no app skills required.">
-<meta property="og:title" content="Lonera — Calgary's Trusted Local Marketplace">
-<meta property="og:description" content="Verified, bilingual, voice-first local services for Calgary's Korean community.">
+<title>Lonera — Calgary's Trusted Marketplace for Newcomers</title>
+<meta name="description" content="Lonera connects Calgary's Korean, Filipino, South Asian, Chinese, and other newcomer communities with real ID-verified, reviewed local businesses — for rentals, immigration help, cleaning, and more. Speak, tap, or type; no app skills required.">
+<meta property="og:title" content="Lonera — Calgary's Trusted Marketplace for Newcomers">
+<meta property="og:description" content="Verified, multilingual, voice-first local services for Calgary's newcomer communities.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e2582d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
@@ -204,6 +204,9 @@
   .provider-cta h2{margin:0 0 10px;font-size: calc(1.5rem * var(--scale));}
   .provider-cta p{margin:0 0 20px;font-size: calc(1rem * var(--scale));color:#fde3d7;}
   .provider-cta .compare-line{font-weight:800;font-size:calc(0.85rem * var(--scale));margin:0 0 20px;color:#fff;}
+  .cta-perks{ list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;text-align:left;max-width:680px;margin-left:auto;margin-right:auto; }
+  .cta-perks li{ display:flex;align-items:flex-start;gap:8px;font-size:calc(0.88rem * var(--scale));color:#fff;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 12px; }
+  .cta-perks li .icon{flex-shrink:0;margin-top:2px;}
   .provider-cta button{ background:var(--ink);color:#fff;border:none;border-radius:var(--radius-sm); padding:16px 26px;font-weight:800;font-size: calc(1.05rem * var(--scale));min-height:54px; }
 
   #providerForm{ display:none; background:#fff;border-radius:var(--radius);padding:26px;max-width:520px;margin:24px auto 0; box-shadow:var(--shadow);border:1px solid var(--border);text-align:left; }
@@ -275,7 +278,7 @@
 <header class="topbar">
   <div class="brand">
     <div class="mark"><svg class="icon" aria-hidden="true"><use href="#ic-mark"/></svg></div>
-    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Local Marketplace</small></div>
+    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Marketplace for Newcomers</small></div>
   </div>
   <div class="topbar-controls">
     <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
@@ -288,7 +291,7 @@
 <main id="main">
 <section class="hero" id="homeAnchor">
   <h1 data-i18n="heroTitle">Find help you can trust — just ask.</h1>
-  <p class="tagline" data-i18n="heroTag">Verified local businesses for Calgary's Korean community. Speak, tap, or type — however is easiest for you.</p>
+  <p class="tagline" data-i18n="heroTag">Verified local businesses for Calgary's newcomer communities — Korean, Filipino, South Asian, Chinese, and beyond. Speak, tap, or type — in your language.</p>
   <button class="readaloud-btn" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
 
   <div class="path-buttons">
@@ -314,19 +317,19 @@
 
 <div class="trust-strip">
   <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-id"/></svg></div><div><div class="label" data-i18n="trust1title">Real ID Verified</div><div class="sub" data-i18n="trust1sub">Every provider's identity is checked before they can list</div></div></div>
-  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-shield"/></svg></div><div><div class="label" data-i18n="trust2title">Payment Protection</div><div class="sub" data-i18n="trust2sub">For bigger bookings, your payment is held safely until the job is done</div></div></div>
-  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-chat"/></svg></div><div><div class="label" data-i18n="trust3title">Bilingual Support</div><div class="sub" data-i18n="trust3sub">Everything works in Korean and English, side by side</div></div></div>
+  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-shield"/></svg></div><div><div class="label" data-i18n="trust2title">Payment Protection</div><div class="sub" data-i18n="trust2sub">For bigger bookings, your money is held in escrow until the job is done — never pay a stranger upfront</div></div></div>
+  <div class="trust-item"><div class="icon-wrap"><svg class="icon-lg" aria-hidden="true"><use href="#ic-chat"/></svg></div><div><div class="label" data-i18n="trust3title">Multilingual Support</div><div class="sub" data-i18n="trust3sub">Fully working in Korean and English today — Tagalog, Hindi, Punjabi, and Mandarin launching soon</div></div></div>
 </div>
 
 <div class="stats-bar">
   <div class="stat"><div class="num">62</div><div class="lbl" data-i18n="stat1">Verified Businesses</div></div>
   <div class="stat"><div class="num">41</div><div class="lbl" data-i18n="stat2">Protected Bookings Completed</div></div>
   <div class="stat">
-    <div class="num">178 / 300</div>
-    <div class="lbl" data-i18n="stat3">Users until Founding fees begin</div>
-    <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" style="width:59%"></div></div></div>
+    <div class="num" id="daysLeftNum">—</div>
+    <div class="lbl" data-i18n="stat3">Days left of free Founding pricing</div>
+    <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="foundingProgress" style="width:0%"></div></div></div>
   </div>
-  <div class="demo-note" data-i18n="demoNote">(Preview numbers — this counter will be real and live once Lonera launches.)</div>
+  <div class="demo-note" data-i18n="demoNote">(Preview numbers — the businesses/bookings counters will be real and live once Lonera launches. The Founding deadline above is real.)</div>
 </div>
 
 <section class="block">
@@ -369,8 +372,9 @@
 <section class="block">
   <div class="provider-cta">
     <h2 data-i18n="ctaTitle">Run a business? Join as a Founding Provider.</h2>
-    <p data-i18n="ctaSub">Free until we reach 300 Calgary users — then commission starts at just 8% (instead of 12%) and drops automatically as your job gets bigger.</p>
-    <p class="compare-line" data-i18n="ctaCompare">Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate starts at 8% and steps down as your job grows — never more than $3,000 on one booking.</p>
+    <p data-i18n="ctaSub">100% free through September 30, 2026 — then just 8% per completed booking, dropping to 5% once you're fully verified. No subscriptions, no hidden costs.</p>
+    <p class="compare-line" data-i18n="ctaCompare">Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate is just 8%, dropping to 5% for verified providers — so you keep up to 95% of what you earn.</p>
+    <ul class="cta-perks" id="ctaPerks"></ul>
     <button id="ctaJoinBtn" data-i18n="ctaBtn">Join Now — It's Free</button>
   </div>
 
@@ -392,14 +396,15 @@
 <section class="block" id="aboutBlock">
   <h2 class="section-title" data-i18n="aboutTitle">Who's behind Lonera</h2>
   <div style="max-width:680px;margin:0 auto;text-align:center;color:var(--muted);font-size:calc(1rem * var(--scale));">
-    <p data-i18n="aboutP1">Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families struggle to find local help they could trust in a new country.</p>
-    <p data-i18n="aboutP2">We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected until the work is actually done.</p>
+    <p data-i18n="aboutP1">Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families — and neighbours from Korean, Filipino, South Asian, and other newcomer communities — struggle to find local help they could trust in a new country.</p>
+    <p data-i18n="aboutP2">We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected in escrow until the work is actually done.</p>
+    <p data-i18n="aboutP3">We built Lonera with deep respect for community spaces like CN Dream that have served Calgary's Korean community for decades — we're not here to replace them. Lonera is a modern, trust-first alternative for a city where roughly 1 in 3 residents is an immigrant: real ID verification, secure escrow payments, and multilingual search, open to every newcomer community in Calgary.</p>
   </div>
 </section>
 </main>
 
 <footer>
-  <div class="foot-brand">Lonera 로네라</div>
+  <div class="foot-brand">Lonera 로네라 · lonera.ca</div>
   <div data-i18n="footTag">Built by two Calgary students, for the community that raised us.</div>
   <div class="foot-links" data-i18n="footNote">This is an early preview of the Lonera platform — not all listings are live yet.</div>
   <div class="foot-links" data-i18n="footContact">Questions or feedback? Reach us any time at hello@lonera.ca</div>
@@ -440,20 +445,20 @@
 
   const T = {
     en: {
-      brandName:"Lonera", brandTag:"Calgary's Trusted Local Marketplace",
+      brandName:"Lonera", brandTag:"Calgary's Trusted Marketplace for Newcomers",
       langBtn:"한국어", contrastBtn:"High Contrast", readAloud:"Read this page to me", readAloudStop:"Stop reading",
       skipLink:"Skip to main content",
       heroTitle:"Find help you can trust — just ask.",
-      heroTag:"Verified local businesses for Calgary's Korean community. Speak, tap, or type — however is easiest for you.",
+      heroTag:"Verified local businesses for Calgary's newcomer communities — Korean, Filipino, South Asian, Chinese, and beyond. Speak, tap, or type — in your language.",
       pathNeed:"I need a service", pathBiz:"I run a business",
       searchTitle:"Just say what you need",
       searchHint:'Tap the microphone and speak naturally — like "I need a house cleaner" or "I need to find an apartment."',
       micLabel:"Tap to speak", typePlaceholder:"Or type here...", searchBtn:"Search",
       trust1title:"Real ID Verified", trust1sub:"Every provider's identity is checked before they can list",
-      trust2title:"Payment Protection", trust2sub:"For bigger bookings, your payment is held safely until the job is done",
-      trust3title:"Bilingual Support", trust3sub:"Everything works in Korean and English, side by side",
-      stat1:"Verified Businesses", stat2:"Protected Bookings Completed", stat3:"Users until Founding fees begin",
-      demoNote:"(Preview numbers — this counter will be real and live once Lonera launches.)",
+      trust2title:"Payment Protection", trust2sub:"For bigger bookings, your money is held in escrow until the job is done — never pay a stranger upfront",
+      trust3title:"Multilingual Support", trust3sub:"Fully working in Korean and English today — Tagalog, Hindi, Punjabi, and Mandarin launching soon",
+      stat1:"Verified Businesses", stat2:"Protected Bookings Completed", stat3:"Days left of free Founding pricing",
+      demoNote:"(Preview numbers — the businesses/bookings counters will be real and live once Lonera launches. The Founding deadline above is real.)",
       howTitle:"How Lonera works", howSub:"Three simple steps. No app skills required.",
       step1title:"Speak or tap", step1sub:"Tell Lonera what you need — out loud, or by tapping a picture below.",
       step2title:"See trusted matches", step2sub:"Only verified, reviewed local providers show up — no scams, no guesswork.",
@@ -464,12 +469,14 @@
       featuredTitle:"Featured Founding Providers", clearBtn:"Show featured instead",
       faqTitle:"Common questions", faqSub:"Straight answers, no fine print.",
       aboutTitle:"Who's behind Lonera",
-      aboutP1:"Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families struggle to find local help they could trust in a new country.",
-      aboutP2:"We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected until the work is actually done.",
+      aboutP1:"Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families — and neighbours from Korean, Filipino, South Asian, and other newcomer communities — struggle to find local help they could trust in a new country.",
+      aboutP2:"We're not a big company — just two people trying to build something the community actually needs. Every provider on Lonera is real-ID verified before they can list, and every bigger booking is protected in escrow until the work is actually done.",
+      aboutP3:"We built Lonera with deep respect for community spaces like CN Dream that have served Calgary's Korean community for decades — we're not here to replace them. Lonera is a modern, trust-first alternative for a city where roughly 1 in 3 residents is an immigrant: real ID verification, secure escrow payments, and multilingual search, open to every newcomer community in Calgary.",
       footContact:"Questions or feedback? Reach us any time at hello@lonera.ca",
       ctaTitle:"Run a business? Join as a Founding Provider.",
-      ctaSub:"Free until we reach 300 Calgary users — then commission starts at just 8% (instead of 12%) and drops automatically as your job gets bigger.",
-      ctaCompare:"Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate starts at 8% and steps down as your job grows — never more than $3,000 on one booking.",
+      ctaSub:"100% free through September 30, 2026 — then just 8% per completed booking, dropping to 5% once you're fully verified. No subscriptions, no hidden costs.",
+      ctaCompare:"Most local-service apps take 20–31% flat, no matter the job size. Lonera's Founding rate is just 8%, dropping to 5% for verified providers — so you keep up to 95% of what you earn.",
+      ctaPerks:["Gold \"Verified Business\" badge on your listing","Permanent \"Founding Provider\" badge as the platform grows","Your listing shown automatically in Korean and English","Guaranteed payment — funds held in escrow until the job is done","First 30 providers get 60 days featured free on the homepage"],
       ctaBtn:"Join Now — It's Free",
       micDenied:"We need microphone access to listen — please allow it in your browser, or type instead.",
       formTitle:"Tell us about your business", formName:"Your name", formBiz:"Business name",
@@ -484,25 +491,26 @@
       navHome:"Home", navSearch:"Search", navCats:"Browse", navFav:"Saved", navBiz:"Business",
       savedTitle:"Your saved providers", noSaved:"Nothing saved yet — tap the heart on any listing to save it here.",
       reviews:"reviews", langSpoken:"Speaks", langKo:"Korean", langEn:"English",
+      langTl:"Tagalog", langHi:"Hindi", langPa:"Punjabi", langZh:"Mandarin",
       micAria:"Start voice search", closeAria:"Close", saveAria:"Save", savedAria:"Saved",
       fontMinusAria:"Decrease text size", fontPlusAria:"Increase text size",
       reviewText:["Very professional and on time.","Explained everything clearly in Korean.","Fair price, no surprises.","Would book again without hesitation.","Fast to respond and easy to reach."]
     },
     ko: {
-      brandName:"로네라", brandTag:"캘거리에서 가장 믿을 수 있는 지역 마켓플레이스",
+      brandName:"로네라", brandTag:"캘거리 이민자와 뉴커머를 위한 믿을 수 있는 마켓플레이스",
       langBtn:"English", contrastBtn:"고대비 모드", readAloud:"이 페이지를 읽어주세요", readAloudStop:"읽기 중지",
       skipLink:"본문으로 바로가기",
       heroTitle:"믿을 수 있는 도움, 말 한마디면 충분해요.",
-      heroTag:"캘거리 한인 커뮤니티를 위한 검증된 지역 업체. 말하거나, 누르거나, 입력하세요 — 편한 방법으로요.",
+      heroTag:"캘거리 한인, 필리핀, 남아시아, 중국계 등 다양한 이민자 커뮤니티를 위한 검증된 지역 업체. 말하거나, 누르거나, 입력하세요 — 내 언어로요.",
       pathNeed:"서비스가 필요해요", pathBiz:"업체를 운영해요",
       searchTitle:"필요한 것을 말씀해 주세요",
       searchHint:'마이크를 누르고 자연스럽게 말씀해 주세요 — "청소해줄 사람이 필요해요" 또는 "이사할 집을 찾아요" 처럼요.',
       micLabel:"눌러서 말하기", typePlaceholder:"또는 여기에 입력하세요...", searchBtn:"검색",
       trust1title:"실명 인증 완료", trust1sub:"모든 업체는 등록 전 실명 인증을 거칩니다",
-      trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 안전하게 보관됩니다",
-      trust3title:"한/영 이중 지원", trust3sub:"모든 기능이 한국어와 영어로 동시에 제공됩니다",
-      stat1:"검증된 업체 수", stat2:"완료된 안전결제 예약", stat3:"파운딩 수수료 시작까지 남은 사용자",
-      demoNote:"(미리보기 수치입니다 — 실제 출시 후에는 실시간 데이터로 업데이트됩니다.)",
+      trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 에스크로에 안전하게 보관됩니다 — 낯선 사람에게 미리 결제할 필요 없어요",
+      trust3title:"다국어 지원", trust3sub:"현재 한국어·영어로 완전히 이용 가능하며, 타갈로그어·힌디어·펀자브어·중국어(만다린)는 곧 지원 예정입니다",
+      stat1:"검증된 업체 수", stat2:"완료된 안전결제 예약", stat3:"파운딩 무료 혜택 종료까지 남은 일수",
+      demoNote:"(업체 수·예약 수는 미리보기 수치이며 실제 출시 후 실시간으로 업데이트됩니다. 파운딩 마감일은 실제 날짜입니다.)",
       howTitle:"로네라 이용 방법", howSub:"아주 간단한 3단계. 앱 사용법을 몰라도 괜찮아요.",
       step1title:"말하거나 누르기", step1sub:"필요한 것을 말씀하시거나, 아래 그림을 눌러주세요.",
       step2title:"검증된 결과 확인", step2sub:"검증되고 후기가 있는 업체만 보여드립니다 — 사기 걱정 없이요.",
@@ -513,12 +521,14 @@
       featuredTitle:"추천 파운딩 프로바이더", clearBtn:"추천 목록 다시 보기",
       faqTitle:"자주 묻는 질문", faqSub:"복잡한 설명 없이, 명확한 답변만 드려요.",
       aboutTitle:"로네라를 만든 사람들",
-      aboutP1:"로네라는 캘거리에서 나고 자란 두 학생, TK Lim과 Connor Kim이 시작했습니다. 저희 가족이 새로운 나라에서 믿을 수 있는 지역 업체를 찾기 위해 고생하는 모습을 보며 자랐습니다.",
-      aboutP2:"저희는 큰 회사가 아니라, 커뮤니티에 진짜 필요한 것을 만들려는 두 사람일 뿐입니다. 모든 업체는 등록 전 실명 인증을 거치며, 큰 예약은 작업이 완료될 때까지 안전하게 보호됩니다.",
+      aboutP1:"로네라는 캘거리에서 나고 자란 두 학생, TK Lim과 Connor Kim이 시작했습니다. 저희 가족과, 한인·필리핀·남아시아 등 다양한 이민자 이웃들이 새로운 나라에서 믿을 수 있는 지역 업체를 찾기 위해 고생하는 모습을 보며 자랐습니다.",
+      aboutP2:"저희는 큰 회사가 아니라, 커뮤니티에 진짜 필요한 것을 만들려는 두 사람일 뿐입니다. 모든 업체는 등록 전 실명 인증을 거치며, 큰 예약은 작업이 완료될 때까지 에스크로로 안전하게 보호됩니다.",
+      aboutP3:"저희는 수십 년간 캘거리 한인 커뮤니티를 지탱해 온 CN Dream 같은 공간을 깊이 존중하며, 그것을 대체하려는 것이 아닙니다. 로네라는 캘거리 인구의 약 3명 중 1명이 이민자인 이 도시를 위한 현대적이고 신뢰 중심의 대안입니다 — 실명 인증, 안전한 에스크로 결제, 다국어 검색을 모든 이민자 커뮤니티에 열어드립니다.",
       footContact:"질문이나 의견이 있으시면 언제든 hello@lonera.ca 로 연락해 주세요.",
       ctaTitle:"업체를 운영하시나요? 파운딩 프로바이더로 함께해요.",
-      ctaSub:"캘거리 사용자 300명이 될 때까지 무료 — 이후에는 수수료가 12% 대신 8%부터 시작되며, 작업 규모가 커질수록 자동으로 낮아집니다.",
-      ctaCompare:"대부분의 지역 서비스 앱은 작업 규모와 상관없이 20~31%를 고정으로 가져갑니다. 로네라의 파운딩 요금은 8%부터 시작해 작업이 커질수록 낮아지며, 한 건당 최대 $3,000를 넘지 않습니다.",
+      ctaSub:"2026년 9월 30일까지 100% 무료 — 이후에는 완료된 예약당 수수료 8%, 인증이 완료되면 5%로 낮아집니다. 구독료나 숨겨진 비용은 없습니다.",
+      ctaCompare:"대부분의 지역 서비스 앱은 작업 규모와 상관없이 20~31%를 고정으로 가져갑니다. 로네라의 파운딩 요금은 8%뿐이며, 인증된 업체는 5%까지 낮아져 수익의 최대 95%를 그대로 가져가실 수 있어요.",
+      ctaPerks:["리스팅에 골드 \"인증 업체\" 배지 부여","플랫폼이 성장해도 남는 영구 \"파운딩 프로바이더\" 배지","리스팅이 한국어와 영어로 자동 표시","작업이 끝날 때까지 에스크로로 결제 금액 보장","선착순 30개 업체는 홈페이지 무료 추천 노출 60일 제공"],
       ctaBtn:"지금 무료로 시작하기",
       micDenied:"음성을 듣기 위해 마이크 권한이 필요해요 — 브라우저에서 허용해 주시거나, 대신 입력해 주세요.",
       formTitle:"업체 정보를 알려주세요", formName:"이름", formBiz:"업체명",
@@ -533,6 +543,7 @@
       navHome:"홈", navSearch:"검색", navCats:"둘러보기", navFav:"저장됨", navBiz:"업체",
       savedTitle:"저장한 업체", noSaved:"아직 저장한 항목이 없어요 — 하트를 눌러 저장해보세요.",
       reviews:"개 후기", langSpoken:"가능 언어", langKo:"한국어", langEn:"영어",
+      langTl:"타갈로그어", langHi:"힌디어", langPa:"펀자브어", langZh:"중국어(만다린)",
       micAria:"음성 검색 시작", closeAria:"닫기", saveAria:"저장", savedAria:"저장됨",
       fontMinusAria:"글자 크기 줄이기", fontPlusAria:"글자 크기 키우기",
       reviewText:["매우 친절하고 시간을 잘 지켰어요.","한국어로 자세히 설명해 주셨어요.","가격이 합리적이고 추가 비용이 없었어요.","다음에도 꼭 다시 이용하고 싶어요.","연락이 빠르고 소통이 편했어요."]
@@ -565,6 +576,7 @@
     renderCategoryTiles();
     renderListings(currentListings);
     renderFAQ();
+    renderCtaPerks();
     populateProviderCatSelect();
     if(document.getElementById("modalOverlay").classList.contains("open") && currentModalListing){
       openModal(currentModalListing);
@@ -627,7 +639,11 @@
     {key:"catering-1", cat:"catering", nameEn:"Home Table Catering", nameKo:"홈테이블 케이터링", gold:true, escrow:true, rating:4.9, reviewCount:41, area:"City-wide", langs:["ko"],
       blurbEn:"Korean home-style catering for events of all sizes.", blurbKo:"각종 행사를 위한 한국 가정식 케이터링."},
     {key:"health-1", cat:"health", nameEn:"Balance Wellness Studio", nameKo:"밸런스 웰니스 스튜디오", gold:false, escrow:false, rating:4.7, reviewCount:26, area:"SW Calgary", langs:["en"],
-      blurbEn:"Massage therapy & chiropractic care.", blurbKo:"마사지 테라피 및 카이로프랙틱 케어."}
+      blurbEn:"Massage therapy & chiropractic care.", blurbKo:"마사지 테라피 및 카이로프랙틱 케어."},
+    {key:"catering-2", cat:"catering", nameEn:"Manila Table Catering", nameKo:"마닐라 테이블 케이터링", gold:true, escrow:true, rating:4.8, reviewCount:33, area:"NE Calgary", langs:["tl","en"],
+      blurbEn:"Filipino home-style catering for parties, birthdays, and community events.", blurbKo:"파티, 생일, 커뮤니티 행사를 위한 필리핀 가정식 케이터링."},
+    {key:"accounting-2", cat:"accounting", nameEn:"Sharma & Sons Accounting", nameKo:"샤르마 앤 선즈 회계", gold:false, escrow:true, rating:4.7, reviewCount:22, area:"SE Calgary", langs:["hi","pa","en"],
+      blurbEn:"Personal & small business tax filing — Punjabi and Hindi spoken.", blurbKo:"개인 및 소상공인 세금 신고 — 펀자브어·힌디어 상담 가능."}
   ];
 
   const FEATURED_IDS = ["rentals","immigration","construction","catering"];
@@ -643,9 +659,10 @@
     for(let i=0;i<5;i++){ html += `<svg class="icon ${i<full?'filled':''}" aria-hidden="true"><use href="#ic-star"/></svg>`; }
     return html;
   }
+  const LANG_LABEL_KEY = {ko:"langKo", en:"langEn", tl:"langTl", hi:"langHi", pa:"langPa", zh:"langZh"};
   function langBadges(l){
     return (l.langs||[]).map(code=>{
-      const label = code === "ko" ? T[lang].langKo : T[lang].langEn;
+      const label = T[lang][LANG_LABEL_KEY[code]] || code;
       return `<span class="badge lang">${icon("ic-chat")}${label}</span>`;
     }).join("");
   }
@@ -762,13 +779,15 @@
       {q:"Is my payment actually safe?", a:"For Protected Bookings (rentals, legal, immigration, accounting, construction, catering), your payment is held by Lonera and only released to the provider once the work is confirmed complete — not before."},
       {q:"What if a provider doesn't show up?", a:"You're covered under the Protected Booking guarantee for those categories — held funds are refunded if the job doesn't happen as agreed."},
       {q:"Is my ID information private?", a:"Yes. Your ID is used only to verify you're a real person, it's encrypted, never sold, and you can request it be deleted at any time."},
-      {q:"Do I have to pay to just look around?", a:"No. Browsing, searching, and contacting Everyday Services providers (hair, tutoring, cleaning, and more) is completely free."}
+      {q:"Do I have to pay to just look around?", a:"No. Browsing, searching, and contacting Everyday Services providers (hair, tutoring, cleaning, and more) is completely free."},
+      {q:"How is Lonera different from Facebook groups, Kijiji, or CN Dream?", a:"We deeply respect community spaces like CN Dream that have served Calgary's Korean community for decades — we're not trying to replace them. Facebook groups, Kijiji, and community boards don't verify who's posting, listings go stale with no way to tell if a spot is already filled, and there's no protection if a deposit or payment goes wrong. Lonera adds real ID verification, escrow payment protection, and multilingual search on top of that same community spirit — for Korean, Filipino, South Asian, Chinese, and other newcomer communities across Calgary."}
     ],
     ko:[
       {q:"결제가 정말 안전한가요?", a:"안전 결제 예약 카테고리(렌탈, 법률, 이민, 회계, 건축, 케이터링)의 경우, 결제 금액은 로네라가 보관하며 작업이 완료 확인된 후에만 업체에 지급됩니다."},
       {q:"업체가 나타나지 않으면 어떻게 되나요?", a:"해당 카테고리는 안전 결제 예약 보장이 적용되어, 약속대로 진행되지 않으면 보관된 금액이 환불됩니다."},
       {q:"제 신분증 정보는 안전한가요?", a:"네. 신분증은 실명 확인 용도로만 사용되며 암호화되어 저장되고, 절대 판매되지 않으며 언제든 삭제를 요청하실 수 있습니다."},
-      {q:"그냥 둘러보기만 해도 비용이 드나요?", a:"아니요. 일상 서비스(미용, 과외, 청소 등) 업체를 검색하고 연락하는 것은 완전히 무료입니다."}
+      {q:"그냥 둘러보기만 해도 비용이 드나요?", a:"아니요. 일상 서비스(미용, 과외, 청소 등) 업체를 검색하고 연락하는 것은 완전히 무료입니다."},
+      {q:"로네라는 페이스북 그룹, Kijiji, CN Dream과 무엇이 다른가요?", a:"저희는 수십 년간 캘거리 한인 커뮤니티를 지탱해 온 CN Dream 같은 공간을 깊이 존중하며, 그것을 대체하려는 것이 아닙니다. 페이스북 그룹이나 Kijiji, 커뮤니티 게시판은 게시자의 신원을 확인하지 않고, 이미 마감된 글인지 알 수 없으며, 보증금이나 결제에 문제가 생겨도 보호받을 방법이 없습니다. 로네라는 그와 같은 커뮤니티 정신 위에 실명 인증, 에스크로 결제 보호, 다국어 검색을 더해 한인은 물론 필리핀, 남아시아, 중국계 등 캘거리의 다양한 이민자 커뮤니티를 위해 만들어졌습니다."}
     ]
   };
   function renderFAQ(){
@@ -785,6 +804,24 @@
       });
       wrap.appendChild(div);
     });
+  }
+
+  function renderCtaPerks(){
+    const wrap = document.getElementById("ctaPerks");
+    if(!wrap) return;
+    wrap.innerHTML = T[lang].ctaPerks.map(p => `<li>${icon("ic-check")}<span>${p}</span></li>`).join("");
+  }
+
+  const FOUNDING_START = new Date("2026-08-01T00:00:00-06:00").getTime();
+  const FOUNDING_DEADLINE = new Date("2026-09-30T23:59:59-06:00").getTime();
+  function updateFoundingCountdown(){
+    const now = Date.now();
+    const daysLeft = Math.max(0, Math.ceil((FOUNDING_DEADLINE - now) / 86400000));
+    const elapsedPct = Math.min(100, Math.max(0, ((now - FOUNDING_START) / (FOUNDING_DEADLINE - FOUNDING_START)) * 100));
+    const numEl = document.getElementById("daysLeftNum");
+    const barEl = document.getElementById("foundingProgress");
+    if(numEl) numEl.textContent = daysLeft;
+    if(barEl) barEl.style.width = elapsedPct + "%";
   }
 
   function findMatches(query){
@@ -954,6 +991,7 @@
   document.getElementById("navBiz").addEventListener("click", ()=>{ setActiveNav("navBiz"); openProviderForm(); });
 
   applyI18n();
+  updateFoundingCountdown();
 })();
 </script>
 </body>
