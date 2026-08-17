@@ -8,33 +8,46 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e2582d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root{
+    --scale: 1;
     --ink:#14181f; --ink-deep:#0a0d12; --accent:#dd5a30; --accent-deep:#b8451f; --accent-tint:#fbe4d8;
     --amber:#c1870f; --amber-tint:#f6e6bf; --teal:#1f6f63; --teal-tint:#dcefe9; --blue:#29578f; --blue-tint:#e3edf9;
     --paper:#faf7f1; --card:#ffffff; --text:#1d2129; --muted:#666f7d; --border:#e7e0d1; --danger:#b5342a;
     --radius:18px; --radius-sm:12px; --shadow:0 10px 28px rgba(20,24,31,0.08); --sidebar-w:236px;
   }
+  body.high-contrast{
+    --ink:#000000; --ink-deep:#000000; --accent:#a8380f; --accent-deep:#7a290a; --accent-tint:#ffe2d3;
+    --amber:#7a5600; --amber-tint:#fff0c2; --teal:#00473c; --teal-tint:#d1f0e6; --blue:#0d3a66; --blue-tint:#d9e8fb;
+    --paper:#ffffff; --card:#ffffff; --text:#000000; --muted:#111111; --border:#000000; --shadow:none;
+  }
+  body.high-contrast .card, body.high-contrast .stat-card, body.high-contrast .list-row, body.high-contrast .verify-item, body.high-contrast .msg-shell{ border:2px solid #000 !important; }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{ font-family:"Noto Sans KR","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--paper); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
+    background:var(--paper); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; font-size:calc(16px * var(--scale)); }
   a{color:inherit;text-decoration:none;}
   button{font-family:inherit;cursor:pointer;}
+  :focus-visible{ outline:3px solid var(--teal); outline-offset:2px; }
   .icon{width:1.2em;height:1.2em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 
-  .preview-banner{ background:var(--ink); color:#fff; text-align:center; padding:10px 16px; font-size:0.82rem; font-weight:700; }
-  .preview-banner a{ color:#f4b489; text-decoration:underline; }
+  header.topbar{ background:var(--ink); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:60; box-shadow:var(--shadow); }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.3rem * var(--scale)); letter-spacing:-0.01em; }
+  .brand .mark{ width:36px;height:36px;border-radius:11px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
+  .brand .mark .icon{ width:20px;height:20px; stroke-width:2.1; }
+  .brand small{ display:block;font-weight:500;font-size: calc(0.7rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
+  .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+  .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.85rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:40px; }
+  .ctrl-btn:hover{background:rgba(255,255,255,0.2);}
+  .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-  .shell{ display:flex; min-height:calc(100vh - 40px); }
+  .preview-banner{ background:var(--accent-tint); color:var(--accent-deep); text-align:center; padding:9px 16px; font-size:calc(0.82rem * var(--scale)); font-weight:700; }
 
-  .sidebar{ width:var(--sidebar-w); flex-shrink:0; background:#fff; border-right:1px solid var(--border); padding:20px 14px; }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.2rem; padding:4px 8px 20px; }
-  .brand .mark{ width:34px;height:34px;border-radius:10px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
-  .brand .mark .icon{ width:18px;height:18px; stroke-width:2.2; }
+  .shell{ display:flex; min-height:calc(100vh - 96px); }
 
+  .sidebar{ width:var(--sidebar-w); flex-shrink:0; background:#fff; border-right:1px solid var(--border); padding:18px 14px; }
   .nav-group{ margin-bottom:14px; }
   .nav-group + .nav-group{ border-top:1px solid var(--border); padding-top:14px; }
   .nav-item{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:none; border:none;
-    padding:10px 10px; border-radius:10px; font-weight:700; font-size:0.94rem; color:var(--ink); margin-bottom:2px; }
+    padding:10px 10px; border-radius:10px; font-weight:700; font-size:calc(0.94rem * var(--scale)); color:var(--ink); margin-bottom:2px; }
   .nav-item:hover{ background:var(--paper); }
   .nav-item.active{ background:var(--ink); color:#fff; }
   .nav-item .icon{ color:var(--accent-deep); }
@@ -44,16 +57,16 @@
 
   .main{ flex:1; min-width:0; padding:28px 32px 60px; }
   .main-header{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:24px; }
-  .main-header h1{ margin:0 0 4px; font-size:1.55rem; color:var(--ink); }
-  .main-header p{ margin:0; color:var(--muted); font-size:0.94rem; }
+  .main-header h1{ margin:0 0 4px; font-size:calc(1.55rem * var(--scale)); color:var(--ink); }
+  .main-header p{ margin:0; color:var(--muted); font-size:calc(0.94rem * var(--scale)); }
   .provider-chip{ display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border); border-radius:999px; padding:6px 14px 6px 6px; }
-  .provider-chip .av{ width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem; }
-  .provider-chip .badge-gold{ display:flex;align-items:center;gap:4px; background:var(--amber-tint);color:#7a5709;font-weight:800;font-size:0.72rem;padding:3px 9px;border-radius:999px; }
+  .provider-chip .av{ width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:calc(0.85rem * var(--scale)); }
+  .provider-chip .badge-gold{ display:flex;align-items:center;gap:4px; background:var(--amber-tint);color:#7a5709;font-weight:800;font-size:calc(0.72rem * var(--scale));padding:3px 9px;border-radius:999px; }
 
   .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:26px; }
   .stat-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
-  .stat-card .n{ font-size:1.7rem; font-weight:800; color:var(--ink); }
-  .stat-card .l{ font-size:0.82rem; color:var(--muted); font-weight:700; margin-top:2px; }
+  .stat-card .n{ font-size:calc(1.7rem * var(--scale)); font-weight:800; color:var(--ink); }
+  .stat-card .l{ font-size:calc(0.82rem * var(--scale)); color:var(--muted); font-weight:700; margin-top:2px; }
   .stat-card.accent{ background:linear-gradient(135deg,var(--accent),var(--accent-deep)); border:none; color:#fff; }
   .stat-card.accent .n, .stat-card.accent .l{ color:#fff; }
 
@@ -61,16 +74,16 @@
   @media (max-width:900px){ .panel-grid{ grid-template-columns:1fr; } }
 
   .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:20px; }
-  .card h2{ margin:0 0 14px; font-size:1.05rem; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .card h2{ margin:0 0 14px; font-size:calc(1.05rem * var(--scale)); color:var(--ink); display:flex; align-items:center; gap:8px; }
   .card h2 .icon{ color:var(--accent-deep); }
 
   .list-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
   .list-row:last-child{ border-bottom:none; }
-  .list-row .av{ width:38px;height:38px;border-radius:11px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;flex-shrink:0; }
+  .list-row .av{ width:38px;height:38px;border-radius:11px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:calc(0.9rem * var(--scale));flex-shrink:0; }
   .list-row .info{ flex:1; min-width:0; }
-  .list-row .info .t{ font-weight:800; color:var(--ink); font-size:0.92rem; }
-  .list-row .info .s{ font-size:0.8rem; color:var(--muted); }
-  .pill{ font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:999px; white-space:nowrap; }
+  .list-row .info .t{ font-weight:800; color:var(--ink); font-size:calc(0.92rem * var(--scale)); }
+  .list-row .info .s{ font-size:calc(0.8rem * var(--scale)); color:var(--muted); }
+  .pill{ font-size:calc(0.72rem * var(--scale)); font-weight:800; padding:4px 10px; border-radius:999px; white-space:nowrap; }
   .pill.new{ background:var(--blue-tint); color:var(--blue); }
   .pill.progress{ background:var(--amber-tint); color:#7a5709; }
   .pill.done{ background:var(--teal-tint); color:var(--teal); }
@@ -78,37 +91,37 @@
   .pill.escrow{ background:var(--teal-tint); color:var(--teal); }
 
   .action-row{ display:flex; gap:8px; margin-top:4px; }
-  .btn{ border:none; border-radius:999px; padding:8px 14px; font-weight:800; font-size:0.8rem; }
+  .btn{ border:none; border-radius:999px; padding:8px 14px; font-weight:800; font-size:calc(0.8rem * var(--scale)); }
   .btn.accept{ background:var(--teal); color:#fff; }
   .btn.decline{ background:var(--paper); color:var(--muted); border:1px solid var(--border); }
   .btn.primary{ background:var(--ink); color:#fff; }
 
-  .empty-hint{ color:var(--muted); font-size:0.88rem; background:var(--paper); border-radius:12px; padding:14px; }
+  .empty-hint{ color:var(--muted); font-size:calc(0.88rem * var(--scale)); background:var(--paper); border-radius:12px; padding:14px; }
 
   .verify-item{ display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--border); border-radius:14px; margin-bottom:10px; }
   .verify-item .icon-wrap{ width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
   .verify-item.done .icon-wrap{ background:var(--teal-tint); color:var(--teal); }
-  .verify-item .t{ font-weight:800; color:var(--ink); font-size:0.92rem; }
-  .verify-item .s{ font-size:0.8rem; color:var(--muted); }
+  .verify-item .t{ font-weight:800; color:var(--ink); font-size:calc(0.92rem * var(--scale)); }
+  .verify-item .s{ font-size:calc(0.8rem * var(--scale)); color:var(--muted); }
 
   .msg-shell{ display:flex; gap:0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
   .msg-list{ width:230px; flex-shrink:0; border-right:1px solid var(--border); }
   .msg-list .m-row{ padding:12px 14px; border-bottom:1px solid var(--border); cursor:default; }
   .msg-list .m-row.active{ background:var(--paper); }
-  .msg-list .m-row .t{ font-weight:800; font-size:0.88rem; color:var(--ink); }
-  .msg-list .m-row .s{ font-size:0.78rem; color:var(--muted); }
+  .msg-list .m-row .t{ font-weight:800; font-size:calc(0.88rem * var(--scale)); color:var(--ink); }
+  .msg-list .m-row .s{ font-size:calc(0.78rem * var(--scale)); color:var(--muted); }
   .msg-thread{ flex:1; padding:18px; display:flex; flex-direction:column; gap:10px; min-height:260px; }
-  .bubble{ max-width:70%; padding:10px 14px; border-radius:14px; font-size:0.88rem; }
+  .bubble{ max-width:70%; padding:10px 14px; border-radius:14px; font-size:calc(0.88rem * var(--scale)); }
   .bubble.them{ background:var(--paper); align-self:flex-start; }
   .bubble.me{ background:var(--teal); color:#fff; align-self:flex-end; }
-  .bubble .lang-tag{ display:block; font-size:0.68rem; opacity:0.7; margin-top:4px; }
+  .bubble .lang-tag{ display:block; font-size:calc(0.68rem * var(--scale)); opacity:0.7; margin-top:4px; }
 
   .community-post{ border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:12px; }
-  .community-post .tag{ display:inline-block; font-size:0.72rem; font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; margin-bottom:8px; }
-  .community-post h3{ margin:0 0 6px; font-size:0.96rem; color:var(--ink); }
-  .community-post p{ margin:0; color:var(--muted); font-size:0.86rem; }
+  .community-post .tag{ display:inline-block; font-size:calc(0.72rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .community-post h3{ margin:0 0 6px; font-size:calc(0.96rem * var(--scale)); color:var(--ink); }
+  .community-post p{ margin:0; color:var(--muted); font-size:calc(0.86rem * var(--scale)); }
 
-  .phase-tag{ display:inline-flex; align-items:center; gap:6px; background:var(--accent-tint); color:var(--accent-deep); font-weight:800; font-size:0.76rem; padding:4px 10px; border-radius:999px; margin-left:8px; }
+  .phase-tag{ display:inline-flex; align-items:center; gap:6px; background:var(--accent-tint); color:var(--accent-deep); font-weight:800; font-size:calc(0.76rem * var(--scale)); padding:4px 10px; border-radius:999px; margin-left:8px; }
 
   .section{ display:none; }
   .section.active{ display:block; }
@@ -116,7 +129,6 @@
   @media (max-width:760px){
     .shell{ flex-direction:column; }
     .sidebar{ width:100%; display:flex; overflow-x:auto; gap:4px; padding:12px; }
-    .brand{ display:none; }
     .nav-group{ display:flex; gap:4px; margin:0; }
     .nav-group + .nav-group{ border-top:none; border-left:1px solid var(--border); padding-top:0; padding-left:8px; }
     .nav-item{ white-space:nowrap; }
@@ -129,6 +141,9 @@
 <svg style="display:none" aria-hidden="true">
   <defs>
     <symbol id="d-mark" viewBox="0 0 24 24"><path d="M7 4v16h6M7 20h11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="d-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+    <symbol id="d-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="d-back" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></symbol>
     <symbol id="d-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
     <symbol id="d-home" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/></symbol>
     <symbol id="d-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></symbol>
@@ -143,35 +158,46 @@
     <symbol id="d-community" viewBox="0 0 24 24"><path d="M3 6.5h11v7H8.5L5 17v-3.5H3z"/><path d="M13.5 9.5H21v6h-2.2v3l-3-3H16"/></symbol>
     <symbol id="d-star" viewBox="0 0 24 24"><polygon points="12,3.2 14.7,9.3 21.3,10 16.4,14.4 17.8,21 12,17.6 6.2,21 7.6,14.4 2.7,10 9.3,9.3"/></symbol>
     <symbol id="d-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></symbol>
-    <symbol id="d-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
   </defs>
 </svg>
 
-<div class="preview-banner">Design preview — this is what Founding Providers will see. Bookings, quotes, and payments below are sample data, not live yet. <a href="index.html">&larr; Back to Lonera</a></div>
+<header class="topbar">
+  <div class="brand">
+    <div class="mark"><svg class="icon" aria-hidden="true"><use href="#d-mark"/></svg></div>
+    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Provider Dashboard</small></div>
+  </div>
+  <div class="topbar-controls">
+    <a class="ctrl-btn" href="index.html#providerBlock"><svg class="icon" aria-hidden="true"><use href="#d-back"/></svg><span data-i18n="backBtn">Back to Lonera</span></a>
+    <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#d-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
+    <button class="ctrl-btn" id="fontMinus" aria-label="Decrease text size">A−</button>
+    <button class="ctrl-btn" id="fontPlus" aria-label="Increase text size">A+</button>
+    <button class="ctrl-btn" id="contrastToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#d-contrast"/></svg><span data-i18n="contrastBtn">High Contrast</span></button>
+  </div>
+</header>
+
+<div class="preview-banner" data-i18n="previewNote">Design preview — this is what Founding Providers will see. Bookings, quotes, and payments below are sample data, not live yet.</div>
 
 <div class="shell">
   <aside class="sidebar">
-    <div class="brand"><div class="mark"><svg class="icon" aria-hidden="true"><use href="#d-mark"/></svg></div>Lonera</div>
-
     <div class="nav-group">
-      <button class="nav-item create" data-target="create"><svg class="icon" aria-hidden="true"><use href="#d-plus"/></svg>Create</button>
-      <button class="nav-item active" data-target="home"><svg class="icon" aria-hidden="true"><use href="#d-home"/></svg>Home</button>
-      <button class="nav-item" data-target="schedule"><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>Schedule</button>
+      <button class="nav-item create" data-target="create"><svg class="icon" aria-hidden="true"><use href="#d-plus"/></svg><span data-i18n="navCreate">Create</span></button>
+      <button class="nav-item active" data-target="home"><svg class="icon" aria-hidden="true"><use href="#d-home"/></svg><span data-i18n="navHome">Home</span></button>
+      <button class="nav-item" data-target="schedule"><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg><span data-i18n="navSchedule">Schedule</span></button>
     </div>
 
     <div class="nav-group">
-      <button class="nav-item" data-target="clients"><svg class="icon" aria-hidden="true"><use href="#d-clients"/></svg>Clients</button>
-      <button class="nav-item" data-target="requests"><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg>Requests</button>
-      <button class="nav-item" data-target="quotes"><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg>Quotes</button>
-      <button class="nav-item" data-target="jobs"><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg>Jobs</button>
-      <button class="nav-item" data-target="payments"><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Payments</button>
+      <button class="nav-item" data-target="clients"><svg class="icon" aria-hidden="true"><use href="#d-clients"/></svg><span data-i18n="navClients">Clients</span></button>
+      <button class="nav-item" data-target="requests"><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg><span data-i18n="navRequests">Requests</span></button>
+      <button class="nav-item" data-target="quotes"><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg><span data-i18n="navQuotes">Quotes</span></button>
+      <button class="nav-item" data-target="jobs"><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg><span data-i18n="navJobs">Jobs</span></button>
+      <button class="nav-item" data-target="payments"><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg><span data-i18n="navPayments">Payments</span></button>
     </div>
 
     <div class="nav-group">
-      <button class="nav-item" data-target="messages"><svg class="icon" aria-hidden="true"><use href="#d-messages"/></svg>Messages</button>
-      <button class="nav-item" data-target="insights"><svg class="icon" aria-hidden="true"><use href="#d-insights"/></svg>Insights</button>
-      <button class="nav-item" data-target="verification"><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg>Verification</button>
-      <button class="nav-item" data-target="community"><svg class="icon" aria-hidden="true"><use href="#d-community"/></svg>Community</button>
+      <button class="nav-item" data-target="messages"><svg class="icon" aria-hidden="true"><use href="#d-messages"/></svg><span data-i18n="navMessages">Messages</span></button>
+      <button class="nav-item" data-target="insights"><svg class="icon" aria-hidden="true"><use href="#d-insights"/></svg><span data-i18n="navInsights">Insights</span></button>
+      <button class="nav-item" data-target="verification"><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg><span data-i18n="navVerification">Verification</span></button>
+      <button class="nav-item" data-target="community"><svg class="icon" aria-hidden="true"><use href="#d-community"/></svg><span data-i18n="navCommunity">Community</span></button>
     </div>
   </aside>
 
@@ -181,42 +207,42 @@
     <section class="section active" id="sec-home">
       <div class="main-header">
         <div>
-          <h1>Welcome back, Sparkle Home Services</h1>
-          <p>Here's what's happening with your Lonera listing today.</p>
+          <h1 data-i18n="homeTitle">Welcome back, Sparkle Home Services</h1>
+          <p data-i18n="homeSub">Here's what's happening with your Lonera listing today.</p>
         </div>
-        <div class="provider-chip"><div class="av">S</div><div>Sparkle Home Services<div class="badge-gold"><svg class="icon" aria-hidden="true"><use href="#d-star"/></svg>Gold Verified</div></div></div>
+        <div class="provider-chip"><div class="av">S</div><div>Sparkle Home Services<div class="badge-gold"><svg class="icon" aria-hidden="true"><use href="#d-star"/></svg><span data-i18n="chipGoldVerified">Gold Verified</span></div></div></div>
       </div>
 
       <div class="stat-row">
-        <div class="stat-card accent"><div class="n">4</div><div class="l">Bookings this week</div></div>
-        <div class="stat-card"><div class="n">2</div><div class="l">New requests waiting</div></div>
-        <div class="stat-card"><div class="n">3</div><div class="l">Unread messages</div></div>
-        <div class="stat-card"><div class="n">86</div><div class="l">Profile views (30 days)</div></div>
+        <div class="stat-card accent"><div class="n">4</div><div class="l" data-i18n="statBookingsWeek">Bookings this week</div></div>
+        <div class="stat-card"><div class="n">2</div><div class="l" data-i18n="statNewRequests">New requests waiting</div></div>
+        <div class="stat-card"><div class="n">3</div><div class="l" data-i18n="statUnreadMsgs">Unread messages</div></div>
+        <div class="stat-card"><div class="n">86</div><div class="l" data-i18n="statProfileViews">Profile views (30 days)</div></div>
       </div>
 
       <div class="panel-grid">
         <div>
           <div class="card">
-            <h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>Today's schedule</h2>
-            <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Move-out cleaning — Yoon family</div><div class="s">10:00 AM · SE Calgary</div></div><span class="pill progress">In progress</span></div>
-            <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Weekly cleaning — Patel residence</div><div class="s">2:30 PM · SE Calgary</div></div><span class="pill new">Upcoming</span></div>
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg><span data-i18n="cardTodaySchedule">Today's schedule</span></h2>
+            <div class="list-row"><div class="av">Y</div><div class="info"><div class="t" data-i18n="schedRow1Title">Move-out cleaning — Yoon family</div><div class="s">10:00 AM · SE Calgary</div></div><span class="pill progress" data-i18n="pillInProgress">In progress</span></div>
+            <div class="list-row"><div class="av">P</div><div class="info"><div class="t" data-i18n="schedRow2Title">Weekly cleaning — Patel residence</div><div class="s">2:30 PM · SE Calgary</div></div><span class="pill new" data-i18n="pillUpcoming">Upcoming</span></div>
           </div>
           <div class="card">
-            <h2><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg>Recent activity</h2>
-            <div class="list-row"><div class="info"><div class="t">New booking request from Grace Tan</div><div class="s">2 hours ago</div></div></div>
-            <div class="list-row"><div class="info"><div class="t">Payment released for Job #482 (escrow)</div><div class="s">Yesterday</div></div></div>
-            <div class="list-row"><div class="info"><div class="t">New 5-star review from Min-jun Lee</div><div class="s">2 days ago</div></div></div>
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg><span data-i18n="cardRecentActivity">Recent activity</span></h2>
+            <div class="list-row"><div class="info"><div class="t" data-i18n="act1">New booking request from Grace Tan</div><div class="s" data-i18n="act1Time">2 hours ago</div></div></div>
+            <div class="list-row"><div class="info"><div class="t" data-i18n="act2">Payment released for Job #482 (escrow)</div><div class="s" data-i18n="act2Time">Yesterday</div></div></div>
+            <div class="list-row"><div class="info"><div class="t" data-i18n="act3">New 5-star review from Min-jun Lee</div><div class="s" data-i18n="act3Time">2 days ago</div></div></div>
           </div>
         </div>
         <div>
           <div class="card">
-            <h2><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg>Verification status</h2>
-            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Identity verified</div><div class="s">Confirmed on file</div></div></div>
-            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Business licence verified</div><div class="s">Gold badge active</div></div></div>
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg><span data-i18n="cardVerificationStatus">Verification status</span></h2>
+            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t" data-i18n="vIdT">Identity verified</div><div class="s" data-i18n="vIdS">Confirmed on file</div></div></div>
+            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t" data-i18n="vBizT">Business licence verified</div><div class="s" data-i18n="vBizS">Gold badge active</div></div></div>
           </div>
           <div class="card">
-            <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Escrow balance</h2>
-            <div class="stat-card" style="box-shadow:none;"><div class="n">$340</div><div class="l">Held for jobs in progress</div></div>
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg><span data-i18n="cardEscrowBalance">Escrow balance</span></h2>
+            <div class="stat-card" style="box-shadow:none;"><div class="n">$340</div><div class="l" data-i18n="escrowHeldLabel">Held for jobs in progress</div></div>
           </div>
         </div>
       </div>
@@ -224,50 +250,50 @@
 
     <!-- CREATE -->
     <section class="section" id="sec-create">
-      <div class="main-header"><div><h1>Create</h1><p>Start something new on your Lonera listing.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="createTitle">Create</h1><p data-i18n="createSub">Start something new on your Lonera listing.</p></div></div>
       <div class="panel-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
-        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg>New job listing</h2><p class="s" style="color:var(--muted);font-size:0.88rem;">Post a new service to appear in search and category browsing.</p><button class="btn primary" style="margin-top:10px;">New listing</button></div>
-        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg>New quote</h2><p style="color:var(--muted);font-size:0.88rem;">Send a custom price for a bigger job, like a renovation or move.</p><button class="btn primary" style="margin-top:10px;">New quote</button></div>
-        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>New booking</h2><p style="color:var(--muted);font-size:0.88rem;">Manually add a booking for a client who contacted you off-platform.</p><button class="btn primary" style="margin-top:10px;">New booking</button></div>
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg><span data-i18n="newListingT">New job listing</span></h2><p style="color:var(--muted);font-size:calc(0.88rem * var(--scale));" data-i18n="newListingS">Post a new service to appear in search and category browsing.</p><button class="btn primary" style="margin-top:10px;" data-i18n="newListingBtn">New listing</button></div>
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg><span data-i18n="newQuoteT">New quote</span></h2><p style="color:var(--muted);font-size:calc(0.88rem * var(--scale));" data-i18n="newQuoteS">Send a custom price for a bigger job, like a renovation or move.</p><button class="btn primary" style="margin-top:10px;" data-i18n="newQuoteBtn">New quote</button></div>
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg><span data-i18n="newBookingT">New booking</span></h2><p style="color:var(--muted);font-size:calc(0.88rem * var(--scale));" data-i18n="newBookingS">Manually add a booking for a client who contacted you off-platform.</p><button class="btn primary" style="margin-top:10px;" data-i18n="newBookingBtn">New booking</button></div>
       </div>
     </section>
 
     <!-- SCHEDULE -->
     <section class="section" id="sec-schedule">
-      <div class="main-header"><div><h1>Schedule</h1><p>Your upcoming bookings, in order.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="scheduleTitle">Schedule</h1><p data-i18n="scheduleSub">Your upcoming bookings, in order.</p></div></div>
       <div class="card">
-        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Yoon family — Move-out cleaning</div><div class="s">Today, 10:00 AM · SE Calgary</div></div><span class="pill progress">In progress</span></div>
-        <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Patel residence — Weekly cleaning</div><div class="s">Today, 2:30 PM · SE Calgary</div></div><span class="pill new">Upcoming</span></div>
-        <div class="list-row"><div class="av">T</div><div class="info"><div class="t">Grace Tan — Move-in deep clean</div><div class="s">Thu, Aug 20 · 9:00 AM</div></div><span class="pill new">Upcoming</span></div>
-        <div class="list-row"><div class="av">K</div><div class="info"><div class="t">Kim household — Bi-weekly cleaning</div><div class="s">Fri, Aug 21 · 1:00 PM</div></div><span class="pill new">Upcoming</span></div>
+        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t" data-i18n="schedFull1">Yoon family — Move-out cleaning</div><div class="s">Today, 10:00 AM · SE Calgary</div></div><span class="pill progress" data-i18n="pillInProgress">In progress</span></div>
+        <div class="list-row"><div class="av">P</div><div class="info"><div class="t" data-i18n="schedFull2">Patel residence — Weekly cleaning</div><div class="s">Today, 2:30 PM · SE Calgary</div></div><span class="pill new" data-i18n="pillUpcoming">Upcoming</span></div>
+        <div class="list-row"><div class="av">T</div><div class="info"><div class="t" data-i18n="schedFull3">Grace Tan — Move-in deep clean</div><div class="s">Thu, Aug 20 · 9:00 AM</div></div><span class="pill new" data-i18n="pillUpcoming">Upcoming</span></div>
+        <div class="list-row"><div class="av">K</div><div class="info"><div class="t" data-i18n="schedFull4">Kim household — Bi-weekly cleaning</div><div class="s">Fri, Aug 21 · 1:00 PM</div></div><span class="pill new" data-i18n="pillUpcoming">Upcoming</span></div>
       </div>
     </section>
 
     <!-- CLIENTS -->
     <section class="section" id="sec-clients">
-      <div class="main-header"><div><h1>Clients</h1><p>Everyone who's booked you through Lonera.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="clientsTitle">Clients</h1><p data-i18n="clientsSub">Everyone who's booked you through Lonera.</p></div></div>
       <div class="card">
-        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Yoon family</div><div class="s">4 bookings · Speaks Korean</div></div></div>
-        <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Patel residence</div><div class="s">7 bookings · Speaks Punjabi, English</div></div></div>
-        <div class="list-row"><div class="av">T</div><div class="info"><div class="t">Grace Tan</div><div class="s">1 booking · Speaks Tagalog, English</div></div></div>
-        <div class="list-row"><div class="av">K</div><div class="info"><div class="t">Kim household</div><div class="s">12 bookings · Speaks Korean, English</div></div></div>
+        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Yoon family</div><div class="s" data-i18n="client1Sub">4 bookings · Speaks Korean</div></div></div>
+        <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Patel residence</div><div class="s" data-i18n="client2Sub">7 bookings · Speaks Punjabi, English</div></div></div>
+        <div class="list-row"><div class="av">T</div><div class="info"><div class="t">Grace Tan</div><div class="s" data-i18n="client3Sub">1 booking · Speaks Tagalog, English</div></div></div>
+        <div class="list-row"><div class="av">K</div><div class="info"><div class="t">Kim household</div><div class="s" data-i18n="client4Sub">12 bookings · Speaks Korean, English</div></div></div>
       </div>
     </section>
 
     <!-- REQUESTS -->
     <section class="section" id="sec-requests">
-      <div class="main-header"><div><h1>Requests</h1><p>New booking requests waiting on your reply.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="requestsTitle">Requests</h1><p data-i18n="requestsSub">New booking requests waiting on your reply.</p></div></div>
       <div class="card">
         <div class="list-row">
           <div class="av">G</div>
-          <div class="info"><div class="t">Grace Tan — Deep clean, 3-bed house</div><div class="s">Requested for Aug 22 · NE Calgary</div>
-            <div class="action-row"><button class="btn accept">Accept</button><button class="btn decline">Decline</button></div>
+          <div class="info"><div class="t" data-i18n="req1Title">Grace Tan — Deep clean, 3-bed house</div><div class="s" data-i18n="req1Sub">Requested for Aug 22 · NE Calgary</div>
+            <div class="action-row"><button class="btn accept" data-i18n="btnAccept">Accept</button><button class="btn decline" data-i18n="btnDecline">Decline</button></div>
           </div>
         </div>
         <div class="list-row">
           <div class="av">O</div>
-          <div class="info"><div class="t">Omar Hassan — Post-renovation cleanup</div><div class="s">Requested for Aug 25 · SW Calgary</div>
-            <div class="action-row"><button class="btn accept">Accept</button><button class="btn decline">Decline</button></div>
+          <div class="info"><div class="t" data-i18n="req2Title">Omar Hassan — Post-renovation cleanup</div><div class="s" data-i18n="req2Sub">Requested for Aug 25 · SW Calgary</div>
+            <div class="action-row"><button class="btn accept" data-i18n="btnAccept">Accept</button><button class="btn decline" data-i18n="btnDecline">Decline</button></div>
           </div>
         </div>
       </div>
@@ -275,43 +301,43 @@
 
     <!-- QUOTES -->
     <section class="section" id="sec-quotes">
-      <div class="main-header"><div><h1>Quotes</h1><p>Custom pricing for bigger jobs before they're booked.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="quotesTitle">Quotes</h1><p data-i18n="quotesSub">Custom pricing for bigger jobs before they're booked.</p></div></div>
       <div class="card">
-        <div class="list-row"><div class="info"><div class="t">Basement move-out clean — Anchor Point Law</div><div class="s">Sent Aug 14 · $280 quoted</div></div><span class="pill sent">Sent</span></div>
-        <div class="list-row"><div class="info"><div class="t">Post-construction clean — TrueBuild client</div><div class="s">Sent Aug 12 · $450 quoted</div></div><span class="pill done">Accepted</span></div>
-        <div class="list-row"><div class="info"><div class="t">Weekly office cleaning — 3-month contract</div><div class="s">Draft, not sent yet</div></div><span class="pill progress">Draft</span></div>
+        <div class="list-row"><div class="info"><div class="t" data-i18n="quote1Title">Basement move-out clean — Anchor Point Law</div><div class="s" data-i18n="quote1Sub">Sent Aug 14 · $280 quoted</div></div><span class="pill sent" data-i18n="pillSent">Sent</span></div>
+        <div class="list-row"><div class="info"><div class="t" data-i18n="quote2Title">Post-construction clean — TrueBuild client</div><div class="s" data-i18n="quote2Sub">Sent Aug 12 · $450 quoted</div></div><span class="pill done" data-i18n="pillAccepted">Accepted</span></div>
+        <div class="list-row"><div class="info"><div class="t" data-i18n="quote3Title">Weekly office cleaning — 3-month contract</div><div class="s" data-i18n="quote3Sub">Draft, not sent yet</div></div><span class="pill progress" data-i18n="pillDraft">Draft</span></div>
       </div>
     </section>
 
     <!-- JOBS -->
     <section class="section" id="sec-jobs">
-      <div class="main-header"><div><h1>Jobs</h1><p>Every job, from booked to completed.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="jobsTitle">Jobs</h1><p data-i18n="jobsSub">Every job, from booked to completed.</p></div></div>
       <div class="card">
-        <div class="list-row"><div class="info"><div class="t">#482 — Yoon family move-out clean</div><div class="s">Completed Aug 15</div></div><span class="pill done">Paid out</span></div>
-        <div class="list-row"><div class="info"><div class="t">#483 — Patel weekly cleaning</div><div class="s">In progress today</div></div><span class="pill progress">In progress</span></div>
-        <div class="list-row"><div class="info"><div class="t">#484 — Grace Tan move-in clean</div><div class="s">Scheduled Aug 20</div></div><span class="pill new">Upcoming</span></div>
+        <div class="list-row"><div class="info"><div class="t">#482 — Yoon family move-out clean</div><div class="s" data-i18n="job1Sub">Completed Aug 15</div></div><span class="pill done" data-i18n="pillPaidOut">Paid out</span></div>
+        <div class="list-row"><div class="info"><div class="t">#483 — Patel weekly cleaning</div><div class="s" data-i18n="job2Sub">In progress today</div></div><span class="pill progress" data-i18n="pillInProgress">In progress</span></div>
+        <div class="list-row"><div class="info"><div class="t">#484 — Grace Tan move-in clean</div><div class="s" data-i18n="job3Sub">Scheduled Aug 20</div></div><span class="pill new" data-i18n="pillUpcoming">Upcoming</span></div>
       </div>
     </section>
 
     <!-- PAYMENTS -->
     <section class="section" id="sec-payments">
-      <div class="main-header"><div><h1>Payments</h1><p>Escrow holds and payouts, in one place.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="paymentsTitle">Payments</h1><p data-i18n="paymentsSub">Escrow holds and payouts, in one place.</p></div></div>
       <div class="stat-row">
-        <div class="stat-card accent"><div class="n">$340</div><div class="l">Held in escrow right now</div></div>
-        <div class="stat-card"><div class="n">$1,960</div><div class="l">Paid out this month</div></div>
+        <div class="stat-card accent"><div class="n">$340</div><div class="l" data-i18n="statEscrowNow">Held in escrow right now</div></div>
+        <div class="stat-card"><div class="n">$1,960</div><div class="l" data-i18n="statPaidMonth">Paid out this month</div></div>
       </div>
       <div class="card">
-        <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Recent transactions</h2>
-        <div class="list-row"><div class="info"><div class="t">Job #482 — Yoon family</div><div class="s">Released to your account · Aug 15</div></div><span class="pill escrow">Paid</span></div>
-        <div class="list-row"><div class="info"><div class="t">Job #483 — Patel residence</div><div class="s">Held until job marked complete</div></div><span class="pill escrow">In escrow</span></div>
-        <div class="list-row"><div class="info"><div class="t">Job #479 — Kim household</div><div class="s">Released to your account · Aug 9</div></div><span class="pill escrow">Paid</span></div>
+        <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg><span data-i18n="cardRecentTransactions">Recent transactions</span></h2>
+        <div class="list-row"><div class="info"><div class="t">Job #482 — Yoon family</div><div class="s" data-i18n="txn1Sub">Released to your account · Aug 15</div></div><span class="pill escrow" data-i18n="pillPaid">Paid</span></div>
+        <div class="list-row"><div class="info"><div class="t">Job #483 — Patel residence</div><div class="s" data-i18n="txn2Sub">Held until job marked complete</div></div><span class="pill escrow" data-i18n="pillInEscrow">In escrow</span></div>
+        <div class="list-row"><div class="info"><div class="t">Job #479 — Kim household</div><div class="s" data-i18n="txn3Sub">Released to your account · Aug 9</div></div><span class="pill escrow" data-i18n="pillPaid">Paid</span></div>
       </div>
-      <div class="empty-hint">Payouts go to your Canadian bank account automatically. Commission per completed job will be shown here once our fee structure is finalized — you'll always see it before it applies.</div>
+      <div class="empty-hint" data-i18n="hintPayments">Payouts go to your Canadian bank account automatically. Commission per completed job will be shown here once our fee structure is finalized — you'll always see it before it applies.</div>
     </section>
 
     <!-- MESSAGES -->
     <section class="section" id="sec-messages">
-      <div class="main-header"><div><h1>Messages</h1><p>Talk with clients in either language — Lonera doesn't auto-translate for you yet, but shows both side by side when needed.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="messagesTitle">Messages</h1><p data-i18n="messagesSub">Talk with clients in either language — Lonera doesn't auto-translate for you yet, but shows both side by side when needed.</p></div></div>
       <div class="msg-shell">
         <div class="msg-list">
           <div class="m-row active"><div class="t">Yoon family</div><div class="s">감사합니다! 내일 뵈어요</div></div>
@@ -319,41 +345,41 @@
           <div class="m-row"><div class="t">Patel residence</div><div class="s">Can we move it to 3pm?</div></div>
         </div>
         <div class="msg-thread">
-          <div class="bubble them">안녕하세요! 내일 오전 10시 예약 확인 부탁드려요.<span class="lang-tag">Korean</span></div>
-          <div class="bubble me">Yes, confirmed for 10:00 AM tomorrow. See you then!<span class="lang-tag">English</span></div>
-          <div class="bubble them">감사합니다! 내일 뵈어요<span class="lang-tag">Korean</span></div>
+          <div class="bubble them">안녕하세요! 내일 오전 10시 예약 확인 부탁드려요.<span class="lang-tag" data-i18n="langKo">Korean</span></div>
+          <div class="bubble me">Yes, confirmed for 10:00 AM tomorrow. See you then!<span class="lang-tag" data-i18n="langEn">English</span></div>
+          <div class="bubble them">감사합니다! 내일 뵈어요<span class="lang-tag" data-i18n="langKo">Korean</span></div>
         </div>
       </div>
     </section>
 
     <!-- INSIGHTS -->
     <section class="section" id="sec-insights">
-      <div class="main-header"><div><h1>Insights</h1><p>How your listing is performing.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="insightsTitle">Insights</h1><p data-i18n="insightsSub">How your listing is performing.</p></div></div>
       <div class="stat-row">
-        <div class="stat-card"><div class="n">86</div><div class="l">Profile views (30 days)</div></div>
-        <div class="stat-card"><div class="n">21</div><div class="l">Booking requests (30 days)</div></div>
-        <div class="stat-card"><div class="n">4.7</div><div class="l">Average rating</div></div>
-        <div class="stat-card"><div class="n">24%</div><div class="l">View-to-booking rate</div></div>
+        <div class="stat-card"><div class="n">86</div><div class="l" data-i18n="statProfileViews">Profile views (30 days)</div></div>
+        <div class="stat-card"><div class="n">21</div><div class="l" data-i18n="statBookingRequests30">Booking requests (30 days)</div></div>
+        <div class="stat-card"><div class="n">4.7</div><div class="l" data-i18n="statAvgRating">Average rating</div></div>
+        <div class="stat-card"><div class="n">24%</div><div class="l" data-i18n="statViewToBooking">View-to-booking rate</div></div>
       </div>
-      <div class="empty-hint">Full analytics — trends over time, where your views come from, and repeat-client rate — go live once Lonera launches publicly.</div>
+      <div class="empty-hint" data-i18n="hintInsights">Full analytics — trends over time, where your views come from, and repeat-client rate — go live once Lonera launches publicly.</div>
     </section>
 
     <!-- VERIFICATION -->
     <section class="section" id="sec-verification">
-      <div class="main-header"><div><h1>Verification</h1><p>Your trust badges — what clients see before they book.</p></div></div>
+      <div class="main-header"><div><h1 data-i18n="verificationTitle">Verification</h1><p data-i18n="verificationSub">Your trust badges — what clients see before they book.</p></div></div>
       <div class="card">
-        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Identity verified (Silver)</div><div class="s">Government ID confirmed — never shown publicly</div></div></div>
-        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Business verified (Gold)</div><div class="s">Alberta business licence confirmed</div></div></div>
+        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t" data-i18n="verifyIdFullT">Identity verified (Silver)</div><div class="s" data-i18n="verifyIdFullS">Government ID confirmed — never shown publicly</div></div></div>
+        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t" data-i18n="verifyBizFullT">Business verified (Gold)</div><div class="s" data-i18n="verifyBizFullS">Alberta business licence confirmed</div></div></div>
       </div>
-      <div class="empty-hint">Verified providers are shown with a badge across search, category browsing, and their listing page — this is what buyers use to decide who to trust first.</div>
+      <div class="empty-hint" data-i18n="hintVerification">Verified providers are shown with a badge across search, category browsing, and their listing page — this is what buyers use to decide who to trust first.</div>
     </section>
 
     <!-- COMMUNITY -->
     <section class="section" id="sec-community">
-      <div class="main-header"><div><h1>Community<span class="phase-tag">Coming soon</span></h1><p>A shared board by community and language — for news, events, and questions.</p></div></div>
-      <div class="community-post"><span class="tag">Korean community</span><h3>Chuseok pop-up market — NE Calgary, Sept 20</h3><p>Local providers can apply for a free table to meet new clients in person.</p></div>
-      <div class="community-post"><span class="tag">Filipino community</span><h3>Looking for recommendations: kids' Tagalog tutor</h3><p>Posted by a parent in SE Calgary — 6 replies</p></div>
-      <div class="community-post"><span class="tag">Platform update</span><h3>New: Punjabi language support launching next month</h3><p>Posted by the Lonera team</p></div>
+      <div class="main-header"><div><h1><span data-i18n="communityTitle">Community</span><span class="phase-tag" data-i18n="phaseComingSoon">Coming soon</span></h1><p data-i18n="communitySub">A shared board by community and language — for news, events, and questions.</p></div></div>
+      <div class="community-post"><span class="tag" data-i18n="post1Tag">Korean community</span><h3 data-i18n="post1Title">Chuseok pop-up market — NE Calgary, Sept 20</h3><p data-i18n="post1Desc">Local providers can apply for a free table to meet new clients in person.</p></div>
+      <div class="community-post"><span class="tag" data-i18n="post2Tag">Filipino community</span><h3 data-i18n="post2Title">Looking for recommendations: kids' Tagalog tutor</h3><p data-i18n="post2Desc">Posted by a parent in SE Calgary — 6 replies</p></div>
+      <div class="community-post"><span class="tag" data-i18n="post3Tag">Platform update</span><h3 data-i18n="post3Title">New: Punjabi language support launching next month</h3><p data-i18n="post3Desc">Posted by the Lonera team</p></div>
     </section>
 
   </main>
@@ -362,6 +388,155 @@
 <script>
 (function(){
   "use strict";
+
+  const DT = {
+    en:{
+      brandName:"Lonera", brandTag:"Provider Dashboard", langBtn:"한국어", contrastBtn:"High Contrast", backBtn:"Back to Lonera",
+      previewNote:"Design preview — this is what Founding Providers will see. Bookings, quotes, and payments below are sample data, not live yet.",
+      navCreate:"Create", navHome:"Home", navSchedule:"Schedule", navClients:"Clients", navRequests:"Requests", navQuotes:"Quotes",
+      navJobs:"Jobs", navPayments:"Payments", navMessages:"Messages", navInsights:"Insights", navVerification:"Verification", navCommunity:"Community",
+      homeTitle:"Welcome back, Sparkle Home Services", homeSub:"Here's what's happening with your Lonera listing today.",
+      chipGoldVerified:"Gold Verified",
+      statBookingsWeek:"Bookings this week", statNewRequests:"New requests waiting", statUnreadMsgs:"Unread messages", statProfileViews:"Profile views (30 days)",
+      cardTodaySchedule:"Today's schedule", schedRow1Title:"Move-out cleaning — Yoon family", schedRow2Title:"Weekly cleaning — Patel residence",
+      pillInProgress:"In progress", pillUpcoming:"Upcoming", pillDone:"Done", pillSent:"Sent", pillAccepted:"Accepted", pillDraft:"Draft",
+      pillPaidOut:"Paid out", pillPaid:"Paid", pillInEscrow:"In escrow",
+      cardRecentActivity:"Recent activity",
+      act1:"New booking request from Grace Tan", act1Time:"2 hours ago",
+      act2:"Payment released for Job #482 (escrow)", act2Time:"Yesterday",
+      act3:"New 5-star review from Min-jun Lee", act3Time:"2 days ago",
+      cardVerificationStatus:"Verification status",
+      vIdT:"Identity verified", vIdS:"Confirmed on file", vBizT:"Business licence verified", vBizS:"Gold badge active",
+      cardEscrowBalance:"Escrow balance", escrowHeldLabel:"Held for jobs in progress",
+      createTitle:"Create", createSub:"Start something new on your Lonera listing.",
+      newListingT:"New job listing", newListingS:"Post a new service to appear in search and category browsing.", newListingBtn:"New listing",
+      newQuoteT:"New quote", newQuoteS:"Send a custom price for a bigger job, like a renovation or move.", newQuoteBtn:"New quote",
+      newBookingT:"New booking", newBookingS:"Manually add a booking for a client who contacted you off-platform.", newBookingBtn:"New booking",
+      scheduleTitle:"Schedule", scheduleSub:"Your upcoming bookings, in order.",
+      schedFull1:"Yoon family — Move-out cleaning", schedFull2:"Patel residence — Weekly cleaning", schedFull3:"Grace Tan — Move-in deep clean", schedFull4:"Kim household — Bi-weekly cleaning",
+      clientsTitle:"Clients", clientsSub:"Everyone who's booked you through Lonera.",
+      client1Sub:"4 bookings · Speaks Korean", client2Sub:"7 bookings · Speaks Punjabi, English", client3Sub:"1 booking · Speaks Tagalog, English", client4Sub:"12 bookings · Speaks Korean, English",
+      requestsTitle:"Requests", requestsSub:"New booking requests waiting on your reply.",
+      req1Title:"Grace Tan — Deep clean, 3-bed house", req1Sub:"Requested for Aug 22 · NE Calgary",
+      req2Title:"Omar Hassan — Post-renovation cleanup", req2Sub:"Requested for Aug 25 · SW Calgary",
+      btnAccept:"Accept", btnDecline:"Decline",
+      quotesTitle:"Quotes", quotesSub:"Custom pricing for bigger jobs before they're booked.",
+      quote1Title:"Basement move-out clean — Anchor Point Law", quote1Sub:"Sent Aug 14 · $280 quoted",
+      quote2Title:"Post-construction clean — TrueBuild client", quote2Sub:"Sent Aug 12 · $450 quoted",
+      quote3Title:"Weekly office cleaning — 3-month contract", quote3Sub:"Draft, not sent yet",
+      jobsTitle:"Jobs", jobsSub:"Every job, from booked to completed.",
+      job1Sub:"Completed Aug 15", job2Sub:"In progress today", job3Sub:"Scheduled Aug 20",
+      paymentsTitle:"Payments", paymentsSub:"Escrow holds and payouts, in one place.",
+      statEscrowNow:"Held in escrow right now", statPaidMonth:"Paid out this month", cardRecentTransactions:"Recent transactions",
+      txn1Sub:"Released to your account · Aug 15", txn2Sub:"Held until job marked complete", txn3Sub:"Released to your account · Aug 9",
+      hintPayments:"Payouts go to your Canadian bank account automatically. Commission per completed job will be shown here once our fee structure is finalized — you'll always see it before it applies.",
+      messagesTitle:"Messages", messagesSub:"Talk with clients in either language — Lonera doesn't auto-translate for you yet, but shows both side by side when needed.",
+      langKo:"Korean", langEn:"English",
+      insightsTitle:"Insights", insightsSub:"How your listing is performing.",
+      statBookingRequests30:"Booking requests (30 days)", statAvgRating:"Average rating", statViewToBooking:"View-to-booking rate",
+      hintInsights:"Full analytics — trends over time, where your views come from, and repeat-client rate — go live once Lonera launches publicly.",
+      verificationTitle:"Verification", verificationSub:"Your trust badges — what clients see before they book.",
+      verifyIdFullT:"Identity verified (Silver)", verifyIdFullS:"Government ID confirmed — never shown publicly",
+      verifyBizFullT:"Business verified (Gold)", verifyBizFullS:"Alberta business licence confirmed",
+      hintVerification:"Verified providers are shown with a badge across search, category browsing, and their listing page — this is what buyers use to decide who to trust first.",
+      communityTitle:"Community", phaseComingSoon:"Coming soon", communitySub:"A shared board by community and language — for news, events, and questions.",
+      post1Tag:"Korean community", post1Title:"Chuseok pop-up market — NE Calgary, Sept 20", post1Desc:"Local providers can apply for a free table to meet new clients in person.",
+      post2Tag:"Filipino community", post2Title:"Looking for recommendations: kids' Tagalog tutor", post2Desc:"Posted by a parent in SE Calgary — 6 replies",
+      post3Tag:"Platform update", post3Title:"New: Punjabi language support launching next month", post3Desc:"Posted by the Lonera team"
+    },
+    ko:{
+      brandName:"로네라", brandTag:"프로바이더 대시보드", langBtn:"English", contrastBtn:"고대비 모드", backBtn:"로네라로 돌아가기",
+      previewNote:"디자인 미리보기입니다 — 파운딩 프로바이더가 실제로 보게 될 화면이에요. 아래 예약, 견적, 결제 내역은 샘플 데이터이며 아직 실제로 작동하지 않습니다.",
+      navCreate:"만들기", navHome:"홈", navSchedule:"일정", navClients:"고객", navRequests:"요청", navQuotes:"견적",
+      navJobs:"작업", navPayments:"결제", navMessages:"메시지", navInsights:"인사이트", navVerification:"인증", navCommunity:"커뮤니티",
+      homeTitle:"다시 오셨네요, Sparkle Home Services 님", homeSub:"오늘 로네라 리스팅에서 일어나고 있는 일들이에요.",
+      chipGoldVerified:"골드 인증",
+      statBookingsWeek:"이번 주 예약", statNewRequests:"대기 중인 새 요청", statUnreadMsgs:"읽지 않은 메시지", statProfileViews:"프로필 조회수 (30일)",
+      cardTodaySchedule:"오늘의 일정", schedRow1Title:"이사 청소 — Yoon 가족", schedRow2Title:"주간 청소 — Patel 자택",
+      pillInProgress:"진행 중", pillUpcoming:"예정", pillDone:"완료", pillSent:"발송됨", pillAccepted:"수락됨", pillDraft:"임시저장",
+      pillPaidOut:"지급 완료", pillPaid:"지급됨", pillInEscrow:"에스크로 보관 중",
+      cardRecentActivity:"최근 활동",
+      act1:"Grace Tan 님의 새 예약 요청", act1Time:"2시간 전",
+      act2:"작업 #482 결제 지급 완료 (에스크로)", act2Time:"어제",
+      act3:"Min-jun Lee 님의 새 5점 후기", act3Time:"2일 전",
+      cardVerificationStatus:"인증 상태",
+      vIdT:"실명 인증 완료", vIdS:"확인 완료", vBizT:"사업자 인증 완료", vBizS:"골드 배지 활성화됨",
+      cardEscrowBalance:"에스크로 잔액", escrowHeldLabel:"진행 중인 작업을 위해 보관 중",
+      createTitle:"만들기", createSub:"로네라 리스팅에 새로운 것을 시작해 보세요.",
+      newListingT:"새 서비스 등록", newListingS:"검색 및 카테고리 탐색에 표시될 새 서비스를 등록합니다.", newListingBtn:"새 리스팅",
+      newQuoteT:"새 견적", newQuoteS:"리노베이션이나 이사처럼 큰 작업에 맞춤 가격을 제안하세요.", newQuoteBtn:"새 견적",
+      newBookingT:"새 예약", newBookingS:"플랫폼 밖에서 연락받은 고객의 예약을 직접 추가하세요.", newBookingBtn:"새 예약",
+      scheduleTitle:"일정", scheduleSub:"다가오는 예약을 순서대로 확인하세요.",
+      schedFull1:"Yoon 가족 — 이사 청소", schedFull2:"Patel 자택 — 주간 청소", schedFull3:"Grace Tan — 입주 청소", schedFull4:"Kim 가족 — 격주 청소",
+      clientsTitle:"고객", clientsSub:"로네라를 통해 예약한 모든 고객이에요.",
+      client1Sub:"예약 4건 · 한국어 가능", client2Sub:"예약 7건 · 펀자브어, 영어 가능", client3Sub:"예약 1건 · 타갈로그어, 영어 가능", client4Sub:"예약 12건 · 한국어, 영어 가능",
+      requestsTitle:"요청", requestsSub:"답변을 기다리는 새 예약 요청이에요.",
+      req1Title:"Grace Tan — 3베드룸 딥 클린", req1Sub:"8월 22일 요청 · NE 캘거리",
+      req2Title:"Omar Hassan — 공사 후 청소", req2Sub:"8월 25일 요청 · SW 캘거리",
+      btnAccept:"수락", btnDecline:"거절",
+      quotesTitle:"견적", quotesSub:"예약 전, 큰 작업에 대한 맞춤 견적이에요.",
+      quote1Title:"지하실 이사 청소 — Anchor Point Law", quote1Sub:"8월 14일 발송 · $280 견적",
+      quote2Title:"공사 후 청소 — TrueBuild 고객", quote2Sub:"8월 12일 발송 · $450 견적",
+      quote3Title:"주간 사무실 청소 — 3개월 계약", quote3Sub:"아직 발송하지 않은 임시저장",
+      jobsTitle:"작업", jobsSub:"예약부터 완료까지, 모든 작업이에요.",
+      job1Sub:"8월 15일 완료", job2Sub:"오늘 진행 중", job3Sub:"8월 20일 예정",
+      paymentsTitle:"결제", paymentsSub:"에스크로 보관과 지급을 한곳에서 확인하세요.",
+      statEscrowNow:"현재 에스크로 보관액", statPaidMonth:"이번 달 지급액", cardRecentTransactions:"최근 거래 내역",
+      txn1Sub:"계좌로 지급됨 · 8월 15일", txn2Sub:"작업 완료 확인 시까지 보관", txn3Sub:"계좌로 지급됨 · 8월 9일",
+      hintPayments:"지급액은 캐나다 은행 계좌로 자동 입금됩니다. 완료된 작업당 수수료는 저희 수수료 체계가 확정되는 대로 여기에 표시되며, 적용되기 전에 항상 미리 안내해 드립니다.",
+      messagesTitle:"메시지", messagesSub:"어떤 언어로든 고객과 대화하세요 — 로네라가 아직 자동 번역을 하진 않지만, 필요할 때 두 언어를 나란히 보여드려요.",
+      langKo:"한국어", langEn:"영어",
+      insightsTitle:"인사이트", insightsSub:"내 리스팅이 어떻게 성과를 내고 있는지 확인하세요.",
+      statBookingRequests30:"예약 요청 수 (30일)", statAvgRating:"평균 평점", statViewToBooking:"조회 대비 예약 전환율",
+      hintInsights:"기간별 추이, 조회수 유입 경로, 재방문 고객 비율 등 전체 분석은 로네라가 공식 출시되면 제공됩니다.",
+      verificationTitle:"인증", verificationSub:"고객이 예약 전에 보게 되는 신뢰 배지예요.",
+      verifyIdFullT:"실명 인증 완료 (실버)", verifyIdFullS:"정부 발급 신분증 확인 완료 — 공개적으로 표시되지 않음",
+      verifyBizFullT:"사업자 인증 완료 (골드)", verifyBizFullS:"앨버타 사업자 등록 확인 완료",
+      hintVerification:"인증된 프로바이더는 검색, 카테고리 탐색, 리스팅 페이지 전반에 배지와 함께 표시됩니다 — 구매자가 누구를 먼저 신뢰할지 결정하는 기준이에요.",
+      communityTitle:"커뮤니티", phaseComingSoon:"출시 예정", communitySub:"커뮤니티와 언어별로 나뉜 게시판이에요 — 소식, 행사, 질문을 나눠보세요.",
+      post1Tag:"한인 커뮤니티", post1Title:"추석 팝업 마켓 — NE 캘거리, 9월 20일", post1Desc:"지역 업체는 신청을 통해 직접 고객을 만날 수 있는 무료 부스를 신청할 수 있어요.",
+      post2Tag:"필리핀 커뮤니티", post2Title:"추천을 구합니다: 아이들 타갈로그어 과외 선생님", post2Desc:"SE 캘거리의 학부모가 작성 — 댓글 6개",
+      post3Tag:"플랫폼 업데이트", post3Title:"신규: 펀자브어 지원이 다음 달 시작됩니다", post3Desc:"로네라 팀이 작성"
+    }
+  };
+
+  const LS_LANG = "lonera_lang", LS_CONTRAST = "lonera_contrast", LS_SCALE = "lonera_scale";
+  let lang = localStorage.getItem(LS_LANG) || "en";
+  let scale = parseFloat(localStorage.getItem(LS_SCALE)) || 1;
+  if(localStorage.getItem(LS_CONTRAST) === "1") document.body.classList.add("high-contrast");
+  document.documentElement.style.setProperty("--scale", scale);
+
+  function applyI18n(){
+    document.documentElement.lang = lang === "ko" ? "ko" : "en";
+    document.getElementById("langToggle").setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
+    document.getElementById("contrastToggle").setAttribute("aria-pressed", document.body.classList.contains("high-contrast") ? "true" : "false");
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const key = el.getAttribute("data-i18n");
+      if(DT[lang][key] !== undefined) el.textContent = DT[lang][key];
+    });
+  }
+
+  document.getElementById("langToggle").addEventListener("click", function(){
+    lang = lang === "en" ? "ko" : "en";
+    localStorage.setItem(LS_LANG, lang);
+    applyI18n();
+  });
+  document.getElementById("contrastToggle").addEventListener("click", function(){
+    const on = document.body.classList.toggle("high-contrast");
+    localStorage.setItem(LS_CONTRAST, on ? "1" : "0");
+    this.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  document.getElementById("fontPlus").addEventListener("click", function(){
+    scale = Math.min(1.5, scale + 0.1);
+    document.documentElement.style.setProperty("--scale", scale);
+    localStorage.setItem(LS_SCALE, scale);
+  });
+  document.getElementById("fontMinus").addEventListener("click", function(){
+    scale = Math.max(0.85, scale - 0.1);
+    document.documentElement.style.setProperty("--scale", scale);
+    localStorage.setItem(LS_SCALE, scale);
+  });
+
   const items = document.querySelectorAll(".nav-item[data-target]");
   items.forEach(btn=>{
     btn.addEventListener("click", ()=>{
@@ -371,6 +546,8 @@
       window.scrollTo({top:0, behavior:"smooth"});
     });
   });
+
+  applyI18n();
 })();
 </script>
 </body>

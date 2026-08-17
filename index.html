@@ -369,7 +369,7 @@
   <div id="faqList" style="max-width:680px;margin:0 auto;"></div>
 </section>
 
-<section class="block">
+<section class="block" id="providerBlock">
   <div class="provider-cta">
     <h2 data-i18n="ctaTitle">Run a business? Join as a Founding Provider.</h2>
     <p data-i18n="ctaSub">100% free for every Founding Provider through September 30, 2026. No subscriptions, no hidden costs — our commission structure is still being finalized and we'll announce it before any fee ever applies to you.</p>
@@ -390,7 +390,7 @@
     <label for="pPhone" data-i18n="formPhone">Phone or KakaoTalk ID</label>
     <input type="text" id="pPhone" required>
     <button type="submit" class="submit-btn" data-i18n="formSubmit">Join as Founding Provider</button>
-    <div id="providerThanks" data-i18n="formThanks">Thank you! This is a preview site — a real Lonera team member will follow up with you soon.</div>
+    <div id="providerThanks"><span data-i18n="formThanks">Thank you! This is a preview site — a real Lonera team member will follow up with you soon.</span> <a href="dashboard.html" style="color:var(--teal);font-weight:800;text-decoration:underline;" data-i18n="formThanksDashboard">Take a look at your Provider Dashboard &rarr;</a></div>
   </form>
 </section>
 
@@ -484,6 +484,7 @@
       formTitle:"Tell us about your business", formName:"Your name", formBiz:"Business name",
       formCat:"Category", formPhone:"Phone or KakaoTalk ID", formSubmit:"Join as Founding Provider",
       formThanks:"Thank you! This is a preview site — a real Lonera team member will follow up with you soon.",
+      formThanksDashboard:"Take a look at your Provider Dashboard →",
       footTag:"Built by two Calgary students, for the community that raised us.",
       footNote:"This is an early preview of the Lonera platform — not all listings are live yet.",
       listeningMsg:"Listening...", heardMsg:'I heard: "%s"', noMatchMsg:"I'm not sure what you need — try browsing the pictures below instead.",
@@ -537,6 +538,7 @@
       formTitle:"업체 정보를 알려주세요", formName:"이름", formBiz:"업체명",
       formCat:"카테고리", formPhone:"전화번호 또는 카카오톡 ID", formSubmit:"파운딩 프로바이더로 등록",
       formThanks:"감사합니다! 이 사이트는 미리보기 버전입니다 — 로네라 팀이 곧 연락드리겠습니다.",
+      formThanksDashboard:"프로바이더 대시보드 미리보기 →",
       footTag:"우리를 키워준 커뮤니티를 위해, 캘거리 학생 두 명이 만들었습니다.",
       footNote:"이 사이트는 로네라 플랫폼의 초기 미리보기입니다 — 아직 모든 업체가 등록되지 않았습니다.",
       listeningMsg:"듣고 있어요...", heardMsg:'이렇게 들었어요: "%s"', noMatchMsg:"무엇이 필요하신지 잘 모르겠어요 — 아래 그림에서 찾아보세요.",
@@ -553,16 +555,22 @@
     }
   };
 
-  let lang = "en";
-  let scale = 1;
+  const LS_LANG = "lonera_lang", LS_CONTRAST = "lonera_contrast", LS_SCALE = "lonera_scale";
+  let lang = localStorage.getItem(LS_LANG) || "en";
+  let scale = parseFloat(localStorage.getItem(LS_SCALE)) || 1;
   let reading = false;
   let currentModalListing = null;
   const favorites = new Set();
+
+  if(localStorage.getItem(LS_CONTRAST) === "1") document.body.classList.add("high-contrast");
+  document.documentElement.style.setProperty("--scale", scale);
 
   function icon(id, cls){ return `<svg class="icon ${cls||''}" aria-hidden="true"><use href="#${id}"/></svg>`; }
 
   function applyI18n(){
     document.documentElement.lang = lang === "ko" ? "ko" : "en";
+    document.getElementById("langToggle").setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
+    document.getElementById("contrastToggle").setAttribute("aria-pressed", document.body.classList.contains("high-contrast") ? "true" : "false");
     document.querySelectorAll("[data-i18n]").forEach(el=>{
       const key = el.getAttribute("data-i18n");
       if(T[lang][key] !== undefined) el.textContent = T[lang][key];
@@ -957,21 +965,25 @@
 
   document.getElementById("langToggle").addEventListener("click", function(){
     lang = lang === "en" ? "ko" : "en";
+    localStorage.setItem(LS_LANG, lang);
     this.setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
     if(reading){ window.speechSynthesis.cancel(); reading = false; }
     applyI18n();
   });
   document.getElementById("contrastToggle").addEventListener("click", function(){
     const on = document.body.classList.toggle("high-contrast");
+    localStorage.setItem(LS_CONTRAST, on ? "1" : "0");
     this.setAttribute("aria-pressed", on ? "true" : "false");
   });
   document.getElementById("fontPlus").addEventListener("click", function(){
     scale = Math.min(1.5, scale + 0.1);
     document.documentElement.style.setProperty("--scale", scale);
+    localStorage.setItem(LS_SCALE, scale);
   });
   document.getElementById("fontMinus").addEventListener("click", function(){
     scale = Math.max(0.85, scale - 0.1);
     document.documentElement.style.setProperty("--scale", scale);
+    localStorage.setItem(LS_SCALE, scale);
   });
 
   function setActiveNav(id){
