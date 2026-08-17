@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Provider Dashboard — Lonera</title>
+<meta name="description" content="Design preview of the Lonera Provider Dashboard — how Founding Providers will manage bookings, quotes, payments, and messages.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e2582d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#14181f; --ink-deep:#0a0d12; --accent:#dd5a30; --accent-deep:#b8451f; --accent-tint:#fbe4d8;
+    --amber:#c1870f; --amber-tint:#f6e6bf; --teal:#1f6f63; --teal-tint:#dcefe9; --blue:#29578f; --blue-tint:#e3edf9;
+    --paper:#faf7f1; --card:#ffffff; --text:#1d2129; --muted:#666f7d; --border:#e7e0d1; --danger:#b5342a;
+    --radius:18px; --radius-sm:12px; --shadow:0 10px 28px rgba(20,24,31,0.08); --sidebar-w:236px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{ font-family:"Noto Sans KR","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--paper); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  .icon{width:1.2em;height:1.2em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+  .preview-banner{ background:var(--ink); color:#fff; text-align:center; padding:10px 16px; font-size:0.82rem; font-weight:700; }
+  .preview-banner a{ color:#f4b489; text-decoration:underline; }
+
+  .shell{ display:flex; min-height:calc(100vh - 40px); }
+
+  .sidebar{ width:var(--sidebar-w); flex-shrink:0; background:#fff; border-right:1px solid var(--border); padding:20px 14px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.2rem; padding:4px 8px 20px; }
+  .brand .mark{ width:34px;height:34px;border-radius:10px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
+  .brand .mark .icon{ width:18px;height:18px; stroke-width:2.2; }
+
+  .nav-group{ margin-bottom:14px; }
+  .nav-group + .nav-group{ border-top:1px solid var(--border); padding-top:14px; }
+  .nav-item{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:none; border:none;
+    padding:10px 10px; border-radius:10px; font-weight:700; font-size:0.94rem; color:var(--ink); margin-bottom:2px; }
+  .nav-item:hover{ background:var(--paper); }
+  .nav-item.active{ background:var(--ink); color:#fff; }
+  .nav-item .icon{ color:var(--accent-deep); }
+  .nav-item.active .icon{ color:#f4b489; }
+  .nav-item.create{ background:var(--accent-tint); color:var(--accent-deep); }
+  .nav-item.create .icon{ color:var(--accent-deep); }
+
+  .main{ flex:1; min-width:0; padding:28px 32px 60px; }
+  .main-header{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:24px; }
+  .main-header h1{ margin:0 0 4px; font-size:1.55rem; color:var(--ink); }
+  .main-header p{ margin:0; color:var(--muted); font-size:0.94rem; }
+  .provider-chip{ display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--border); border-radius:999px; padding:6px 14px 6px 6px; }
+  .provider-chip .av{ width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem; }
+  .provider-chip .badge-gold{ display:flex;align-items:center;gap:4px; background:var(--amber-tint);color:#7a5709;font-weight:800;font-size:0.72rem;padding:3px 9px;border-radius:999px; }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:26px; }
+  .stat-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); }
+  .stat-card .n{ font-size:1.7rem; font-weight:800; color:var(--ink); }
+  .stat-card .l{ font-size:0.82rem; color:var(--muted); font-weight:700; margin-top:2px; }
+  .stat-card.accent{ background:linear-gradient(135deg,var(--accent),var(--accent-deep)); border:none; color:#fff; }
+  .stat-card.accent .n, .stat-card.accent .l{ color:#fff; }
+
+  .panel-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:20px; align-items:start; }
+  @media (max-width:900px){ .panel-grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:20px; }
+  .card h2{ margin:0 0 14px; font-size:1.05rem; color:var(--ink); display:flex; align-items:center; gap:8px; }
+  .card h2 .icon{ color:var(--accent-deep); }
+
+  .list-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .list-row:last-child{ border-bottom:none; }
+  .list-row .av{ width:38px;height:38px;border-radius:11px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;flex-shrink:0; }
+  .list-row .info{ flex:1; min-width:0; }
+  .list-row .info .t{ font-weight:800; color:var(--ink); font-size:0.92rem; }
+  .list-row .info .s{ font-size:0.8rem; color:var(--muted); }
+  .pill{ font-size:0.72rem; font-weight:800; padding:4px 10px; border-radius:999px; white-space:nowrap; }
+  .pill.new{ background:var(--blue-tint); color:var(--blue); }
+  .pill.progress{ background:var(--amber-tint); color:#7a5709; }
+  .pill.done{ background:var(--teal-tint); color:var(--teal); }
+  .pill.sent{ background:#f1e9fb; color:#5b3a94; }
+  .pill.escrow{ background:var(--teal-tint); color:var(--teal); }
+
+  .action-row{ display:flex; gap:8px; margin-top:4px; }
+  .btn{ border:none; border-radius:999px; padding:8px 14px; font-weight:800; font-size:0.8rem; }
+  .btn.accept{ background:var(--teal); color:#fff; }
+  .btn.decline{ background:var(--paper); color:var(--muted); border:1px solid var(--border); }
+  .btn.primary{ background:var(--ink); color:#fff; }
+
+  .empty-hint{ color:var(--muted); font-size:0.88rem; background:var(--paper); border-radius:12px; padding:14px; }
+
+  .verify-item{ display:flex; align-items:center; gap:12px; padding:14px; border:1px solid var(--border); border-radius:14px; margin-bottom:10px; }
+  .verify-item .icon-wrap{ width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .verify-item.done .icon-wrap{ background:var(--teal-tint); color:var(--teal); }
+  .verify-item .t{ font-weight:800; color:var(--ink); font-size:0.92rem; }
+  .verify-item .s{ font-size:0.8rem; color:var(--muted); }
+
+  .msg-shell{ display:flex; gap:0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+  .msg-list{ width:230px; flex-shrink:0; border-right:1px solid var(--border); }
+  .msg-list .m-row{ padding:12px 14px; border-bottom:1px solid var(--border); cursor:default; }
+  .msg-list .m-row.active{ background:var(--paper); }
+  .msg-list .m-row .t{ font-weight:800; font-size:0.88rem; color:var(--ink); }
+  .msg-list .m-row .s{ font-size:0.78rem; color:var(--muted); }
+  .msg-thread{ flex:1; padding:18px; display:flex; flex-direction:column; gap:10px; min-height:260px; }
+  .bubble{ max-width:70%; padding:10px 14px; border-radius:14px; font-size:0.88rem; }
+  .bubble.them{ background:var(--paper); align-self:flex-start; }
+  .bubble.me{ background:var(--teal); color:#fff; align-self:flex-end; }
+  .bubble .lang-tag{ display:block; font-size:0.68rem; opacity:0.7; margin-top:4px; }
+
+  .community-post{ border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:12px; }
+  .community-post .tag{ display:inline-block; font-size:0.72rem; font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; margin-bottom:8px; }
+  .community-post h3{ margin:0 0 6px; font-size:0.96rem; color:var(--ink); }
+  .community-post p{ margin:0; color:var(--muted); font-size:0.86rem; }
+
+  .phase-tag{ display:inline-flex; align-items:center; gap:6px; background:var(--accent-tint); color:var(--accent-deep); font-weight:800; font-size:0.76rem; padding:4px 10px; border-radius:999px; margin-left:8px; }
+
+  .section{ display:none; }
+  .section.active{ display:block; }
+
+  @media (max-width:760px){
+    .shell{ flex-direction:column; }
+    .sidebar{ width:100%; display:flex; overflow-x:auto; gap:4px; padding:12px; }
+    .brand{ display:none; }
+    .nav-group{ display:flex; gap:4px; margin:0; }
+    .nav-group + .nav-group{ border-top:none; border-left:1px solid var(--border); padding-top:0; padding-left:8px; }
+    .nav-item{ white-space:nowrap; }
+    .main{ padding:20px 16px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="d-mark" viewBox="0 0 24 24"><path d="M7 4v16h6M7 20h11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="d-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="d-home" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/></symbol>
+    <symbol id="d-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></symbol>
+    <symbol id="d-clients" viewBox="0 0 24 24"><circle cx="9.5" cy="8.5" r="3.3"/><path d="M4 20c0-3.3 2.5-5.5 5.5-5.5S15 16.7 15 20"/><path d="M16.5 5.5c1.7 0 3 1.3 3 3s-1.3 3-3 3"/><path d="M17.5 14.5c2 .4 3 1.9 3 3.8"/></symbol>
+    <symbol id="d-inbox" viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M4 13.5h5l1.3 2.3h3.4L15 13.5h5"/><path d="M12 8v4M9.5 9.5l2.5 2.5 2.5-2.5"/></symbol>
+    <symbol id="d-quote" viewBox="0 0 24 24"><path d="M3 12.3L12.3 3H20v7.7L10.7 20 3 12.3z"/><circle cx="15.2" cy="7.8" r="1.3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="d-jobs" viewBox="0 0 24 24"><path d="M14.6 6.4a3.9 3.9 0 0 1-5.2 5.2L4.5 16.5l3 3 4.9-4.9a3.9 3.9 0 0 1 5.2-5.2l-2.9 2.9-2-2 2.9-2.9z"/></symbol>
+    <symbol id="d-payments" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="M3.5 10h17"/><path d="M7 14.3h4"/></symbol>
+    <symbol id="d-messages" viewBox="0 0 24 24"><path d="M4 5.5h16v11H8.5L4 20.5z"/></symbol>
+    <symbol id="d-insights" viewBox="0 0 24 24"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></symbol>
+    <symbol id="d-verify" viewBox="0 0 24 24"><path d="M12 3l7 3.2v5.6c0 5-3.3 7.8-7 9-3.7-1.2-7-4-7-9V6.2L12 3z"/><path d="M9 12.2l2.2 2.2L15.5 10"/></symbol>
+    <symbol id="d-community" viewBox="0 0 24 24"><path d="M3 6.5h11v7H8.5L5 17v-3.5H3z"/><path d="M13.5 9.5H21v6h-2.2v3l-3-3H16"/></symbol>
+    <symbol id="d-star" viewBox="0 0 24 24"><polygon points="12,3.2 14.7,9.3 21.3,10 16.4,14.4 17.8,21 12,17.6 6.2,21 7.6,14.4 2.7,10 9.3,9.3"/></symbol>
+    <symbol id="d-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></symbol>
+    <symbol id="d-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  </defs>
+</svg>
+
+<div class="preview-banner">Design preview — this is what Founding Providers will see. Bookings, quotes, and payments below are sample data, not live yet. <a href="index.html">&larr; Back to Lonera</a></div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark"><svg class="icon" aria-hidden="true"><use href="#d-mark"/></svg></div>Lonera</div>
+
+    <div class="nav-group">
+      <button class="nav-item create" data-target="create"><svg class="icon" aria-hidden="true"><use href="#d-plus"/></svg>Create</button>
+      <button class="nav-item active" data-target="home"><svg class="icon" aria-hidden="true"><use href="#d-home"/></svg>Home</button>
+      <button class="nav-item" data-target="schedule"><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>Schedule</button>
+    </div>
+
+    <div class="nav-group">
+      <button class="nav-item" data-target="clients"><svg class="icon" aria-hidden="true"><use href="#d-clients"/></svg>Clients</button>
+      <button class="nav-item" data-target="requests"><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg>Requests</button>
+      <button class="nav-item" data-target="quotes"><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg>Quotes</button>
+      <button class="nav-item" data-target="jobs"><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg>Jobs</button>
+      <button class="nav-item" data-target="payments"><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Payments</button>
+    </div>
+
+    <div class="nav-group">
+      <button class="nav-item" data-target="messages"><svg class="icon" aria-hidden="true"><use href="#d-messages"/></svg>Messages</button>
+      <button class="nav-item" data-target="insights"><svg class="icon" aria-hidden="true"><use href="#d-insights"/></svg>Insights</button>
+      <button class="nav-item" data-target="verification"><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg>Verification</button>
+      <button class="nav-item" data-target="community"><svg class="icon" aria-hidden="true"><use href="#d-community"/></svg>Community</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- HOME -->
+    <section class="section active" id="sec-home">
+      <div class="main-header">
+        <div>
+          <h1>Welcome back, Sparkle Home Services</h1>
+          <p>Here's what's happening with your Lonera listing today.</p>
+        </div>
+        <div class="provider-chip"><div class="av">S</div><div>Sparkle Home Services<div class="badge-gold"><svg class="icon" aria-hidden="true"><use href="#d-star"/></svg>Gold Verified</div></div></div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card accent"><div class="n">4</div><div class="l">Bookings this week</div></div>
+        <div class="stat-card"><div class="n">2</div><div class="l">New requests waiting</div></div>
+        <div class="stat-card"><div class="n">3</div><div class="l">Unread messages</div></div>
+        <div class="stat-card"><div class="n">86</div><div class="l">Profile views (30 days)</div></div>
+      </div>
+
+      <div class="panel-grid">
+        <div>
+          <div class="card">
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>Today's schedule</h2>
+            <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Move-out cleaning — Yoon family</div><div class="s">10:00 AM · SE Calgary</div></div><span class="pill progress">In progress</span></div>
+            <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Weekly cleaning — Patel residence</div><div class="s">2:30 PM · SE Calgary</div></div><span class="pill new">Upcoming</span></div>
+          </div>
+          <div class="card">
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-inbox"/></svg>Recent activity</h2>
+            <div class="list-row"><div class="info"><div class="t">New booking request from Grace Tan</div><div class="s">2 hours ago</div></div></div>
+            <div class="list-row"><div class="info"><div class="t">Payment released for Job #482 (escrow)</div><div class="s">Yesterday</div></div></div>
+            <div class="list-row"><div class="info"><div class="t">New 5-star review from Min-jun Lee</div><div class="s">2 days ago</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-verify"/></svg>Verification status</h2>
+            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Identity verified</div><div class="s">Confirmed on file</div></div></div>
+            <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Business licence verified</div><div class="s">Gold badge active</div></div></div>
+          </div>
+          <div class="card">
+            <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Escrow balance</h2>
+            <div class="stat-card" style="box-shadow:none;"><div class="n">$340</div><div class="l">Held for jobs in progress</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREATE -->
+    <section class="section" id="sec-create">
+      <div class="main-header"><div><h1>Create</h1><p>Start something new on your Lonera listing.</p></div></div>
+      <div class="panel-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-jobs"/></svg>New job listing</h2><p class="s" style="color:var(--muted);font-size:0.88rem;">Post a new service to appear in search and category browsing.</p><button class="btn primary" style="margin-top:10px;">New listing</button></div>
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-quote"/></svg>New quote</h2><p style="color:var(--muted);font-size:0.88rem;">Send a custom price for a bigger job, like a renovation or move.</p><button class="btn primary" style="margin-top:10px;">New quote</button></div>
+        <div class="card"><h2><svg class="icon" aria-hidden="true"><use href="#d-calendar"/></svg>New booking</h2><p style="color:var(--muted);font-size:0.88rem;">Manually add a booking for a client who contacted you off-platform.</p><button class="btn primary" style="margin-top:10px;">New booking</button></div>
+      </div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section class="section" id="sec-schedule">
+      <div class="main-header"><div><h1>Schedule</h1><p>Your upcoming bookings, in order.</p></div></div>
+      <div class="card">
+        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Yoon family — Move-out cleaning</div><div class="s">Today, 10:00 AM · SE Calgary</div></div><span class="pill progress">In progress</span></div>
+        <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Patel residence — Weekly cleaning</div><div class="s">Today, 2:30 PM · SE Calgary</div></div><span class="pill new">Upcoming</span></div>
+        <div class="list-row"><div class="av">T</div><div class="info"><div class="t">Grace Tan — Move-in deep clean</div><div class="s">Thu, Aug 20 · 9:00 AM</div></div><span class="pill new">Upcoming</span></div>
+        <div class="list-row"><div class="av">K</div><div class="info"><div class="t">Kim household — Bi-weekly cleaning</div><div class="s">Fri, Aug 21 · 1:00 PM</div></div><span class="pill new">Upcoming</span></div>
+      </div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section class="section" id="sec-clients">
+      <div class="main-header"><div><h1>Clients</h1><p>Everyone who's booked you through Lonera.</p></div></div>
+      <div class="card">
+        <div class="list-row"><div class="av">Y</div><div class="info"><div class="t">Yoon family</div><div class="s">4 bookings · Speaks Korean</div></div></div>
+        <div class="list-row"><div class="av">P</div><div class="info"><div class="t">Patel residence</div><div class="s">7 bookings · Speaks Punjabi, English</div></div></div>
+        <div class="list-row"><div class="av">T</div><div class="info"><div class="t">Grace Tan</div><div class="s">1 booking · Speaks Tagalog, English</div></div></div>
+        <div class="list-row"><div class="av">K</div><div class="info"><div class="t">Kim household</div><div class="s">12 bookings · Speaks Korean, English</div></div></div>
+      </div>
+    </section>
+
+    <!-- REQUESTS -->
+    <section class="section" id="sec-requests">
+      <div class="main-header"><div><h1>Requests</h1><p>New booking requests waiting on your reply.</p></div></div>
+      <div class="card">
+        <div class="list-row">
+          <div class="av">G</div>
+          <div class="info"><div class="t">Grace Tan — Deep clean, 3-bed house</div><div class="s">Requested for Aug 22 · NE Calgary</div>
+            <div class="action-row"><button class="btn accept">Accept</button><button class="btn decline">Decline</button></div>
+          </div>
+        </div>
+        <div class="list-row">
+          <div class="av">O</div>
+          <div class="info"><div class="t">Omar Hassan — Post-renovation cleanup</div><div class="s">Requested for Aug 25 · SW Calgary</div>
+            <div class="action-row"><button class="btn accept">Accept</button><button class="btn decline">Decline</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUOTES -->
+    <section class="section" id="sec-quotes">
+      <div class="main-header"><div><h1>Quotes</h1><p>Custom pricing for bigger jobs before they're booked.</p></div></div>
+      <div class="card">
+        <div class="list-row"><div class="info"><div class="t">Basement move-out clean — Anchor Point Law</div><div class="s">Sent Aug 14 · $280 quoted</div></div><span class="pill sent">Sent</span></div>
+        <div class="list-row"><div class="info"><div class="t">Post-construction clean — TrueBuild client</div><div class="s">Sent Aug 12 · $450 quoted</div></div><span class="pill done">Accepted</span></div>
+        <div class="list-row"><div class="info"><div class="t">Weekly office cleaning — 3-month contract</div><div class="s">Draft, not sent yet</div></div><span class="pill progress">Draft</span></div>
+      </div>
+    </section>
+
+    <!-- JOBS -->
+    <section class="section" id="sec-jobs">
+      <div class="main-header"><div><h1>Jobs</h1><p>Every job, from booked to completed.</p></div></div>
+      <div class="card">
+        <div class="list-row"><div class="info"><div class="t">#482 — Yoon family move-out clean</div><div class="s">Completed Aug 15</div></div><span class="pill done">Paid out</span></div>
+        <div class="list-row"><div class="info"><div class="t">#483 — Patel weekly cleaning</div><div class="s">In progress today</div></div><span class="pill progress">In progress</span></div>
+        <div class="list-row"><div class="info"><div class="t">#484 — Grace Tan move-in clean</div><div class="s">Scheduled Aug 20</div></div><span class="pill new">Upcoming</span></div>
+      </div>
+    </section>
+
+    <!-- PAYMENTS -->
+    <section class="section" id="sec-payments">
+      <div class="main-header"><div><h1>Payments</h1><p>Escrow holds and payouts, in one place.</p></div></div>
+      <div class="stat-row">
+        <div class="stat-card accent"><div class="n">$340</div><div class="l">Held in escrow right now</div></div>
+        <div class="stat-card"><div class="n">$1,960</div><div class="l">Paid out this month</div></div>
+      </div>
+      <div class="card">
+        <h2><svg class="icon" aria-hidden="true"><use href="#d-payments"/></svg>Recent transactions</h2>
+        <div class="list-row"><div class="info"><div class="t">Job #482 — Yoon family</div><div class="s">Released to your account · Aug 15</div></div><span class="pill escrow">Paid</span></div>
+        <div class="list-row"><div class="info"><div class="t">Job #483 — Patel residence</div><div class="s">Held until job marked complete</div></div><span class="pill escrow">In escrow</span></div>
+        <div class="list-row"><div class="info"><div class="t">Job #479 — Kim household</div><div class="s">Released to your account · Aug 9</div></div><span class="pill escrow">Paid</span></div>
+      </div>
+      <div class="empty-hint">Payouts go to your Canadian bank account automatically. Commission per completed job will be shown here once our fee structure is finalized — you'll always see it before it applies.</div>
+    </section>
+
+    <!-- MESSAGES -->
+    <section class="section" id="sec-messages">
+      <div class="main-header"><div><h1>Messages</h1><p>Talk with clients in either language — Lonera doesn't auto-translate for you yet, but shows both side by side when needed.</p></div></div>
+      <div class="msg-shell">
+        <div class="msg-list">
+          <div class="m-row active"><div class="t">Yoon family</div><div class="s">감사합니다! 내일 뵈어요</div></div>
+          <div class="m-row"><div class="t">Grace Tan</div><div class="s">Sounds good, see you then!</div></div>
+          <div class="m-row"><div class="t">Patel residence</div><div class="s">Can we move it to 3pm?</div></div>
+        </div>
+        <div class="msg-thread">
+          <div class="bubble them">안녕하세요! 내일 오전 10시 예약 확인 부탁드려요.<span class="lang-tag">Korean</span></div>
+          <div class="bubble me">Yes, confirmed for 10:00 AM tomorrow. See you then!<span class="lang-tag">English</span></div>
+          <div class="bubble them">감사합니다! 내일 뵈어요<span class="lang-tag">Korean</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section class="section" id="sec-insights">
+      <div class="main-header"><div><h1>Insights</h1><p>How your listing is performing.</p></div></div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="n">86</div><div class="l">Profile views (30 days)</div></div>
+        <div class="stat-card"><div class="n">21</div><div class="l">Booking requests (30 days)</div></div>
+        <div class="stat-card"><div class="n">4.7</div><div class="l">Average rating</div></div>
+        <div class="stat-card"><div class="n">24%</div><div class="l">View-to-booking rate</div></div>
+      </div>
+      <div class="empty-hint">Full analytics — trends over time, where your views come from, and repeat-client rate — go live once Lonera launches publicly.</div>
+    </section>
+
+    <!-- VERIFICATION -->
+    <section class="section" id="sec-verification">
+      <div class="main-header"><div><h1>Verification</h1><p>Your trust badges — what clients see before they book.</p></div></div>
+      <div class="card">
+        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Identity verified (Silver)</div><div class="s">Government ID confirmed — never shown publicly</div></div></div>
+        <div class="verify-item done"><div class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#d-check"/></svg></div><div><div class="t">Business verified (Gold)</div><div class="s">Alberta business licence confirmed</div></div></div>
+      </div>
+      <div class="empty-hint">Verified providers are shown with a badge across search, category browsing, and their listing page — this is what buyers use to decide who to trust first.</div>
+    </section>
+
+    <!-- COMMUNITY -->
+    <section class="section" id="sec-community">
+      <div class="main-header"><div><h1>Community<span class="phase-tag">Coming soon</span></h1><p>A shared board by community and language — for news, events, and questions.</p></div></div>
+      <div class="community-post"><span class="tag">Korean community</span><h3>Chuseok pop-up market — NE Calgary, Sept 20</h3><p>Local providers can apply for a free table to meet new clients in person.</p></div>
+      <div class="community-post"><span class="tag">Filipino community</span><h3>Looking for recommendations: kids' Tagalog tutor</h3><p>Posted by a parent in SE Calgary — 6 replies</p></div>
+      <div class="community-post"><span class="tag">Platform update</span><h3>New: Punjabi language support launching next month</h3><p>Posted by the Lonera team</p></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const items = document.querySelectorAll(".nav-item[data-target]");
+  items.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const target = btn.getAttribute("data-target");
+      document.querySelectorAll(".nav-item").forEach(b=> b.classList.toggle("active", b === btn));
+      document.querySelectorAll(".section").forEach(s=> s.classList.toggle("active", s.id === "sec-" + target));
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+})();
+</script>
+</body>
+</html>
