@@ -95,6 +95,14 @@
   .btn.accept{ background:var(--teal); color:#fff; }
   .btn.decline{ background:var(--paper); color:var(--muted); border:1px solid var(--border); }
   .btn.primary{ background:var(--ink); color:#fff; }
+  .status-pill{ font-size:calc(0.76rem * var(--scale)); font-weight:800; padding:5px 12px; border-radius:999px; display:inline-block; }
+  .status-pill.accepted{ background:var(--teal-tint); color:var(--teal); }
+  .status-pill.declined{ background:var(--border); color:var(--muted); }
+
+  .live-request-row{ display:flex; align-items:flex-start; gap:12px; padding:14px 0; border-bottom:1px solid var(--border); }
+  .live-request-row:last-child{ border-bottom:none; }
+  .request-note-quote{ background:var(--paper); border-left:4px solid var(--accent); border-radius:0 10px 10px 0; padding:10px 12px; margin:8px 0; font-style:italic; color:var(--text); font-size:calc(0.9rem * var(--scale)); }
+  .ai-tag{ display:inline-flex; align-items:center; gap:5px; background:var(--accent-tint); color:var(--accent-deep); font-weight:800; font-size:calc(0.7rem * var(--scale)); padding:3px 9px; border-radius:999px; margin-bottom:6px; }
 
   .empty-hint{ color:var(--muted); font-size:calc(0.88rem * var(--scale)); background:var(--paper); border-radius:12px; padding:14px; }
 
@@ -283,6 +291,7 @@
     <!-- REQUESTS -->
     <section class="section" id="sec-requests">
       <div class="main-header"><div><h1 data-i18n="requestsTitle">Requests</h1><p data-i18n="requestsSub">New booking requests waiting on your reply.</p></div></div>
+      <div id="liveRequestsWrap"></div>
       <div class="card">
         <div class="list-row">
           <div class="av">G</div>
@@ -420,6 +429,9 @@
       req1Title:"Grace Tan — Deep clean, 3-bed house", req1Sub:"Requested for Aug 22 · NE Calgary",
       req2Title:"Omar Hassan — Post-renovation cleanup", req2Sub:"Requested for Aug 25 · SW Calgary",
       btnAccept:"Accept", btnDecline:"Decline",
+      newRequestFrom:"New request from a customer", aiTag:"Cleaned up by Lonera AI",
+      statusAccepted:"Accepted", statusDeclined:"Declined",
+      timeJustNow:"Just now", timeMinAgo:"%s min ago", timeHourAgo:"%s hr ago", timeDayAgo:"%s day ago",
       quotesTitle:"Quotes", quotesSub:"Custom pricing for bigger jobs before they're booked.",
       quote1Title:"Basement move-out clean — Anchor Point Law", quote1Sub:"Sent Aug 14 · $280 quoted",
       quote2Title:"Post-construction clean — TrueBuild client", quote2Sub:"Sent Aug 12 · $450 quoted",
@@ -474,6 +486,9 @@
       req1Title:"Grace Tan — 3베드룸 딥 클린", req1Sub:"8월 22일 요청 · NE 캘거리",
       req2Title:"Omar Hassan — 공사 후 청소", req2Sub:"8월 25일 요청 · SW 캘거리",
       btnAccept:"수락", btnDecline:"거절",
+      newRequestFrom:"고객으로부터 새 요청", aiTag:"로네라 AI가 다듬음",
+      statusAccepted:"수락됨", statusDeclined:"거절됨",
+      timeJustNow:"방금 전", timeMinAgo:"%s분 전", timeHourAgo:"%s시간 전", timeDayAgo:"%s일 전",
       quotesTitle:"견적", quotesSub:"예약 전, 큰 작업에 대한 맞춤 견적이에요.",
       quote1Title:"지하실 이사 청소 — Anchor Point Law", quote1Sub:"8월 14일 발송 · $280 견적",
       quote2Title:"공사 후 청소 — TrueBuild 고객", quote2Sub:"8월 12일 발송 · $450 견적",
@@ -506,6 +521,78 @@
   if(localStorage.getItem(LS_CONTRAST) === "1") document.body.classList.add("high-contrast");
   document.documentElement.style.setProperty("--scale", scale);
 
+  const REQUESTS_KEY = "lonera_requests";
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function loadRequests(){
+    try{ return JSON.parse(localStorage.getItem(REQUESTS_KEY)) || []; }catch(e){ return []; }
+  }
+  function saveRequests(list){ localStorage.setItem(REQUESTS_KEY, JSON.stringify(list)); }
+  function timeAgo(ts){
+    const diffMin = Math.max(0, Math.floor((Date.now()-ts)/60000));
+    if(diffMin < 1) return DT[lang].timeJustNow;
+    if(diffMin < 60) return DT[lang].timeMinAgo.replace("%s", diffMin);
+    const diffHr = Math.floor(diffMin/60);
+    if(diffHr < 24) return DT[lang].timeHourAgo.replace("%s", diffHr);
+    return DT[lang].timeDayAgo.replace("%s", Math.floor(diffHr/24));
+  }
+  function updatePendingStat(list){
+    const pendingCount = list.filter(r=>r.status==="pending").length;
+    const statEl = document.querySelector('[data-i18n="statNewRequests"]');
+    const numEl = statEl ? statEl.closest(".stat-card")?.querySelector(".n") : null;
+    if(numEl) numEl.textContent = 2 + pendingCount;
+  }
+  function renderLiveRequests(){
+    const wrap = document.getElementById("liveRequestsWrap");
+    if(!wrap) return;
+    const list = loadRequests();
+    updatePendingStat(list);
+    if(!list.length){ wrap.innerHTML = ""; return; }
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = list.map((r, idx)=>{
+      const providerName = escapeHtml(lang==="ko" ? r.providerNameKo : r.providerNameEn);
+      const initial = (providerName||"?").trim()[0] || "?";
+      const noteHtml = escapeHtml(r.note);
+      if(r.status === "pending"){
+        return `<div class="live-request-row">
+          <div class="av">${initial}</div>
+          <div class="info">
+            <div class="t">${DT[lang].newRequestFrom}</div>
+            <div class="s">${providerName} &middot; ${timeAgo(r.ts)}</div>
+            <span class="ai-tag">${DT[lang].aiTag}</span>
+            <div class="request-note-quote">&ldquo;${noteHtml}&rdquo;</div>
+            <div class="action-row">
+              <button class="btn accept" data-req-idx="${idx}" data-req-action="accept">${DT[lang].btnAccept}</button>
+              <button class="btn decline" data-req-idx="${idx}" data-req-action="decline">${DT[lang].btnDecline}</button>
+            </div>
+          </div>
+        </div>`;
+      }
+      return `<div class="live-request-row">
+        <div class="av">${initial}</div>
+        <div class="info">
+          <div class="t">${DT[lang].newRequestFrom}</div>
+          <div class="s">${providerName} &middot; ${timeAgo(r.ts)}</div>
+          <div class="request-note-quote">&ldquo;${noteHtml}&rdquo;</div>
+          <span class="status-pill ${r.status}">${r.status==="accepted"?DT[lang].statusAccepted:DT[lang].statusDeclined}</span>
+        </div>
+      </div>`;
+    }).join("");
+    wrap.innerHTML = "";
+    wrap.appendChild(card);
+    card.querySelectorAll("[data-req-action]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const idx = parseInt(btn.getAttribute("data-req-idx"), 10);
+        const action = btn.getAttribute("data-req-action");
+        const current = loadRequests();
+        if(current[idx]){ current[idx].status = action === "accept" ? "accepted" : "declined"; saveRequests(current); }
+        renderLiveRequests();
+      });
+    });
+  }
+
   function applyI18n(){
     document.documentElement.lang = lang === "ko" ? "ko" : "en";
     document.getElementById("langToggle").setAttribute("aria-pressed", lang === "ko" ? "true" : "false");
@@ -514,6 +601,7 @@
       const key = el.getAttribute("data-i18n");
       if(DT[lang][key] !== undefined) el.textContent = DT[lang][key];
     });
+    renderLiveRequests();
   }
 
   document.getElementById("langToggle").addEventListener("click", function(){

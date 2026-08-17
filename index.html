@@ -167,6 +167,7 @@
   .compare-provider{ font-weight:800; color:var(--ink); }
   .compare-provider .sub{ display:block; font-weight:500; color:var(--muted); font-size:calc(0.78rem * var(--scale)); margin-top:2px; }
   .compare-badges{ display:flex; flex-wrap:wrap; gap:4px; }
+  .compare-actions{ display:flex; gap:6px; }
   .compare-actions button{ border:none;border-radius:999px;padding:8px 14px;font-weight:800;font-size:calc(0.8rem * var(--scale)); white-space:nowrap; }
   .listing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px;}
   .listing-card{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px;position:relative; }
@@ -197,6 +198,11 @@
   .listing-actions button{ flex:1;border-radius:var(--radius-sm);border:none;padding:12px 10px;font-weight:800; font-size: calc(0.9rem * var(--scale));min-height:46px; display:inline-flex;align-items:center;justify-content:center;gap:7px; }
   .btn-call{background:var(--teal);color:#fff;}
   .btn-msg{background:var(--ink);color:#fff;}
+  .btn-choose{background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px 10px;font-weight:800;font-size: calc(0.9rem * var(--scale));min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
+  .request-modal-sub{color:var(--muted);font-size:calc(0.92rem * var(--scale));margin:6px 0 14px;}
+  .request-textarea{ width:100%;padding:14px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);font-size: calc(0.96rem * var(--scale));font-family:inherit;resize:vertical;min-height:100px; }
+  .request-note-quote{ background:var(--paper);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:14px 16px;margin:0;color:var(--text);font-size:calc(0.94rem * var(--scale));font-style:italic; }
+  .request-cleanup-note{ color:var(--muted);font-size:calc(0.78rem * var(--scale));margin:10px 0 0; }
   .empty-msg{color:var(--muted);text-align:center;padding:30px;font-size: calc(1rem * var(--scale));}
 
   /* ===== Modal ===== */
@@ -472,8 +478,24 @@
       <button class="btn-call" id="modalCall"><svg class="icon" aria-hidden="true"><use href="#ic-phone"/></svg><span data-i18n="call">Call</span></button>
       <button class="btn-msg" id="modalMsg"><svg class="icon" aria-hidden="true"><use href="#ic-chat"/></svg><span data-i18n="message">Message</span></button>
     </div>
+    <button class="btn-choose" id="modalChooseBtn" style="width:100%;margin-top:10px;"><svg class="icon" aria-hidden="true"><use href="#ic-check"/></svg><span data-i18n="chooseBtn">Choose this business</span></button>
     <button class="report-link" id="reportBtn"><svg class="icon" aria-hidden="true"><use href="#ic-flag"/></svg><span data-i18n="reportLink">Report a concern about this listing</span></button>
     <div id="reportConfirm" data-i18n="reportConfirmMsg">Thanks — our team reviews every report within 24 hours.</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="requestOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
+    <button class="modal-close" id="requestModalClose"><svg class="icon" aria-hidden="true"><use href="#ic-close"/></svg></button>
+    <h3 id="requestModalTitle"></h3>
+    <p class="request-modal-sub" id="requestModalSub" data-i18n="requestModalSub">Tell us in your own words — we'll clean up the grammar before sending it, but keep your meaning exactly the same.</p>
+    <textarea id="requestNoteInput" class="request-textarea" rows="4" data-i18n-placeholder="requestNotePlaceholder" placeholder="e.g. I need someone who can also move a couch while they're there"></textarea>
+    <button class="btn-choose" id="requestSendBtn" style="width:100%;margin-top:14px;" data-i18n="requestSendBtn">Send request</button>
+    <div id="requestSentConfirm" style="display:none;">
+      <p id="requestSentLabel2" style="font-weight:800;color:var(--ink);margin:4px 0 8px;"></p>
+      <blockquote id="requestSentNote" class="request-note-quote"></blockquote>
+      <p class="request-cleanup-note" data-i18n="requestCleanupNote">(Cleaned up for grammar only — your meaning stays exactly the same.)</p>
+    </div>
   </div>
 </div>
 
@@ -510,6 +532,13 @@
       compareMsg:'Comparing the top 3 for "%s"',
       noAvailToday:"No one's available today for this — here's who's available soon.",
       dayMon:"Mon", dayTue:"Tue", dayWed:"Wed", dayThu:"Thu", dayFri:"Fri", daySat:"Sat", daySun:"Sun",
+      chooseBtn:"Choose this business",
+      requestModalTitle:"What would you like to ask %s for?",
+      requestModalSub:"Tell us in your own words — we'll clean up the grammar before sending it, but keep your meaning exactly the same.",
+      requestNotePlaceholder:"e.g. I need someone who can also move a couch while they're there",
+      requestSendBtn:"Send request",
+      requestSentLabel:"Sent to %s. Here's what they'll see:",
+      requestCleanupNote:"(Cleaned up for grammar only — your meaning stays exactly the same.)",
       trust1title:"Real ID Verified", trust1sub:"Every provider's identity is checked before they can list",
       trust2title:"Payment Protection", trust2sub:"For bigger bookings, your money is held in escrow until the job is done — never pay a stranger upfront",
       trust3title:"Multilingual Support", trust3sub:"Fully working in Korean and English today — Tagalog, Hindi, Punjabi, and Mandarin launching soon",
@@ -572,6 +601,13 @@
       compareMsg:'"%s"에 대한 상위 3개를 비교했어요',
       noAvailToday:"오늘은 예약 가능한 업체가 없어요 — 곧 가능한 업체를 보여드릴게요.",
       dayMon:"월", dayTue:"화", dayWed:"수", dayThu:"목", dayFri:"금", daySat:"토", daySun:"일",
+      chooseBtn:"이 업체 선택하기",
+      requestModalTitle:"%s에게 무엇을 요청하고 싶으신가요?",
+      requestModalSub:"편하게 말씀해 주세요 — 보내기 전에 문법만 다듬고, 의미는 그대로 유지할게요.",
+      requestNotePlaceholder:"예: 청소하면서 소파도 옮겨주실 수 있는 분이면 좋겠어요",
+      requestSendBtn:"요청 보내기",
+      requestSentLabel:"%s에게 전송했어요. 업체가 보게 될 내용이에요:",
+      requestCleanupNote:"(문법만 다듬었어요 — 의미는 그대로예요.)",
       trust1title:"실명 인증 완료", trust1sub:"모든 업체는 등록 전 실명 인증을 거칩니다",
       trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 에스크로에 안전하게 보관됩니다 — 낯선 사람에게 미리 결제할 필요 없어요",
       trust3title:"다국어 지원", trust3sub:"현재 한국어·영어로 완전히 이용 가능하며, 타갈로그어·힌디어·펀자브어·중국어(만다린)는 곧 지원 예정입니다",
@@ -842,9 +878,11 @@
           <button class="btn-call">${icon("ic-phone")}${T[lang].call}</button>
           <button class="btn-msg">${icon("ic-chat")}${T[lang].message}</button>
         </div>
+        <button class="btn-choose" style="width:100%;" data-choose-key="${l.key}">${icon("ic-check")}${T[lang].chooseBtn}</button>
       `;
       card.querySelectorAll("[data-key]").forEach(el=> el.addEventListener("click", ()=> openModal(l)));
       card.querySelector(".fav-btn").addEventListener("click", (e)=>{ e.stopPropagation(); toggleFav(l.key); });
+      card.querySelector("[data-choose-key]").addEventListener("click", (e)=>{ e.stopPropagation(); openRequestModal(l); });
       grid.appendChild(card);
     });
   }
@@ -889,7 +927,10 @@
         <td><span class="avail-badge ${info.cls}">${info.text}</span></td>
         <td><div class="compare-badges">${trustBadges}</div></td>
         <td>${langBadges(l)}</td>
-        <td><div class="compare-actions"><button class="btn-call" data-key="${l.key}">${icon("ic-phone")}${T[lang].call}</button></div></td>
+        <td><div class="compare-actions">
+          <button class="btn-call" data-key="${l.key}">${icon("ic-phone")}${T[lang].call}</button>
+          <button class="btn-choose" data-choose-key="${l.key}">${icon("ic-check")}${T[lang].chooseBtn}</button>
+        </div></td>
       </tr>`;
     }).join("");
     table.innerHTML = head + "<tbody>" + rows + "</tbody>";
@@ -897,6 +938,12 @@
       btn.addEventListener("click", ()=>{
         const l = LISTINGS.find(x=>x.key===btn.getAttribute("data-key"));
         if(l) openModal(l);
+      });
+    });
+    table.querySelectorAll("[data-choose-key]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const l = LISTINGS.find(x=>x.key===btn.getAttribute("data-choose-key"));
+        if(l) openRequestModal(l);
       });
     });
   }
@@ -1001,6 +1048,86 @@
   document.addEventListener("keydown", (e)=>{ if(e.key === "Escape"){ overlay.classList.remove("open"); currentModalListing=null; } });
   document.getElementById("reportBtn").addEventListener("click", ()=>{ document.getElementById("reportConfirm").style.display = "block"; });
 
+  document.getElementById("modalChooseBtn").addEventListener("click", ()=>{ if(currentModalListing) openRequestModal(currentModalListing); });
+
+  const REQUESTS_KEY = "lonera_requests";
+  let currentRequestListing = null;
+  const requestOverlay = document.getElementById("requestOverlay");
+
+  function containsHangul(s){ return /[가-힣]/.test(s); }
+
+  function cleanupNote(raw){
+    let text = raw.trim().replace(/\s+/g, " ");
+    if(!text) return "";
+    if(containsHangul(text)){
+      if(!/[.!?…]$/.test(text)) text += ".";
+      return text;
+    }
+    const parts = text.split(/([.!?]+)/).filter(s=>s.length);
+    const sentences = [];
+    let current = "";
+    for(let i=0;i<parts.length;i++){
+      current += parts[i];
+      if(/^[.!?]+$/.test(parts[i]) || i===parts.length-1){
+        if(current.trim()) sentences.push(current.trim());
+        current = "";
+      }
+    }
+    return sentences.map(s=>{
+      s = s.trim();
+      if(!s) return s;
+      s = s.charAt(0).toUpperCase() + s.slice(1);
+      s = s.replace(/\bi\b/g, "I");
+      s = s.replace(/\bi'/g, "I'");
+      if(!/[.!?]$/.test(s)) s += ".";
+      return s;
+    }).join(" ");
+  }
+
+  function openRequestModal(l){
+    currentRequestListing = l;
+    document.getElementById("requestModalTitle").textContent = T[lang].requestModalTitle.replace("%s", listingName(l));
+    document.getElementById("requestNoteInput").value = "";
+    document.getElementById("requestNoteInput").style.display = "block";
+    document.getElementById("requestSendBtn").style.display = "inline-block";
+    document.getElementById("requestSentConfirm").style.display = "none";
+    if(overlay.classList.contains("open")) overlay.classList.remove("open");
+    requestOverlay.classList.add("open");
+    document.getElementById("requestNoteInput").focus();
+  }
+  function closeRequestModal(){ requestOverlay.classList.remove("open"); currentRequestListing = null; }
+
+  document.getElementById("requestModalClose").addEventListener("click", closeRequestModal);
+  requestOverlay.addEventListener("click", (e)=>{ if(e.target === requestOverlay) closeRequestModal(); });
+  document.addEventListener("keydown", (e)=>{ if(e.key === "Escape" && requestOverlay.classList.contains("open")) closeRequestModal(); });
+
+  function saveRequest(l, rawNote, cleanedNote){
+    let list = [];
+    try{ list = JSON.parse(localStorage.getItem(REQUESTS_KEY)) || []; }catch(e){ list = []; }
+    list.unshift({
+      providerKey: l.key,
+      providerNameEn: l.nameEn,
+      providerNameKo: l.nameKo,
+      note: cleanedNote,
+      raw: rawNote,
+      status: "pending",
+      ts: Date.now()
+    });
+    localStorage.setItem(REQUESTS_KEY, JSON.stringify(list.slice(0, 30)));
+  }
+
+  document.getElementById("requestSendBtn").addEventListener("click", ()=>{
+    const raw = document.getElementById("requestNoteInput").value.trim();
+    if(!raw || !currentRequestListing) return;
+    const cleaned = cleanupNote(raw);
+    saveRequest(currentRequestListing, raw, cleaned);
+    document.getElementById("requestSentLabel2").textContent = T[lang].requestSentLabel.replace("%s", listingName(currentRequestListing));
+    document.getElementById("requestSentNote").textContent = cleaned;
+    document.getElementById("requestNoteInput").style.display = "none";
+    document.getElementById("requestSendBtn").style.display = "none";
+    document.getElementById("requestSentConfirm").style.display = "block";
+  });
+
   const FAQS = {
     en:[
       {q:"Is my payment actually safe?", a:"For Protected Bookings (rentals, legal, immigration, accounting, construction, catering), your payment is held by Lonera and only released to the provider once the work is confirmed complete — not before."},
@@ -1062,21 +1189,49 @@
     return bestCat;
   }
 
-  const AVAIL_TODAY_KW = ["today","오늘"];
+  const DAY_OFFSET_KW = { 0: ["today","오늘"], 1: ["tomorrow","내일"] };
   const COMPARE_KW = ["compare","comparison","top 3","top three","best","vs","versus","which one","비교","베스트","가장 좋은","추천해"];
+  const LANG_FILTER_KW = {
+    ko: ["speaks korean","speak korean","korean speaking","in korean","who speaks korean","한국어","한국말"],
+    en: ["speaks english","speak english","english speaking","in english"],
+    tl: ["speaks tagalog","speak tagalog","tagalog speaking","타갈로그"],
+    hi: ["speaks hindi","speak hindi","hindi speaking","힌디"],
+    pa: ["speaks punjabi","speak punjabi","punjabi speaking","펀자브"],
+    zh: ["speaks mandarin","speak mandarin","speaks chinese","speak chinese","mandarin speaking","만다린","중국어"]
+  };
+
+  function detectDayOffset(q){
+    for(const offset of Object.keys(DAY_OFFSET_KW)){
+      if(DAY_OFFSET_KW[offset].some(k=>q.includes(k))) return parseInt(offset);
+    }
+    return null;
+  }
+  function detectLangFilter(q){
+    for(const code of Object.keys(LANG_FILTER_KW)){
+      if(LANG_FILTER_KW[code].some(k=>q.includes(k))) return code;
+    }
+    return null;
+  }
 
   function runSearch(query){
     if(!query || !query.trim()) return;
     const cat = findMatches(query);
     const q = query.toLowerCase();
-    const wantsToday = AVAIL_TODAY_KW.some(k=>q.includes(k));
+    const dayOffset = detectDayOffset(q);
+    const langFilter = detectLangFilter(q);
     const wantsCompare = COMPARE_KW.some(k=>q.includes(k));
     if(cat){
       let matches = LISTINGS.filter(l=>l.cat===cat.id);
-      let noneToday = false;
-      if(wantsToday){
-        const todayMatches = matches.filter(isAvailableToday);
-        if(todayMatches.length){ matches = todayMatches; } else { noneToday = true; }
+      let noneAvail = false;
+      if(dayOffset !== null){
+        const dayIdx = (todayIdx() + dayOffset) % 7;
+        const dayMatches = matches.filter(l=>isAvailableOnIdx(l, dayIdx));
+        if(dayMatches.length){ matches = dayMatches; } else { noneAvail = true; }
+      }
+      let noneSpeak = false;
+      if(langFilter){
+        const langMatches = matches.filter(l=>(l.langs||[]).includes(langFilter));
+        if(langMatches.length){ matches = langMatches; } else { noneSpeak = true; }
       }
       matches = matches.slice().sort((a,b)=>b.rating-a.rating);
       currentListings = matches;
@@ -1086,7 +1241,8 @@
       renderCompareTable(matches.slice(0,3));
       updateResultsTabs(matches.length, true);
       const baseMsg = wantsCompare ? T[lang].compareMsg.replace("%s", query) : T[lang].matchMsg.replace("%s", query);
-      speak(noneToday ? T[lang].noAvailToday + " " + baseMsg : baseMsg);
+      const caveat = (noneAvail || noneSpeak) ? T[lang].noAvailToday + " " : "";
+      speak(caveat + baseMsg);
     } else {
       renderListings([]);
       document.getElementById("resultsTitle").textContent = lang==="ko" ? "검색 결과" : "Search results";
