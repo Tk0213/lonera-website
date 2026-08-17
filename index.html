@@ -153,6 +153,21 @@
   .results-heading{ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px; }
   .results-heading h2{margin:0;font-size: calc(1.3rem * var(--scale));color:var(--ink);}
   .clear-btn{ background:none;border:1.5px solid var(--border);border-radius:999px;padding:8px 16px; font-weight:700;font-size: calc(0.85rem * var(--scale));color:var(--muted);min-height:40px; }
+
+  .results-tabs{ display:none; gap:8px; margin-bottom:16px; }
+  .tab-btn{ background:var(--card); border:1.5px solid var(--border); border-radius:999px; padding:9px 18px; font-weight:800; font-size: calc(0.88rem * var(--scale)); color:var(--muted); min-height:40px; }
+  .tab-btn.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+  .compare-wrap{ overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border); box-shadow:var(--shadow); }
+  .compare-table{ width:100%; border-collapse:collapse; min-width:680px; background:var(--card); }
+  .compare-table th{ background:var(--ink); color:#fff; text-align:left; padding:12px 14px; font-size:calc(0.78rem * var(--scale)); white-space:nowrap; }
+  .compare-table td{ padding:14px; border-bottom:1px solid var(--border); font-size:calc(0.88rem * var(--scale)); vertical-align:top; }
+  .compare-table tr:last-child td{ border-bottom:none; }
+  .compare-provider{ font-weight:800; color:var(--ink); }
+  .compare-provider .sub{ display:block; font-weight:500; color:var(--muted); font-size:calc(0.78rem * var(--scale)); margin-top:2px; }
+  .compare-badges{ display:flex; flex-wrap:wrap; gap:4px; }
+  .compare-actions button{ border:none;border-radius:999px;padding:8px 14px;font-weight:800;font-size:calc(0.8rem * var(--scale)); white-space:nowrap; }
   .listing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px;}
   .listing-card{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px;position:relative; }
   .fav-btn{ position:absolute; top:16px; right:16px; background:none; border:none; color:var(--border); min-height:36px; min-width:36px; padding:0; }
@@ -174,6 +189,9 @@
   .badge.gold{background:var(--amber-tint);color:#7a5709;}
   .badge.escrow{background:var(--teal-tint);color:var(--teal);}
   .badge.lang{background:#f1e9fb;color:#5b3a94;}
+  .avail-badge{ display:inline-flex;align-items:center;gap:5px; font-size: calc(0.78rem * var(--scale));font-weight:800;padding:4px 10px;border-radius:999px; }
+  .avail-badge.today{background:var(--teal-tint);color:var(--teal);}
+  .avail-badge.later{background:var(--border);color:var(--muted);}
   .listing-blurb{color:var(--text);font-size: calc(0.92rem * var(--scale));margin:0;cursor:pointer;}
   .listing-actions{display:flex;gap:10px;margin-top:6px;}
   .listing-actions button{ flex:1;border-radius:var(--radius-sm);border:none;padding:12px 10px;font-weight:800; font-size: calc(0.9rem * var(--scale));min-height:46px; display:inline-flex;align-items:center;justify-content:center;gap:7px; }
@@ -191,6 +209,20 @@
   .modal-review{ background:var(--paper); border-radius:14px; padding:14px; margin-bottom:10px; font-size: calc(0.88rem * var(--scale)); }
   .report-link{ display:inline-flex; align-items:center; gap:6px; margin-top:14px; color:var(--danger); font-weight:700; font-size: calc(0.85rem * var(--scale)); background:none; border:none; padding:0; text-decoration:underline; }
   #reportConfirm{ display:none; background:#fdeeed; color:var(--danger); padding:12px; border-radius:12px; margin-top:10px; font-size: calc(0.85rem * var(--scale)); font-weight:700; }
+
+  /* ===== Availability picker ===== */
+  .avail-section{ margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+  .avail-section h4{ margin:0 0 10px; font-size: calc(0.94rem * var(--scale)); color:var(--ink); }
+  .day-chip-row{ display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:12px; }
+  .day-chip{ flex-shrink:0; background:var(--card); border:1.5px solid var(--border); border-radius:12px; padding:8px 12px; text-align:center; min-width:52px; font-weight:700; font-size:calc(0.8rem * var(--scale)); color:var(--text); }
+  .day-chip .dname{ display:block; font-size:calc(0.7rem * var(--scale)); color:var(--muted); margin-top:2px; }
+  .day-chip.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .day-chip.active .dname{ color:#c7d0da; }
+  .day-chip:disabled{ opacity:0.4; }
+  .slot-chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .slot-chip{ background:var(--paper); border:1.5px solid var(--border); border-radius:10px; padding:8px 14px; font-weight:700; font-size:calc(0.85rem * var(--scale)); }
+  .slot-chip.active{ background:var(--teal); border-color:var(--teal); color:#fff; }
+  #slotConfirm{ display:none; background:var(--teal-tint); color:var(--teal); padding:12px; border-radius:12px; margin-top:12px; font-size:calc(0.85rem * var(--scale)); font-weight:700; }
 
   /* ===== FAQ ===== */
   .faq-item{ background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; }
@@ -301,7 +333,7 @@
 
   <div class="search-panel">
     <h2 data-i18n="searchTitle">Just say what you need</h2>
-    <p class="hint" data-i18n="searchHint">Tap the microphone and speak naturally — like "I need a house cleaner" or "이사할 집을 찾아요."</p>
+    <p class="hint" data-i18n="searchHint">Tap the microphone and speak naturally — like "I need a house cleaner available today" or "compare cleaning services in Calgary."</p>
     <div class="mic-wrap">
       <button id="micBtn"><svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg></button>
       <div id="micLabel" data-i18n="micLabel">Tap to speak</div>
@@ -359,7 +391,16 @@
       <h2 id="resultsTitle" data-i18n="featuredTitle">Featured Founding Providers</h2>
       <button class="clear-btn" id="clearBtn" style="display:none;" data-i18n="clearBtn">Show featured instead</button>
     </div>
-    <div class="listing-grid" id="listingGrid"></div>
+    <div class="results-tabs" id="resultsTabs">
+      <button class="tab-btn active" id="tabListingsBtn" data-i18n="tabListings">Listings</button>
+      <button class="tab-btn" id="tabCompareBtn" data-i18n="tabCompare">Compare Top 3</button>
+    </div>
+    <div class="tab-panel active" id="listingsPanel">
+      <div class="listing-grid" id="listingGrid"></div>
+    </div>
+    <div class="tab-panel" id="comparePanel">
+      <div class="compare-wrap"><table class="compare-table" id="compareTable"></table></div>
+    </div>
   </div>
 </section>
 
@@ -420,6 +461,12 @@
     <div class="rating-line" style="margin:8px 0;"><span class="star-row" id="modalStars"></span><span id="modalRatingText"></span></div>
     <div class="modal-price" id="modalPrice"></div>
     <p class="listing-blurb" id="modalBlurb"></p>
+    <div class="avail-section">
+      <h4 data-i18n="chooseTime">Choose a time</h4>
+      <div class="day-chip-row" id="dayChipRow"></div>
+      <div class="slot-chip-row" id="slotChipRow"></div>
+      <div id="slotConfirm"></div>
+    </div>
     <div id="modalReviews"></div>
     <div class="listing-actions">
       <button class="btn-call" id="modalCall"><svg class="icon" aria-hidden="true"><use href="#ic-phone"/></svg><span data-i18n="call">Call</span></button>
@@ -453,8 +500,16 @@
       heroTag:"Verified local businesses for Calgary's newcomer communities — Korean, Filipino, South Asian, Chinese, and beyond. Speak, tap, or type — in your language.",
       pathNeed:"I need a service", pathBiz:"I run a business",
       searchTitle:"Just say what you need",
-      searchHint:'Tap the microphone and speak naturally — like "I need a house cleaner" or "I need to find an apartment."',
+      searchHint:'Tap the microphone and speak naturally — like "I need a house cleaner available today" or "compare cleaning services in Calgary."',
       micLabel:"Tap to speak", typePlaceholder:"Or type here...", searchBtn:"Search",
+      tabListings:"Listings", tabCompare:"Compare Top 3",
+      compareColProvider:"Provider", compareColPrice:"Price", compareColRating:"Rating", compareColAvailability:"Availability", compareColTrust:"Trust", compareColLanguages:"Languages",
+      availToday:"Available today", availNext:"Next available: %s",
+      chooseTime:"Choose a time",
+      slotConfirm:'Request sent for %s at %s — %s will confirm shortly.',
+      compareMsg:'Comparing the top 3 for "%s"',
+      noAvailToday:"No one's available today for this — here's who's available soon.",
+      dayMon:"Mon", dayTue:"Tue", dayWed:"Wed", dayThu:"Thu", dayFri:"Fri", daySat:"Sat", daySun:"Sun",
       trust1title:"Real ID Verified", trust1sub:"Every provider's identity is checked before they can list",
       trust2title:"Payment Protection", trust2sub:"For bigger bookings, your money is held in escrow until the job is done — never pay a stranger upfront",
       trust3title:"Multilingual Support", trust3sub:"Fully working in Korean and English today — Tagalog, Hindi, Punjabi, and Mandarin launching soon",
@@ -507,8 +562,16 @@
       heroTag:"캘거리 한인, 필리핀, 남아시아, 중국계 등 다양한 이민자 커뮤니티를 위한 검증된 지역 업체. 말하거나, 누르거나, 입력하세요 — 내 언어로요.",
       pathNeed:"서비스가 필요해요", pathBiz:"업체를 운영해요",
       searchTitle:"필요한 것을 말씀해 주세요",
-      searchHint:'마이크를 누르고 자연스럽게 말씀해 주세요 — "청소해줄 사람이 필요해요" 또는 "이사할 집을 찾아요" 처럼요.',
+      searchHint:'마이크를 누르고 자연스럽게 말씀해 주세요 — "오늘 가능한 청소 업체 찾아줘" 또는 "캘거리 청소 업체 비교해줘" 처럼요.',
       micLabel:"눌러서 말하기", typePlaceholder:"또는 여기에 입력하세요...", searchBtn:"검색",
+      tabListings:"목록", tabCompare:"상위 3개 비교",
+      compareColProvider:"업체", compareColPrice:"가격", compareColRating:"평점", compareColAvailability:"예약 가능 시간", compareColTrust:"신뢰 정보", compareColLanguages:"가능 언어",
+      availToday:"오늘 예약 가능", availNext:"다음 예약 가능: %s",
+      chooseTime:"시간 선택",
+      slotConfirm:'%s %s 요청을 보냈어요 — %s에서 곧 확인해 드릴게요.',
+      compareMsg:'"%s"에 대한 상위 3개를 비교했어요',
+      noAvailToday:"오늘은 예약 가능한 업체가 없어요 — 곧 가능한 업체를 보여드릴게요.",
+      dayMon:"월", dayTue:"화", dayWed:"수", dayThu:"목", dayFri:"금", daySat:"토", daySun:"일",
       trust1title:"실명 인증 완료", trust1sub:"모든 업체는 등록 전 실명 인증을 거칩니다",
       trust2title:"안전 결제 보호", trust2sub:"큰 예약은 작업이 끝날 때까지 결제 금액이 에스크로에 안전하게 보관됩니다 — 낯선 사람에게 미리 결제할 필요 없어요",
       trust3title:"다국어 지원", trust3sub:"현재 한국어·영어로 완전히 이용 가능하며, 타갈로그어·힌디어·펀자브어·중국어(만다린)는 곧 지원 예정입니다",
@@ -586,6 +649,7 @@
     document.getElementById("fontPlus").setAttribute("aria-label", T[lang].fontPlusAria);
     renderCategoryTiles();
     renderListings(currentListings);
+    renderCompareTable(currentListings.slice(0,3));
     renderFAQ();
     renderCtaPerks();
     populateProviderCatSelect();
@@ -626,34 +690,55 @@
   // Fictional demo listings (illustrative preview data only — not real businesses)
   const LISTINGS = [
     {key:"rentals-1", cat:"rentals", nameEn:"Maple Grove Property Group", nameKo:"메이플 그로브 부동산", gold:true, escrow:true, rating:4.9, reviewCount:38, area:"NW Calgary", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","1:00 PM","4:00 PM"]},
       blurbEn:"Furnished rooms & townhouses near downtown. Bilingual leasing agent.", blurbKo:"다운타운 근처 가구 완비 방 및 타운하우스. 한/영 이중 상담 가능."},
     {key:"immigration-1", cat:"immigration", nameEn:"Bright Path Immigration", nameKo:"브라이트패스 이민상담", gold:true, escrow:true, rating:4.8, reviewCount:52, area:"City-wide", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","11:00 AM","2:00 PM"]},
       blurbEn:"RCIC-licensed consultant, work permits & PR applications.", blurbKo:"RCIC 공인 컨설턴트, 취업 비자 및 영주권 신청 지원."},
     {key:"cleaning-1", cat:"cleaning", nameEn:"Sparkle Home Services", nameKo:"스파클 홈 서비스", gold:true, escrow:false, rating:4.7, reviewCount:21, area:"SE Calgary", langs:["en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri","Sat"], slots:["8:00 AM","10:30 AM","1:00 PM","3:30 PM"]},
       blurbEn:"Weekly & move-out cleaning, fully insured team.", blurbKo:"주간 청소 및 이사 청소, 보험 가입 완료된 팀."},
+    {key:"cleaning-2", cat:"cleaning", nameEn:"Fresh Start Cleaning Co.", nameKo:"프레시 스타트 클리닝", gold:false, escrow:false, rating:4.5, reviewCount:16, area:"NW Calgary", langs:["en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","12:00 PM","2:30 PM"]},
+      blurbEn:"Budget-friendly regular cleaning, eco-friendly products.", blurbKo:"합리적인 가격의 정기 청소, 친환경 세제 사용."},
+    {key:"cleaning-3", cat:"cleaning", nameEn:"Clean Slate Calgary", nameKo:"클린 슬레이트 캘거리", gold:true, escrow:true, rating:4.8, reviewCount:47, area:"City-wide", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri","Sun"], slots:["8:30 AM","11:00 AM","1:30 PM","4:30 PM"]},
+      blurbEn:"Deep cleaning & move-out specialists, satisfaction guaranteed.", blurbKo:"입주·이사 청소 전문, 만족 보장."},
     {key:"hair-1", cat:"hair", nameEn:"Studio Haneul Hair", nameKo:"스튜디오 하늘 헤어", gold:false, escrow:false, rating:4.9, reviewCount:64, area:"Downtown", langs:["ko","en"],
+      avail:{days:["Tue","Wed","Thu","Fri","Sat"], slots:["11:00 AM","1:30 PM","4:00 PM"]},
       blurbEn:"Korean-style cuts & color, walk-ins welcome.", blurbKo:"한국식 커트 및 염색, 워크인 환영."},
     {key:"law-1", cat:"law", nameEn:"Anchor Point Law", nameKo:"앵커포인트 법률사무소", gold:true, escrow:true, rating:4.6, reviewCount:17, area:"Downtown", langs:["en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","2:00 PM"]},
       blurbEn:"Family law & small business contracts.", blurbKo:"가족법 및 소상공인 계약 전문."},
     {key:"tutoring-1", cat:"tutoring", nameEn:"Northstar Learning", nameKo:"노스스타 학습센터", gold:false, escrow:false, rating:4.8, reviewCount:29, area:"NW Calgary", langs:["ko","en"],
+      avail:{days:["Mon","Wed","Fri","Sat"], slots:["4:00 PM","5:30 PM","7:00 PM"]},
       blurbEn:"Math & English tutoring, all ages.", blurbKo:"전 연령 대상 수학 및 영어 과외."},
     {key:"construction-1", cat:"construction", nameEn:"TrueBuild Renovations", nameKo:"트루빌드 리노베이션", gold:true, escrow:true, rating:4.9, reviewCount:44, area:"City-wide", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["8:00 AM","12:00 PM"]},
       blurbEn:"Basement development & additions, Red Seal certified.", blurbKo:"지하실 개발 및 증축, 레드씰 자격 보유."},
     {key:"doctor-1", cat:"doctor", nameEn:"Riverbend Dental Care", nameKo:"리버벤드 치과", gold:false, escrow:false, rating:4.7, reviewCount:33, area:"SW Calgary", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","11:00 AM","2:30 PM"]},
       blurbEn:"Family dentistry, Korean-speaking front desk.", blurbKo:"가족 치과, 한국어 상담 가능."},
     {key:"tourism-1", cat:"tourism", nameEn:"Rocky Trails Tours", nameKo:"로키 트레일 투어", gold:false, escrow:true, rating:4.9, reviewCount:71, area:"City-wide", langs:["ko","en"],
+      avail:{days:["Fri","Sat","Sun"], slots:["7:00 AM","8:30 AM"]},
       blurbEn:"Banff & Lake Louise day trips, small groups.", blurbKo:"밴프 및 레이크루이스 당일 투어, 소규모 그룹."},
     {key:"caregiving-1", cat:"caregiving", nameEn:"Gentle Hands Care", nameKo:"젠틀핸즈 돌봄센터", gold:false, escrow:false, rating:4.8, reviewCount:19, area:"NE Calgary", langs:["ko"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], slots:["9:00 AM","1:00 PM","5:00 PM"]},
       blurbEn:"Elder companion care & light housekeeping.", blurbKo:"어르신 동행 돌봄 및 가벼운 가사 지원."},
     {key:"accounting-1", cat:"accounting", nameEn:"Clearview Accounting", nameKo:"클리어뷰 회계", gold:false, escrow:true, rating:4.6, reviewCount:24, area:"City-wide", langs:["ko","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","1:00 PM","3:00 PM"]},
       blurbEn:"Small business bookkeeping & personal tax filing.", blurbKo:"소상공인 기장 및 개인 세금 신고."},
     {key:"catering-1", cat:"catering", nameEn:"Home Table Catering", nameKo:"홈테이블 케이터링", gold:true, escrow:true, rating:4.9, reviewCount:41, area:"City-wide", langs:["ko"],
+      avail:{days:["Wed","Thu","Fri","Sat","Sun"], slots:["11:00 AM","2:00 PM"]},
       blurbEn:"Korean home-style catering for events of all sizes.", blurbKo:"각종 행사를 위한 한국 가정식 케이터링."},
     {key:"health-1", cat:"health", nameEn:"Balance Wellness Studio", nameKo:"밸런스 웰니스 스튜디오", gold:false, escrow:false, rating:4.7, reviewCount:26, area:"SW Calgary", langs:["en"],
+      avail:{days:["Mon","Tue","Thu","Fri","Sat"], slots:["9:30 AM","12:00 PM","3:00 PM"]},
       blurbEn:"Massage therapy & chiropractic care.", blurbKo:"마사지 테라피 및 카이로프랙틱 케어."},
     {key:"catering-2", cat:"catering", nameEn:"Manila Table Catering", nameKo:"마닐라 테이블 케이터링", gold:true, escrow:true, rating:4.8, reviewCount:33, area:"NE Calgary", langs:["tl","en"],
+      avail:{days:["Thu","Fri","Sat","Sun"], slots:["12:00 PM","3:00 PM"]},
       blurbEn:"Filipino home-style catering for parties, birthdays, and community events.", blurbKo:"파티, 생일, 커뮤니티 행사를 위한 필리핀 가정식 케이터링."},
     {key:"accounting-2", cat:"accounting", nameEn:"Sharma & Sons Accounting", nameKo:"샤르마 앤 선즈 회계", gold:false, escrow:true, rating:4.7, reviewCount:22, area:"SE Calgary", langs:["hi","pa","en"],
+      avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","12:00 PM","2:30 PM"]},
       blurbEn:"Personal & small business tax filing — Punjabi and Hindi spoken.", blurbKo:"개인 및 소상공인 세금 신고 — 펀자브어·힌디어 상담 가능."}
   ];
 
@@ -670,6 +755,21 @@
     for(let i=0;i<5;i++){ html += `<svg class="icon ${i<full?'filled':''}" aria-hidden="true"><use href="#ic-star"/></svg>`; }
     return html;
   }
+  const WEEKDAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  function todayIdx(){ return new Date().getDay(); }
+  function isAvailableOnIdx(l, idx){ return l.avail.days.includes(WEEKDAYS[idx]); }
+  function isAvailableToday(l){ return isAvailableOnIdx(l, todayIdx()); }
+  function nextAvailableIdx(l){
+    for(let i=0;i<7;i++){ const idx=(todayIdx()+i)%7; if(isAvailableOnIdx(l, idx)) return idx; }
+    return null;
+  }
+  function availInfo(l){
+    if(isAvailableToday(l)) return {cls:"today", text:T[lang].availToday};
+    const idx = nextAvailableIdx(l);
+    const dayName = idx===null ? "" : T[lang]["day"+WEEKDAYS[idx]];
+    return {cls:"later", text:T[lang].availNext.replace("%s", dayName)};
+  }
+
   const LANG_LABEL_KEY = {ko:"langKo", en:"langEn", tl:"langTl", hi:"langHi", pa:"langPa", zh:"langZh"};
   function langBadges(l){
     return (l.langs||[]).map(code=>{
@@ -693,12 +793,14 @@
   }
 
   function showCategory(catId){
-    const matches = LISTINGS.filter(l => l.cat === catId);
+    const matches = LISTINGS.filter(l => l.cat === catId).slice().sort((a,b)=>b.rating-a.rating);
     const cat = CATEGORIES.find(c=>c.id===catId);
     document.getElementById("resultsTitle").textContent = catName(cat);
     document.getElementById("clearBtn").style.display = "inline-block";
     currentListings = matches;
     renderListings(matches);
+    renderCompareTable(matches.slice(0,3));
+    updateResultsTabs(matches.length, false);
     document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
   }
 
@@ -728,6 +830,7 @@
           <span>${icon("ic-pin")}${l.area}</span>
           <span>${icon("ic-tag")}${catOf(l).price}</span>
         </div>
+        <div class="meta-line"><span class="avail-badge ${availInfo(l).cls}">${availInfo(l).text}</span></div>
         <div class="badges">
           <span class="badge id">${icon("ic-id")}${lang==="ko"?"인증":"Verified"}</span>
           ${l.gold ? `<span class="badge gold">${icon("ic-star","filled")}${lang==="ko"?"파운딩":"Founding"}</span>` : ""}
@@ -756,7 +859,66 @@
     document.getElementById("resultsTitle").textContent = T[lang].featuredTitle;
     document.getElementById("clearBtn").style.display = "none";
     renderListings(currentListings);
+    renderCompareTable(currentListings.slice(0,3));
+    updateResultsTabs(0, false);
   });
+
+  function renderCompareTable(list){
+    const table = document.getElementById("compareTable");
+    if(!list || list.length === 0){ table.innerHTML = ""; return; }
+    const head = `<thead><tr>
+      <th>${T[lang].compareColProvider}</th>
+      <th>${T[lang].compareColPrice}</th>
+      <th>${T[lang].compareColRating}</th>
+      <th>${T[lang].compareColAvailability}</th>
+      <th>${T[lang].compareColTrust}</th>
+      <th>${T[lang].compareColLanguages}</th>
+      <th></th>
+    </tr></thead>`;
+    const rows = list.map(l=>{
+      const info = availInfo(l);
+      const trustBadges = `
+        <span class="badge id">${icon("ic-id")}${lang==="ko"?"인증":"Verified"}</span>
+        ${l.gold ? `<span class="badge gold">${icon("ic-star","filled")}${lang==="ko"?"파운딩":"Founding"}</span>` : ""}
+        ${l.escrow ? `<span class="badge escrow">${icon("ic-shield")}${lang==="ko"?"안전결제":"Protected"}</span>` : ""}
+      `;
+      return `<tr>
+        <td><div class="compare-provider">${listingName(l)}<span class="sub">${l.area}</span></div></td>
+        <td>${catOf(l).price}</td>
+        <td><span class="star-row">${starRow(l.rating)}</span> ${l.rating}</td>
+        <td><span class="avail-badge ${info.cls}">${info.text}</span></td>
+        <td><div class="compare-badges">${trustBadges}</div></td>
+        <td>${langBadges(l)}</td>
+        <td><div class="compare-actions"><button class="btn-call" data-key="${l.key}">${icon("ic-phone")}${T[lang].call}</button></div></td>
+      </tr>`;
+    }).join("");
+    table.innerHTML = head + "<tbody>" + rows + "</tbody>";
+    table.querySelectorAll("[data-key]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const l = LISTINGS.find(x=>x.key===btn.getAttribute("data-key"));
+        if(l) openModal(l);
+      });
+    });
+  }
+
+  function setResultsTab(which){
+    document.getElementById("tabListingsBtn").classList.toggle("active", which==="listings");
+    document.getElementById("tabCompareBtn").classList.toggle("active", which==="compare");
+    document.getElementById("listingsPanel").classList.toggle("active", which==="listings");
+    document.getElementById("comparePanel").classList.toggle("active", which==="compare");
+  }
+  function updateResultsTabs(count, autoCompare){
+    const tabs = document.getElementById("resultsTabs");
+    if(count >= 2){
+      tabs.style.display = "flex";
+      setResultsTab(autoCompare ? "compare" : "listings");
+    } else {
+      tabs.style.display = "none";
+      setResultsTab("listings");
+    }
+  }
+  document.getElementById("tabListingsBtn").addEventListener("click", ()=> setResultsTab("listings"));
+  document.getElementById("tabCompareBtn").addEventListener("click", ()=> setResultsTab("compare"));
 
   const overlay = document.getElementById("modalOverlay");
   function openModal(l){
@@ -777,8 +939,62 @@
     const revs = T[lang].reviewText.slice(0,2);
     document.getElementById("modalReviews").innerHTML = revs.map(r=>`<div class="modal-review"><span class="star-row">${starRow(l.rating)}</span><br>${r}</div>`).join("");
     document.getElementById("reportConfirm").style.display = "none";
+    renderAvailPicker(l);
     overlay.classList.add("open");
     document.getElementById("modalClose").focus();
+  }
+
+  function renderAvailPicker(l){
+    const dayRow = document.getElementById("dayChipRow");
+    const confirm = document.getElementById("slotConfirm");
+    confirm.style.display = "none";
+    dayRow.innerHTML = "";
+    const today = todayIdx();
+    let firstEnabled = null;
+    const chips = [];
+    for(let i=0;i<7;i++){
+      const idx = (today+i)%7;
+      const enabled = isAvailableOnIdx(l, idx);
+      const d = new Date(); d.setDate(d.getDate()+i);
+      const btn = document.createElement("button");
+      btn.className = "day-chip";
+      btn.disabled = !enabled;
+      btn.innerHTML = `${T[lang]["day"+WEEKDAYS[idx]]}<span class="dname">${d.getDate()}</span>`;
+      btn.addEventListener("click", ()=>{
+        dayRow.querySelectorAll(".day-chip").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        renderSlots(l, T[lang]["day"+WEEKDAYS[idx]]);
+      });
+      dayRow.appendChild(btn);
+      chips.push(btn);
+      if(enabled && firstEnabled === null) firstEnabled = {btn, idx};
+    }
+    if(firstEnabled){
+      firstEnabled.btn.classList.add("active");
+      renderSlots(l, T[lang]["day"+WEEKDAYS[firstEnabled.idx]]);
+    } else {
+      document.getElementById("slotChipRow").innerHTML = "";
+    }
+  }
+
+  function renderSlots(l, dayLabel){
+    const slotRow = document.getElementById("slotChipRow");
+    const confirm = document.getElementById("slotConfirm");
+    confirm.style.display = "none";
+    slotRow.innerHTML = "";
+    l.avail.slots.forEach(s=>{
+      const btn = document.createElement("button");
+      btn.className = "slot-chip";
+      btn.type = "button";
+      btn.textContent = s;
+      btn.addEventListener("click", ()=>{
+        slotRow.querySelectorAll(".slot-chip").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        confirm.textContent = T[lang].slotConfirm.replace("%s", dayLabel).replace("%s", s).replace("%s", listingName(l));
+        confirm.style.display = "block";
+      });
+      slotRow.appendChild(btn);
+    });
   }
   document.getElementById("modalClose").addEventListener("click", ()=>{ overlay.classList.remove("open"); currentModalListing=null; });
   overlay.addEventListener("click", (e)=>{ if(e.target === overlay){ overlay.classList.remove("open"); currentModalListing=null; } });
@@ -846,20 +1062,36 @@
     return bestCat;
   }
 
+  const AVAIL_TODAY_KW = ["today","오늘"];
+  const COMPARE_KW = ["compare","comparison","top 3","top three","best","vs","versus","which one","비교","베스트","가장 좋은","추천해"];
+
   function runSearch(query){
     if(!query || !query.trim()) return;
     const cat = findMatches(query);
+    const q = query.toLowerCase();
+    const wantsToday = AVAIL_TODAY_KW.some(k=>q.includes(k));
+    const wantsCompare = COMPARE_KW.some(k=>q.includes(k));
     if(cat){
-      const matches = LISTINGS.filter(l=>l.cat===cat.id);
+      let matches = LISTINGS.filter(l=>l.cat===cat.id);
+      let noneToday = false;
+      if(wantsToday){
+        const todayMatches = matches.filter(isAvailableToday);
+        if(todayMatches.length){ matches = todayMatches; } else { noneToday = true; }
+      }
+      matches = matches.slice().sort((a,b)=>b.rating-a.rating);
       currentListings = matches;
       document.getElementById("resultsTitle").textContent = catName(cat);
       document.getElementById("clearBtn").style.display = "inline-block";
       renderListings(matches);
-      speak(T[lang].matchMsg.replace("%s", query));
+      renderCompareTable(matches.slice(0,3));
+      updateResultsTabs(matches.length, true);
+      const baseMsg = wantsCompare ? T[lang].compareMsg.replace("%s", query) : T[lang].matchMsg.replace("%s", query);
+      speak(noneToday ? T[lang].noAvailToday + " " + baseMsg : baseMsg);
     } else {
       renderListings([]);
       document.getElementById("resultsTitle").textContent = lang==="ko" ? "검색 결과" : "Search results";
       document.getElementById("clearBtn").style.display = "inline-block";
+      updateResultsTabs(0, false);
       speak(T[lang].noMatchMsg);
     }
     document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
@@ -1001,6 +1233,8 @@
     document.getElementById("clearBtn").style.display = "inline-block";
     if(favList.length === 0){ document.getElementById("listingGrid").innerHTML = `<div class="empty-msg">${T[lang].noSaved}</div>`; }
     else{ renderListings(favList); }
+    document.getElementById("resultsTabs").style.display = "none";
+    setResultsTab("listings");
     document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
   });
   document.getElementById("navBiz").addEventListener("click", ()=>{ setActiveNav("navBiz"); openProviderForm(); });
