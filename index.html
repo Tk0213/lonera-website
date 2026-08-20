@@ -23,9 +23,9 @@
     --scale: 1;
     --ink: #14181f;
     --ink-deep: #0a0d12;
-    --accent: #1c7a4e;
-    --accent-deep: #135c3a;
-    --accent-tint: #dcf3e5;
+    --accent: #c23b3b;
+    --accent-deep: #9c2e2e;
+    --accent-tint: #f4cccc;
     --amber: #c1870f;
     --amber-tint: #f6e6bf;
     --teal: #1f6f63;
@@ -43,7 +43,7 @@
     --shadow: 0 10px 28px rgba(20,24,31,0.06);
   }
   body.high-contrast{
-    --ink:#000000; --ink-deep:#000000; --accent:#0a5c34; --accent-deep:#053d22; --accent-tint:#d1f2de;
+    --ink:#000000; --ink-deep:#000000; --accent:#8a1f1f; --accent-deep:#5c1414; --accent-tint:#f9dede;
     --amber:#7a5600; --amber-tint:#fff0c2; --teal:#00473c; --teal-tint:#d1f0e6; --blue:#0d3a66; --blue-tint:#d9e8fb;
     --paper:#ffffff; --card:#ffffff; --text:#000000; --muted:#111111; --border:#000000; --shadow:none;
   }
@@ -79,40 +79,34 @@
   .brand small{ display:block;font-weight:500;font-size: calc(0.72rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
   .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
 
-  .section-nav{ background:#fff; border-bottom:1px solid var(--border); display:flex; justify-content:center; gap:6px; flex-wrap:wrap; padding:10px 16px; position:sticky; top:0; z-index:55; }
-  .section-nav a{ text-decoration:none; color:var(--text); font-weight:800; font-size:calc(0.86rem * var(--scale)); padding:8px 16px; border-radius:999px; }
-  .section-nav a:hover, .section-nav a:focus-visible{ background:var(--paper); color:var(--ink); }
   .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.88rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:44px; }
   .ctrl-btn:hover{background:rgba(255,255,255,0.2);}
   .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-  /* ===== Hero ===== */
-  .hero{ background:linear-gradient(165deg,var(--ink) 0%, var(--ink-deep) 100%); color:#fff; padding:48px 20px 56px; text-align:center; position:relative; overflow:hidden; }
-  .hero h1{ font-size: calc(2.35rem * var(--scale)); margin:0 0 12px; font-weight:800; }
-  .hero p.tagline{ font-size: calc(1.1rem * var(--scale)); color:#c7d0da; max-width:620px; margin:0 auto 22px; }
-  .readaloud-btn{ background:rgba(255,255,255,0.12); color:#fff; border:1.5px solid rgba(255,255,255,0.32); border-radius:999px; padding:10px 18px; font-weight:700; font-size: calc(0.88rem * var(--scale)); margin-bottom:26px; min-height:44px; display:inline-flex; align-items:center; gap:8px; }
-  .readaloud-btn.active{ background:var(--danger); border-color:var(--danger); }
+  /* ===== Icon category nav ===== */
+  .icon-nav-bar{ background:#fff; border-bottom:1px solid var(--border); display:flex; justify-content:center; align-items:flex-start; gap:6px; flex-wrap:wrap; padding:10px 16px; position:sticky; top:0; z-index:55; }
+  .icon-nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; color:var(--text); font-weight:700; font-size:calc(0.76rem * var(--scale)); padding:8px 16px; border-radius:14px; min-width:68px; background:none; border:none; font-family:inherit; }
+  .icon-nav-item .icon{ width:1.7em; height:1.7em; color:var(--accent); }
+  .icon-nav-item:hover, .icon-nav-item:focus-visible{ background:var(--accent-tint); }
+  .icon-nav-cta{ background:var(--accent); color:#fff; margin-left:6px; }
+  .icon-nav-cta .icon{ color:#fff; }
+  .icon-nav-cta:hover{ background:var(--accent-deep); }
 
-  .path-buttons{ display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px; }
-  .path-btn{ background:#fff; color:var(--ink); border:none; border-radius:var(--radius-sm); padding:18px 26px; font-size: calc(1.02rem * var(--scale)); font-weight:800; display:flex; flex-direction:column; align-items:center; gap:8px; min-width:210px; box-shadow:0 10px 26px rgba(0,0,0,0.28); min-height:88px; justify-content:center; }
-  .path-btn .icon{ color:var(--accent); }
-  .path-btn.secondary{ background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.5); box-shadow:none; }
-  .path-btn.secondary .icon{ color:#fff; }
-
-  .search-panel{ background:#fff; color:var(--text); border-radius:26px; max-width:620px; margin:0 auto; padding:30px 26px; box-shadow:0 24px 54px rgba(0,0,0,0.32); }
-  .search-panel h2{ margin:0 0 4px; font-size: calc(1.2rem * var(--scale)); color:var(--ink); }
-  .search-panel p.hint{ margin:0 0 18px; color:var(--muted); font-size: calc(0.94rem * var(--scale)); }
-  .mic-wrap{ display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:18px; }
-  #micBtn{ width:108px;height:108px;border-radius:50%;border:none; background:var(--teal); color:#fff; display:flex;align-items:center;justify-content:center; box-shadow:0 12px 28px rgba(31,111,99,0.4); transition:transform .15s ease; }
-  #micBtn .icon{ width:38px;height:38px; stroke-width:1.6; }
-  #micBtn:hover{transform:scale(1.04);}
+  /* ===== Top search ===== */
+  .top-search{ background:#fff; padding:40px 20px 34px; text-align:center; max-width:760px; margin:0 auto; }
+  .top-search h1{ font-size: calc(2rem * var(--scale)); margin:0 0 24px; font-weight:800; color:var(--ink); text-wrap:balance; }
+  .search-pill{ display:flex; align-items:center; gap:6px; background:#fff; border:2px solid var(--border); border-radius:999px; padding:6px; max-width:640px; margin:0 auto; box-shadow:0 8px 24px rgba(20,24,31,0.08); }
+  .search-pill:focus-within{ border-color:var(--accent); }
+  #micBtn{ width:46px;height:46px;border-radius:50%;border:none; background:var(--accent); color:#fff; display:flex;align-items:center;justify-content:center; flex-shrink:0; transition:transform .15s ease; }
+  #micBtn .icon{ width:20px;height:20px; stroke-width:1.8; }
+  #micBtn:hover{transform:scale(1.05);}
   #micBtn.listening{ background:var(--danger); animation:pulse 1.2s infinite; }
-  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(181,52,42,0.45);} 70%{box-shadow:0 0 0 22px rgba(181,52,42,0);} 100%{box-shadow:0 0 0 0 rgba(181,52,42,0);} }
-  #micLabel{font-weight:800;color:var(--ink);font-size: calc(1rem * var(--scale));}
-  #voiceStatus{ min-height:26px; color:var(--teal); font-weight:700; font-size: calc(0.94rem * var(--scale)); }
-  .type-alt{ display:flex;gap:8px; border-top:1px solid var(--border); padding-top:16px; }
-  .type-alt input{ flex:1; padding:14px 16px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size: calc(1rem * var(--scale)); min-height:52px; }
-  .type-alt button{ background:var(--ink); color:#fff; border:none; border-radius:var(--radius-sm); padding:0 22px; font-weight:800; font-size: calc(1rem * var(--scale)); min-height:52px; min-width:90px; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(181,52,42,0.45);} 70%{box-shadow:0 0 0 18px rgba(181,52,42,0);} 100%{box-shadow:0 0 0 0 rgba(181,52,42,0);} }
+  .search-pill input{ flex:1; min-width:0; border:none; outline:none; background:transparent; padding:10px 4px; font-size: calc(1rem * var(--scale)); font-family:inherit; color:var(--text); }
+  .search-pill #textSearchBtn{ background:var(--ink); color:#fff; border:none; border-radius:999px; padding:12px 22px; font-weight:800; font-size: calc(0.94rem * var(--scale)); flex-shrink:0; }
+  .voice-status-inline{ margin-top:12px; min-height:22px; color:var(--accent-deep); font-weight:700; font-size: calc(0.9rem * var(--scale)); }
+  .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; text-decoration:underline; text-underline-offset:2px; }
+  .readaloud-link.active{ color:var(--danger); }
 
   /* ===== Trust strip + stats ===== */
   .trust-strip{ display:flex;justify-content:center;flex-wrap:wrap;gap:26px; padding:28px 20px;background:#fff;border-bottom:1px solid var(--border); }
@@ -126,7 +120,7 @@
 
   .stats-bar{ background:var(--ink-deep); color:#fff; padding:28px 20px; display:flex; flex-wrap:wrap; justify-content:center; gap:38px; text-align:center; }
   .stat{min-width:150px;}
-  .stat .num{font-size: calc(1.7rem * var(--scale)); font-weight:800; color:#7fd9a8;}
+  .stat .num{font-size: calc(1.7rem * var(--scale)); font-weight:800; color:#f0a8a8;}
   .stat .lbl{font-size: calc(0.82rem * var(--scale)); color:#aab4c0;}
   .progress-wrap{ max-width:420px; margin:6px auto 0; text-align:left; }
   .progress-track{ background:rgba(255,255,255,0.16); border-radius:999px; height:12px; overflow:hidden; margin-top:6px; }
@@ -247,7 +241,7 @@
 
   .provider-cta{ background:linear-gradient(135deg,var(--accent),var(--accent-deep)); color:#fff;border-radius:26px;padding:38px 26px; text-align:center;margin:0 auto;max-width:820px; }
   .provider-cta h2{margin:0 0 10px;font-size: calc(1.5rem * var(--scale));}
-  .provider-cta p{margin:0 0 20px;font-size: calc(1rem * var(--scale));color:#d7f2e2;}
+  .provider-cta p{margin:0 0 20px;font-size: calc(1rem * var(--scale));color:#f9dede;}
   .provider-cta .compare-line{font-weight:800;font-size:calc(0.85rem * var(--scale));margin:0 0 20px;color:#fff;}
   .cta-perks{ list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;text-align:left;max-width:680px;margin-left:auto;margin-right:auto; }
   .cta-perks li{ display:flex;align-items:flex-start;gap:8px;font-size:calc(0.88rem * var(--scale));color:#fff;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 12px; }
@@ -346,6 +340,7 @@
     <symbol id="ic-contrast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
     <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 0 1 12 0c0 4.5 1.5 6 2 6.5H4c.5-.5 2-2 2-6.5z"/><path d="M9.5 19.5a2.5 2.5 0 0 0 5 0"/></symbol>
     <symbol id="ic-ticket" viewBox="0 0 24 24"><path d="M3 9V6.5a1.5 1.5 0 0 1 1.5-1.5h15A1.5 1.5 0 0 1 21 6.5V9a2 2 0 0 0 0 6v2.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5V15a2 2 0 0 0 0-6z"/><path d="M9 5v14" stroke-dasharray="2.5 2.5"/></symbol>
+    <symbol id="ic-briefcase" viewBox="0 0 24 24"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/><path d="M3 13h18"/></symbol>
     <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/><path d="M8 21h8"/></symbol>
     <symbol id="ic-speaker" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.2 9a4 4 0 0 1 0 6"/><path d="M18.6 6.7a8 8 0 0 1 0 10.6"/></symbol>
     <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></symbol>
@@ -400,39 +395,27 @@
   </div>
 </header>
 
-<nav class="section-nav" aria-label="Section links">
-  <a href="#categoriesBlock" data-i18n="navSecServices">Services</a>
-  <a href="#jobsBlock" data-i18n="navSecJobs">Jobs</a>
-  <a href="#marketplaceBlock" data-i18n="navSecMarket">Marketplace</a>
-  <a href="#communityBlock" data-i18n="navSecCommunity">Community</a>
-  <a href="#supportBlock" data-i18n="navSecSupport">Support</a>
+<nav class="icon-nav-bar" aria-label="Section links">
+  <a href="#categoriesBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-store"/></svg><span data-i18n="navSecServices">Services</span></a>
+  <a href="#jobsBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-briefcase"/></svg><span data-i18n="navSecJobs">Jobs</span></a>
+  <a href="#marketplaceBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-tag"/></svg><span data-i18n="navSecMarket">Marketplace</span></a>
+  <a href="#communityBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-chat"/></svg><span data-i18n="navSecCommunity">Community</span></a>
+  <a href="#supportBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-ticket"/></svg><span data-i18n="navSecSupport">Support</span></a>
+  <button class="icon-nav-item icon-nav-cta" id="runBizBtn"><svg class="icon" aria-hidden="true"><use href="#ic-briefcase"/></svg><span data-i18n="pathBiz">I run a business</span></button>
 </nav>
 
 <main id="main">
-<section class="hero" id="homeAnchor">
+<section class="top-search" id="homeAnchor">
   <h1 data-i18n="heroTitle">Find help you can trust — just ask.</h1>
-  <p class="tagline" data-i18n="heroTag">Verified local businesses for Calgary's newcomer communities — Korean, Filipino, South Asian, Chinese, and beyond. Speak, tap, or type — in your language.</p>
-  <button class="readaloud-btn" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
-
-  <div class="path-buttons">
-    <button class="path-btn" id="needHelpBtn"><svg class="icon-xl" aria-hidden="true"><use href="#ic-search"/></svg><span data-i18n="pathNeed">I need a service</span></button>
-    <button class="path-btn secondary" id="runBizBtn"><svg class="icon-xl" aria-hidden="true"><use href="#ic-store"/></svg><span data-i18n="pathBiz">I run a business</span></button>
+  <label for="textSearch" class="sr-only" data-i18n="searchTitle">Just say what you need</label>
+  <div class="search-pill">
+    <button id="micBtn" class="pill-mic"><svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg></button>
+    <input type="text" id="textSearch" data-i18n-placeholder="typePlaceholder" placeholder="Or type here...">
+    <button id="textSearchBtn" data-i18n="searchBtn">Search</button>
   </div>
-
-  <div class="search-panel">
-    <h2 data-i18n="searchTitle">Just say what you need</h2>
-    <p class="hint" data-i18n="searchHint">Tap the microphone and speak naturally — like "I need a house cleaner available today" or "compare cleaning services in Calgary."</p>
-    <div class="mic-wrap">
-      <button id="micBtn"><svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg></button>
-      <div id="micLabel" data-i18n="micLabel">Tap to speak</div>
-      <div id="voiceStatus" aria-live="polite"></div>
-    </div>
-    <div class="type-alt">
-      <label for="textSearch" class="sr-only">Search by typing</label>
-      <input type="text" id="textSearch" data-i18n-placeholder="typePlaceholder" placeholder="Or type here...">
-      <button id="textSearchBtn" data-i18n="searchBtn">Search</button>
-    </div>
-  </div>
+  <div id="micLabel" class="sr-only" data-i18n="micLabel">Tap to speak</div>
+  <div id="voiceStatus" class="voice-status-inline" aria-live="polite"></div>
+  <button class="readaloud-link" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
 </section>
 
 <div class="trust-strip">
@@ -1829,7 +1812,6 @@
 
   document.getElementById("textSearchBtn").addEventListener("click", ()=> runSearch(document.getElementById("textSearch").value));
   document.getElementById("textSearch").addEventListener("keydown", (e)=>{ if(e.key === "Enter") runSearch(e.target.value); });
-  document.getElementById("needHelpBtn").addEventListener("click", ()=> document.querySelector(".search-panel").scrollIntoView({behavior:"smooth", block:"center"}));
   document.getElementById("runBizBtn").addEventListener("click", openProviderForm);
   document.getElementById("ctaJoinBtn").addEventListener("click", openProviderForm);
 
@@ -1953,7 +1935,7 @@
     document.getElementById(id).classList.add("active");
   }
   document.getElementById("navHome").addEventListener("click", ()=>{ setActiveNav("navHome"); document.getElementById("homeAnchor").scrollIntoView({behavior:"smooth"}); });
-  document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-panel").scrollIntoView({behavior:"smooth", block:"center"}); });
+  document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
   document.getElementById("navCats").addEventListener("click", ()=>{ setActiveNav("navCats"); document.getElementById("categoriesBlock").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navFav").addEventListener("click", ()=>{
     setActiveNav("navFav");
