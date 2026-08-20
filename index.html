@@ -78,6 +78,10 @@
   .brand .mark .icon{ width:22px;height:22px; stroke-width:2.1; }
   .brand small{ display:block;font-weight:500;font-size: calc(0.72rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
   .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+
+  .section-nav{ background:#fff; border-bottom:1px solid var(--border); display:flex; justify-content:center; gap:6px; flex-wrap:wrap; padding:10px 16px; position:sticky; top:0; z-index:55; }
+  .section-nav a{ text-decoration:none; color:var(--text); font-weight:800; font-size:calc(0.86rem * var(--scale)); padding:8px 16px; border-radius:999px; }
+  .section-nav a:hover, .section-nav a:focus-visible{ background:var(--paper); color:var(--ink); }
   .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.88rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:44px; }
   .ctrl-btn:hover{background:rgba(255,255,255,0.2);}
   .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
@@ -183,6 +187,9 @@
   .star-row .icon{width:0.95em;height:0.95em;}
   .meta-line{display:flex;gap:12px;flex-wrap:wrap;font-size: calc(0.8rem * var(--scale));color:var(--muted);align-items:center;}
   .meta-line span{display:inline-flex;align-items:center;gap:4px;}
+  .posted-tag{color:var(--muted);opacity:0.85;}
+  .sort-bar{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .sort-bar select{ padding:9px 14px; border-radius:999px; border:1.5px solid var(--border); font-size:calc(0.85rem * var(--scale)); font-family:inherit; background:#fff; color:var(--text); font-weight:700; }
   .badges{display:flex;gap:6px;flex-wrap:wrap;}
   .badge{ font-size: calc(0.74rem * var(--scale));font-weight:800;padding:5px 11px;border-radius:999px; display:flex;align-items:center;gap:5px; }
   .badge .icon{width:0.95em;height:0.95em;}
@@ -298,6 +305,24 @@
   .ticket-status.pending{ background:var(--amber-tint); color:#7a5709; }
   .ticket-status.resolved{ background:var(--teal-tint); color:var(--teal); }
 
+  /* ===== Jobs + Marketplace boards ===== */
+  .filter-chips{ display:flex; gap:8px; flex-wrap:wrap; max-width:1080px; margin:0 auto 20px; justify-content:center; }
+  .filter-chips .chip{ background:var(--card); border:1.5px solid var(--border); border-radius:999px; padding:8px 16px; font-weight:800; font-size:calc(0.84rem * var(--scale)); color:var(--muted); }
+  .filter-chips .chip.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .board-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; max-width:1080px; margin:0 auto 22px; }
+  .board-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; }
+  .board-card .cat-tag{ display:inline-block; font-size:calc(0.7rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; align-self:flex-start; margin-bottom:2px; }
+  .board-card .b-title{ font-weight:800; color:var(--ink); font-size:calc(0.96rem * var(--scale)); line-height:1.35; }
+  .board-card .b-sub{ color:var(--muted); font-size:calc(0.82rem * var(--scale)); }
+  .board-card .b-price{ font-weight:800; color:var(--teal); font-size:calc(1.02rem * var(--scale)); margin-top:2px; }
+  .board-card .b-meta{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:calc(0.76rem * var(--scale)); color:var(--muted); }
+  .board-card .condition-badge{ font-size:calc(0.7rem * var(--scale)); font-weight:800; padding:3px 9px; border-radius:999px; background:var(--teal-tint); color:var(--teal); }
+  .post-toggle-wrap{ max-width:1080px; margin:0 auto 16px; text-align:center; }
+  .post-form{ max-width:680px; margin:0 auto 26px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; display:flex; flex-direction:column; gap:10px; }
+  .post-form input, .post-form select{ padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size:calc(0.94rem * var(--scale)); font-family:inherit; background:#fff; width:100%; }
+  .post-form-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media (max-width:640px){ .post-form-row{ grid-template-columns:1fr; } }
+
   /* ===== Bottom mobile nav ===== */
   .bottom-nav{ display:none; position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--border); z-index:70; box-shadow:0 -4px 16px rgba(0,0,0,0.08); }
   .bottom-nav .row{ display:flex; }
@@ -375,6 +400,14 @@
   </div>
 </header>
 
+<nav class="section-nav" aria-label="Section links">
+  <a href="#categoriesBlock" data-i18n="navSecServices">Services</a>
+  <a href="#jobsBlock" data-i18n="navSecJobs">Jobs</a>
+  <a href="#marketplaceBlock" data-i18n="navSecMarket">Marketplace</a>
+  <a href="#communityBlock" data-i18n="navSecCommunity">Community</a>
+  <a href="#supportBlock" data-i18n="navSecSupport">Support</a>
+</nav>
+
 <main id="main">
 <section class="hero" id="homeAnchor">
   <h1 data-i18n="heroTitle">Find help you can trust — just ask.</h1>
@@ -444,7 +477,15 @@
   <div id="results">
     <div class="results-heading">
       <h2 id="resultsTitle" data-i18n="featuredTitle">Featured Founding Providers</h2>
-      <button class="clear-btn" id="clearBtn" style="display:none;" data-i18n="clearBtn">Show featured instead</button>
+      <div class="sort-bar">
+        <label for="resultsSort" class="sr-only" data-i18n="sortLabel">Sort</label>
+        <select id="resultsSort">
+          <option value="rating" data-i18n="sortRating">Highest rated</option>
+          <option value="newest" data-i18n="sortNewest">Newest</option>
+          <option value="priceLow" data-i18n="sortPriceLow">Price: low first</option>
+        </select>
+        <button class="clear-btn" id="clearBtn" style="display:none;" data-i18n="clearBtn">Show featured instead</button>
+      </div>
     </div>
     <div class="results-tabs" id="resultsTabs">
       <button class="tab-btn active" id="tabListingsBtn" data-i18n="tabListings">Listings</button>
@@ -456,6 +497,42 @@
     <div class="tab-panel" id="comparePanel">
       <div class="compare-wrap"><table class="compare-table" id="compareTable"></table></div>
     </div>
+  </div>
+</section>
+
+<section class="block" id="jobsBlock">
+  <h2 class="section-title" data-i18n="jobsTitle">Jobs</h2>
+  <p class="section-sub" data-i18n="jobsSub">Local job postings from Calgary employers — hourly, salaried, and gig work.</p>
+  <div class="filter-chips" id="jobsFilterChips"></div>
+  <div id="jobsGrid" class="board-grid"></div>
+  <div class="post-toggle-wrap"><button class="btn-cancel" id="jobsPostToggle" data-i18n="postAJob">+ Post a job</button></div>
+  <div class="post-form" id="jobsPostForm" style="display:none;">
+    <input type="text" id="jobTitleInput" data-i18n-placeholder="jobTitlePlaceholder" placeholder="Job title">
+    <input type="text" id="jobCompanyInput" data-i18n-placeholder="jobCompanyPlaceholder" placeholder="Company name">
+    <div class="post-form-row">
+      <select id="jobCategoryInput"></select>
+      <input type="text" id="jobWageInput" data-i18n-placeholder="jobWagePlaceholder" placeholder="e.g. $22/hr or $55,000/yr">
+      <input type="text" id="jobAreaInput" data-i18n-placeholder="jobAreaPlaceholder" placeholder="Area (e.g. NE Calgary)">
+    </div>
+    <button class="btn-choose" id="jobsSubmitBtn" data-i18n="postSubmitBtn">Post job</button>
+  </div>
+</section>
+
+<section class="block" id="marketplaceBlock">
+  <h2 class="section-title" data-i18n="marketTitle">Marketplace</h2>
+  <p class="section-sub" data-i18n="marketSub">Buy and sell with your neighbours — furniture, electronics, vehicles, and more.</p>
+  <div class="filter-chips" id="marketFilterChips"></div>
+  <div id="marketGrid" class="board-grid"></div>
+  <div class="post-toggle-wrap"><button class="btn-cancel" id="marketPostToggle" data-i18n="postAnItem">+ Post an item</button></div>
+  <div class="post-form" id="marketPostForm" style="display:none;">
+    <input type="text" id="itemTitleInput" data-i18n-placeholder="itemTitlePlaceholder" placeholder="What are you selling?">
+    <div class="post-form-row">
+      <select id="itemCategoryInput"></select>
+      <select id="itemConditionInput"></select>
+      <input type="text" id="itemPriceInput" data-i18n-placeholder="itemPricePlaceholder" placeholder="Price (e.g. $80)">
+      <input type="text" id="itemAreaInput" data-i18n-placeholder="itemAreaPlaceholder" placeholder="Area (e.g. SW Calgary)">
+    </div>
+    <button class="btn-choose" id="marketSubmitBtn" data-i18n="postSubmitBtn">Post item</button>
   </div>
 </section>
 
@@ -652,6 +729,13 @@
       tier1label:"Protected Bookings", tier1desc:"Bigger jobs — your payment is held safely until the work is finished.",
       tier2label:"Everyday Services", tier2desc:"Every-day help — all verified, all reviewed by real neighbours.",
       featuredTitle:"Featured Founding Providers", clearBtn:"Show featured instead",
+      sortLabel:"Sort", sortRating:"Highest rated", sortNewest:"Newest", sortPriceLow:"Price: low first",
+      jobsTitle:"Jobs", jobsSub:"Local job postings from Calgary employers — hourly, salaried, and gig work.",
+      marketTitle:"Marketplace", marketSub:"Buy and sell with your neighbours — furniture, electronics, vehicles, and more.",
+      postAJob:"+ Post a job", postAnItem:"+ Post an item", postSubmitBtn:"Post",
+      jobTitlePlaceholder:"Job title", jobCompanyPlaceholder:"Company name", jobWagePlaceholder:"e.g. $22/hr or $55,000/yr", jobAreaPlaceholder:"Area (e.g. NE Calgary)",
+      itemTitlePlaceholder:"What are you selling?", itemPricePlaceholder:"Price (e.g. $80)", itemAreaPlaceholder:"Area (e.g. SW Calgary)",
+      navSecServices:"Services", navSecJobs:"Jobs", navSecMarket:"Marketplace", navSecCommunity:"Community", navSecSupport:"Support",
       faqTitle:"Common questions", faqSub:"Straight answers, no fine print.",
       aboutTitle:"Who's behind Lonera",
       aboutP1:"Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families — and neighbours from Korean, Filipino, South Asian, and other newcomer communities — struggle to find local help they could trust in a new country.",
@@ -734,6 +818,13 @@
       tier1label:"안전 결제 예약", tier1desc:"큰 예약 — 작업이 끝날 때까지 결제 금액이 안전하게 보관됩니다.",
       tier2label:"일상 서비스", tier2desc:"일상적인 도움 — 모두 검증되고 이웃들의 후기가 있어요.",
       featuredTitle:"추천 파운딩 프로바이더", clearBtn:"추천 목록 다시 보기",
+      sortLabel:"정렬", sortRating:"평점 높은순", sortNewest:"최신순", sortPriceLow:"가격 낮은순",
+      jobsTitle:"구인구직", jobsSub:"캘거리 고용주들의 지역 채용 공고 — 시급, 연봉, 단기직 모두 있어요.",
+      marketTitle:"마켓플레이스", marketSub:"이웃과 사고 팔아보세요 — 가구, 전자제품, 차량 등 다양하게.",
+      postAJob:"+ 채용 등록", postAnItem:"+ 물품 등록", postSubmitBtn:"등록",
+      jobTitlePlaceholder:"직무명", jobCompanyPlaceholder:"업체명", jobWagePlaceholder:"예: $22/시간 또는 $55,000/년", jobAreaPlaceholder:"지역 (예: NE 캘거리)",
+      itemTitlePlaceholder:"판매하실 물품은 무엇인가요?", itemPricePlaceholder:"가격 (예: $80)", itemAreaPlaceholder:"지역 (예: SW 캘거리)",
+      navSecServices:"서비스", navSecJobs:"구인구직", navSecMarket:"마켓플레이스", navSecCommunity:"커뮤니티", navSecSupport:"고객센터",
       faqTitle:"자주 묻는 질문", faqSub:"복잡한 설명 없이, 명확한 답변만 드려요.",
       aboutTitle:"로네라를 만든 사람들",
       aboutP1:"로네라는 캘거리에서 나고 자란 두 학생, TK Lim과 Connor Kim이 시작했습니다. 저희 가족과, 한인·필리핀·남아시아 등 다양한 이민자 이웃들이 새로운 나라에서 믿을 수 있는 지역 업체를 찾기 위해 고생하는 모습을 보며 자랐습니다.",
@@ -805,6 +896,12 @@
     renderCommunityFeed();
     renderTicketList();
     renderNotifications();
+    renderJobsFilterChips();
+    renderJobsGrid();
+    populateJobCategorySelect();
+    renderMarketFilterChips();
+    renderMarketGrid();
+    populateMarketSelects();
     if(document.getElementById("modalOverlay").classList.contains("open") && currentModalListing){
       openModal(currentModalListing);
     }
@@ -841,55 +938,55 @@
 
   // Fictional demo listings (illustrative preview data only — not real businesses)
   const LISTINGS = [
-    {key:"rentals-1", cat:"rentals", nameEn:"Maple Grove Property Group", nameKo:"메이플 그로브 부동산", gold:true, escrow:true, rating:4.9, reviewCount:38, area:"NW Calgary", langs:["ko","en"],
+    {key:"rentals-1", cat:"rentals", nameEn:"Maple Grove Property Group", nameKo:"메이플 그로브 부동산", gold:true, escrow:true, rating:4.9, reviewCount:38, area:"NW Calgary", langs:["ko","en"], postedTs: Date.now() - 3600000*3,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","1:00 PM","4:00 PM"]},
       blurbEn:"Furnished rooms & townhouses near downtown. Bilingual leasing agent.", blurbKo:"다운타운 근처 가구 완비 방 및 타운하우스. 한/영 이중 상담 가능."},
-    {key:"immigration-1", cat:"immigration", nameEn:"Bright Path Immigration", nameKo:"브라이트패스 이민상담", gold:true, escrow:true, rating:4.8, reviewCount:52, area:"City-wide", langs:["ko","en"],
+    {key:"immigration-1", cat:"immigration", nameEn:"Bright Path Immigration", nameKo:"브라이트패스 이민상담", gold:true, escrow:true, rating:4.8, reviewCount:52, area:"City-wide", langs:["ko","en"], postedTs: Date.now() - 3600000*6,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","11:00 AM","2:00 PM"]},
       blurbEn:"RCIC-licensed consultant, work permits & PR applications.", blurbKo:"RCIC 공인 컨설턴트, 취업 비자 및 영주권 신청 지원."},
-    {key:"cleaning-1", cat:"cleaning", nameEn:"Sparkle Home Services", nameKo:"스파클 홈 서비스", gold:true, escrow:false, rating:4.7, reviewCount:21, area:"SE Calgary", langs:["en"],
+    {key:"cleaning-1", cat:"cleaning", nameEn:"Sparkle Home Services", nameKo:"스파클 홈 서비스", gold:true, escrow:false, rating:4.7, reviewCount:21, area:"SE Calgary", langs:["en"], postedTs: Date.now() - 3600000*9,
       avail:{days:["Mon","Tue","Wed","Thu","Fri","Sat"], slots:["8:00 AM","10:30 AM","1:00 PM","3:30 PM"]},
       blurbEn:"Weekly & move-out cleaning, fully insured team.", blurbKo:"주간 청소 및 이사 청소, 보험 가입 완료된 팀."},
-    {key:"cleaning-2", cat:"cleaning", nameEn:"Fresh Start Cleaning Co.", nameKo:"프레시 스타트 클리닝", gold:false, escrow:false, rating:4.5, reviewCount:16, area:"NW Calgary", langs:["en"],
+    {key:"cleaning-2", cat:"cleaning", nameEn:"Fresh Start Cleaning Co.", nameKo:"프레시 스타트 클리닝", gold:false, escrow:false, rating:4.5, reviewCount:16, area:"NW Calgary", langs:["en"], postedTs: Date.now() - 3600000*14,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","12:00 PM","2:30 PM"]},
       blurbEn:"Budget-friendly regular cleaning, eco-friendly products.", blurbKo:"합리적인 가격의 정기 청소, 친환경 세제 사용."},
-    {key:"cleaning-3", cat:"cleaning", nameEn:"Clean Slate Calgary", nameKo:"클린 슬레이트 캘거리", gold:true, escrow:true, rating:4.8, reviewCount:47, area:"City-wide", langs:["ko","en"],
+    {key:"cleaning-3", cat:"cleaning", nameEn:"Clean Slate Calgary", nameKo:"클린 슬레이트 캘거리", gold:true, escrow:true, rating:4.8, reviewCount:47, area:"City-wide", langs:["ko","en"], postedTs: Date.now() - 3600000*20,
       avail:{days:["Mon","Tue","Wed","Thu","Fri","Sun"], slots:["8:30 AM","11:00 AM","1:30 PM","4:30 PM"]},
       blurbEn:"Deep cleaning & move-out specialists, satisfaction guaranteed.", blurbKo:"입주·이사 청소 전문, 만족 보장."},
-    {key:"hair-1", cat:"hair", nameEn:"Studio Haneul Hair", nameKo:"스튜디오 하늘 헤어", gold:false, escrow:false, rating:4.9, reviewCount:64, area:"Downtown", langs:["ko","en"],
+    {key:"hair-1", cat:"hair", nameEn:"Studio Haneul Hair", nameKo:"스튜디오 하늘 헤어", gold:false, escrow:false, rating:4.9, reviewCount:64, area:"Downtown", langs:["ko","en"], postedTs: Date.now() - 3600000*26,
       avail:{days:["Tue","Wed","Thu","Fri","Sat"], slots:["11:00 AM","1:30 PM","4:00 PM"]},
       blurbEn:"Korean-style cuts & color, walk-ins welcome.", blurbKo:"한국식 커트 및 염색, 워크인 환영."},
-    {key:"law-1", cat:"law", nameEn:"Anchor Point Law", nameKo:"앵커포인트 법률사무소", gold:true, escrow:true, rating:4.6, reviewCount:17, area:"Downtown", langs:["en"],
+    {key:"law-1", cat:"law", nameEn:"Anchor Point Law", nameKo:"앵커포인트 법률사무소", gold:true, escrow:true, rating:4.6, reviewCount:17, area:"Downtown", langs:["en"], postedTs: Date.now() - 3600000*33,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","2:00 PM"]},
       blurbEn:"Family law & small business contracts.", blurbKo:"가족법 및 소상공인 계약 전문."},
-    {key:"tutoring-1", cat:"tutoring", nameEn:"Northstar Learning", nameKo:"노스스타 학습센터", gold:false, escrow:false, rating:4.8, reviewCount:29, area:"NW Calgary", langs:["ko","en"],
+    {key:"tutoring-1", cat:"tutoring", nameEn:"Northstar Learning", nameKo:"노스스타 학습센터", gold:false, escrow:false, rating:4.8, reviewCount:29, area:"NW Calgary", langs:["ko","en"], postedTs: Date.now() - 3600000*40,
       avail:{days:["Mon","Wed","Fri","Sat"], slots:["4:00 PM","5:30 PM","7:00 PM"]},
       blurbEn:"Math & English tutoring, all ages.", blurbKo:"전 연령 대상 수학 및 영어 과외."},
-    {key:"construction-1", cat:"construction", nameEn:"TrueBuild Renovations", nameKo:"트루빌드 리노베이션", gold:true, escrow:true, rating:4.9, reviewCount:44, area:"City-wide", langs:["ko","en"],
+    {key:"construction-1", cat:"construction", nameEn:"TrueBuild Renovations", nameKo:"트루빌드 리노베이션", gold:true, escrow:true, rating:4.9, reviewCount:44, area:"City-wide", langs:["ko","en"], postedTs: Date.now() - 3600000*48,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["8:00 AM","12:00 PM"]},
       blurbEn:"Basement development & additions, Red Seal certified.", blurbKo:"지하실 개발 및 증축, 레드씰 자격 보유."},
-    {key:"doctor-1", cat:"doctor", nameEn:"Riverbend Dental Care", nameKo:"리버벤드 치과", gold:false, escrow:false, rating:4.7, reviewCount:33, area:"SW Calgary", langs:["ko","en"],
+    {key:"doctor-1", cat:"doctor", nameEn:"Riverbend Dental Care", nameKo:"리버벤드 치과", gold:false, escrow:false, rating:4.7, reviewCount:33, area:"SW Calgary", langs:["ko","en"], postedTs: Date.now() - 3600000*55,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","11:00 AM","2:30 PM"]},
       blurbEn:"Family dentistry, Korean-speaking front desk.", blurbKo:"가족 치과, 한국어 상담 가능."},
-    {key:"tourism-1", cat:"tourism", nameEn:"Rocky Trails Tours", nameKo:"로키 트레일 투어", gold:false, escrow:true, rating:4.9, reviewCount:71, area:"City-wide", langs:["ko","en"],
+    {key:"tourism-1", cat:"tourism", nameEn:"Rocky Trails Tours", nameKo:"로키 트레일 투어", gold:false, escrow:true, rating:4.9, reviewCount:71, area:"City-wide", langs:["ko","en"], postedTs: Date.now() - 3600000*62,
       avail:{days:["Fri","Sat","Sun"], slots:["7:00 AM","8:30 AM"]},
       blurbEn:"Banff & Lake Louise day trips, small groups.", blurbKo:"밴프 및 레이크루이스 당일 투어, 소규모 그룹."},
-    {key:"caregiving-1", cat:"caregiving", nameEn:"Gentle Hands Care", nameKo:"젠틀핸즈 돌봄센터", gold:false, escrow:false, rating:4.8, reviewCount:19, area:"NE Calgary", langs:["ko"],
+    {key:"caregiving-1", cat:"caregiving", nameEn:"Gentle Hands Care", nameKo:"젠틀핸즈 돌봄센터", gold:false, escrow:false, rating:4.8, reviewCount:19, area:"NE Calgary", langs:["ko"], postedTs: Date.now() - 3600000*70,
       avail:{days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], slots:["9:00 AM","1:00 PM","5:00 PM"]},
       blurbEn:"Elder companion care & light housekeeping.", blurbKo:"어르신 동행 돌봄 및 가벼운 가사 지원."},
-    {key:"accounting-1", cat:"accounting", nameEn:"Clearview Accounting", nameKo:"클리어뷰 회계", gold:false, escrow:true, rating:4.6, reviewCount:24, area:"City-wide", langs:["ko","en"],
+    {key:"accounting-1", cat:"accounting", nameEn:"Clearview Accounting", nameKo:"클리어뷰 회계", gold:false, escrow:true, rating:4.6, reviewCount:24, area:"City-wide", langs:["ko","en"], postedTs: Date.now() - 3600000*78,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["10:00 AM","1:00 PM","3:00 PM"]},
       blurbEn:"Small business bookkeeping & personal tax filing.", blurbKo:"소상공인 기장 및 개인 세금 신고."},
-    {key:"catering-1", cat:"catering", nameEn:"Home Table Catering", nameKo:"홈테이블 케이터링", gold:true, escrow:true, rating:4.9, reviewCount:41, area:"City-wide", langs:["ko"],
+    {key:"catering-1", cat:"catering", nameEn:"Home Table Catering", nameKo:"홈테이블 케이터링", gold:true, escrow:true, rating:4.9, reviewCount:41, area:"City-wide", langs:["ko"], postedTs: Date.now() - 3600000*86,
       avail:{days:["Wed","Thu","Fri","Sat","Sun"], slots:["11:00 AM","2:00 PM"]},
       blurbEn:"Korean home-style catering for events of all sizes.", blurbKo:"각종 행사를 위한 한국 가정식 케이터링."},
-    {key:"health-1", cat:"health", nameEn:"Balance Wellness Studio", nameKo:"밸런스 웰니스 스튜디오", gold:false, escrow:false, rating:4.7, reviewCount:26, area:"SW Calgary", langs:["en"],
+    {key:"health-1", cat:"health", nameEn:"Balance Wellness Studio", nameKo:"밸런스 웰니스 스튜디오", gold:false, escrow:false, rating:4.7, reviewCount:26, area:"SW Calgary", langs:["en"], postedTs: Date.now() - 3600000*95,
       avail:{days:["Mon","Tue","Thu","Fri","Sat"], slots:["9:30 AM","12:00 PM","3:00 PM"]},
       blurbEn:"Massage therapy & chiropractic care.", blurbKo:"마사지 테라피 및 카이로프랙틱 케어."},
-    {key:"catering-2", cat:"catering", nameEn:"Manila Table Catering", nameKo:"마닐라 테이블 케이터링", gold:true, escrow:true, rating:4.8, reviewCount:33, area:"NE Calgary", langs:["tl","en"],
+    {key:"catering-2", cat:"catering", nameEn:"Manila Table Catering", nameKo:"마닐라 테이블 케이터링", gold:true, escrow:true, rating:4.8, reviewCount:33, area:"NE Calgary", langs:["tl","en"], postedTs: Date.now() - 3600000*104,
       avail:{days:["Thu","Fri","Sat","Sun"], slots:["12:00 PM","3:00 PM"]},
       blurbEn:"Filipino home-style catering for parties, birthdays, and community events.", blurbKo:"파티, 생일, 커뮤니티 행사를 위한 필리핀 가정식 케이터링."},
-    {key:"accounting-2", cat:"accounting", nameEn:"Sharma & Sons Accounting", nameKo:"샤르마 앤 선즈 회계", gold:false, escrow:true, rating:4.7, reviewCount:22, area:"SE Calgary", langs:["hi","pa","en"],
+    {key:"accounting-2", cat:"accounting", nameEn:"Sharma & Sons Accounting", nameKo:"샤르마 앤 선즈 회계", gold:false, escrow:true, rating:4.7, reviewCount:22, area:"SE Calgary", langs:["hi","pa","en"], postedTs: Date.now() - 3600000*112,
       avail:{days:["Mon","Tue","Wed","Thu","Fri"], slots:["9:00 AM","12:00 PM","2:30 PM"]},
       blurbEn:"Personal & small business tax filing — Punjabi and Hindi spoken.", blurbKo:"개인 및 소상공인 세금 신고 — 펀자브어·힌디어 상담 가능."}
   ];
@@ -922,6 +1019,19 @@
     return {cls:"later", text:T[lang].availNext.replace("%s", dayName)};
   }
 
+  let currentSort = "rating";
+  function priceLowValue(l){
+    const m = (catOf(l).price || "").match(/[\d,]+/);
+    return m ? parseInt(m[0].replace(/,/g,""), 10) : 0;
+  }
+  function sortListings(list){
+    const sorted = (list || []).slice();
+    if(currentSort === "newest") sorted.sort((a,b)=> b.postedTs - a.postedTs);
+    else if(currentSort === "priceLow") sorted.sort((a,b)=> priceLowValue(a) - priceLowValue(b));
+    else sorted.sort((a,b)=> b.rating - a.rating);
+    return sorted;
+  }
+
   const LANG_LABEL_KEY = {ko:"langKo", en:"langEn", tl:"langTl", hi:"langHi", pa:"langPa", zh:"langZh"};
   function langBadges(l){
     return (l.langs||[]).map(code=>{
@@ -945,7 +1055,7 @@
   }
 
   function showCategory(catId){
-    const matches = LISTINGS.filter(l => l.cat === catId).slice().sort((a,b)=>b.rating-a.rating);
+    const matches = sortListings(LISTINGS.filter(l => l.cat === catId));
     const cat = CATEGORIES.find(c=>c.id===catId);
     document.getElementById("resultsTitle").textContent = catName(cat);
     document.getElementById("clearBtn").style.display = "inline-block";
@@ -981,6 +1091,7 @@
         <div class="meta-line">
           <span>${icon("ic-pin")}${l.area}</span>
           <span>${icon("ic-tag")}${catOf(l).price}</span>
+          <span class="posted-tag">${timeAgo(l.postedTs)}</span>
         </div>
         <div class="meta-line"><span class="avail-badge ${availInfo(l).cls}">${availInfo(l).text}</span></div>
         <div class="badges">
@@ -1009,7 +1120,7 @@
   }
 
   document.getElementById("clearBtn").addEventListener("click", ()=>{
-    currentListings = LISTINGS.filter(l => FEATURED_IDS.includes(l.cat) && l.gold);
+    currentListings = sortListings(LISTINGS.filter(l => FEATURED_IDS.includes(l.cat) && l.gold));
     document.getElementById("resultsTitle").textContent = T[lang].featuredTitle;
     document.getElementById("clearBtn").style.display = "none";
     renderListings(currentListings);
@@ -1257,6 +1368,165 @@
     const diffDay = Math.floor(diffHr/24);
     return T[lang].timeDayAgo.replace("%s", diffDay).replace(/\bday\b/, diffDay===1?"day":"days");
   }
+
+  const JOB_CATEGORIES = [
+    {id:"all", en:"All", ko:"전체"},
+    {id:"food", en:"Food Service", ko:"요식업"},
+    {id:"retail", en:"Retail", ko:"판매직"},
+    {id:"trades", en:"Trades", ko:"기술직"},
+    {id:"office", en:"Office", ko:"사무직"},
+    {id:"driving", en:"Driving", ko:"운전직"}
+  ];
+  const JOBS_KEY = "lonera_jobs";
+  const JOBS_SEED = [
+    {titleEn:"Kitchen Prep Cook", titleKo:"주방 프렙 쿡", companyEn:"Home Table Catering", companyKo:"홈테이블 케이터링", cat:"food", wage:"$19/hr", area:"City-wide", postedTs: Date.now()-3600000*5, seeded:true},
+    {titleEn:"Front Desk Assistant", titleKo:"프론트 데스크 보조", companyEn:"Riverbend Dental Care", companyKo:"리버벤드 치과", cat:"office", wage:"$21/hr", area:"SW Calgary", postedTs: Date.now()-3600000*11, seeded:true},
+    {titleEn:"Delivery Driver (Part-time)", titleKo:"배달 기사 (파트타임)", companyEn:"Sparkle Home Services", companyKo:"스파클 홈 서비스", cat:"driving", wage:"$22/hr", area:"SE Calgary", postedTs: Date.now()-3600000*20, seeded:true},
+    {titleEn:"Junior Renovation Carpenter", titleKo:"주니어 리노베이션 목수", companyEn:"TrueBuild Renovations", companyKo:"트루빌드 리노베이션", cat:"trades", wage:"$28-34/hr", area:"City-wide", postedTs: Date.now()-3600000*30, seeded:true},
+    {titleEn:"Retail Sales Associate", titleKo:"매장 판매 사원", companyEn:"Studio Haneul Hair", companyKo:"스튜디오 하늘 헤어", cat:"retail", wage:"$18/hr", area:"Downtown", postedTs: Date.now()-3600000*44, seeded:true},
+    {titleEn:"Bookkeeping Assistant (Bilingual)", titleKo:"기장 보조 (한/영 가능자)", companyEn:"Clearview Accounting", companyKo:"클리어뷰 회계", cat:"office", wage:"$24/hr", area:"City-wide", postedTs: Date.now()-3600000*58, seeded:true}
+  ];
+  function loadJobs(){
+    try{ const stored = JSON.parse(localStorage.getItem(JOBS_KEY)); if(stored && stored.length) return stored; }catch(e){}
+    return JOBS_SEED;
+  }
+  function saveJobPost(job){
+    const list = loadJobs();
+    list.unshift(job);
+    localStorage.setItem(JOBS_KEY, JSON.stringify(list.slice(0,60)));
+  }
+  let jobsFilter = "all";
+  function renderJobsFilterChips(){
+    const wrap = document.getElementById("jobsFilterChips");
+    if(!wrap) return;
+    wrap.innerHTML = JOB_CATEGORIES.map(c=>`<button class="chip ${jobsFilter===c.id?'active':''}" data-cat="${c.id}">${lang==="ko"?c.ko:c.en}</button>`).join("");
+    wrap.querySelectorAll("[data-cat]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{ jobsFilter = btn.getAttribute("data-cat"); renderJobsFilterChips(); renderJobsGrid(); });
+    });
+  }
+  function renderJobsGrid(){
+    const wrap = document.getElementById("jobsGrid");
+    if(!wrap) return;
+    let list = loadJobs().slice().sort((a,b)=>b.postedTs-a.postedTs);
+    if(jobsFilter !== "all") list = list.filter(j=>j.cat===jobsFilter);
+    if(!list.length){ wrap.innerHTML = `<div class="empty-msg">${lang==="ko"?"결과가 없어요.":"No matches yet."}</div>`; return; }
+    const catLabel = id => { const c = JOB_CATEGORIES.find(x=>x.id===id); return c ? (lang==="ko"?c.ko:c.en) : id; };
+    wrap.innerHTML = list.map(j=>{
+      const title = escapeHtml(lang==="ko" ? j.titleKo : j.titleEn);
+      const company = escapeHtml(lang==="ko" ? j.companyKo : j.companyEn);
+      return `<div class="board-card">
+        <span class="cat-tag">${catLabel(j.cat)}</span>
+        <div class="b-title">${title}</div>
+        <div class="b-sub">${company}</div>
+        <div class="b-price">${escapeHtml(j.wage)}</div>
+        <div class="b-meta"><span>${icon("ic-pin")}${escapeHtml(j.area)}</span><span>${timeAgo(j.postedTs)}</span></div>
+      </div>`;
+    }).join("");
+  }
+  function populateJobCategorySelect(){
+    const sel = document.getElementById("jobCategoryInput");
+    if(!sel) return;
+    sel.innerHTML = JOB_CATEGORIES.filter(c=>c.id!=="all").map(c=>`<option value="${c.id}">${lang==="ko"?c.ko:c.en}</option>`).join("");
+  }
+  document.getElementById("jobsPostToggle").addEventListener("click", ()=>{
+    const form = document.getElementById("jobsPostForm");
+    form.style.display = form.style.display === "block" ? "none" : "block";
+  });
+  document.getElementById("jobsSubmitBtn").addEventListener("click", ()=>{
+    const title = document.getElementById("jobTitleInput").value.trim();
+    const company = document.getElementById("jobCompanyInput").value.trim();
+    const wage = document.getElementById("jobWageInput").value.trim();
+    const area = document.getElementById("jobAreaInput").value.trim();
+    const cat = document.getElementById("jobCategoryInput").value;
+    if(!title || !company) return;
+    saveJobPost({titleEn:title, titleKo:title, companyEn:company, companyKo:company, cat, wage: wage || (lang==="ko"?"협의":"Negotiable"), area: area || (lang==="ko"?"캘거리":"Calgary"), postedTs: Date.now(), seeded:false});
+    ["jobTitleInput","jobCompanyInput","jobWageInput","jobAreaInput"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("jobsPostForm").style.display = "none";
+    renderJobsGrid();
+  });
+
+  const MARKET_CATEGORIES = [
+    {id:"all", en:"All", ko:"전체"},
+    {id:"furniture", en:"Furniture", ko:"가구"},
+    {id:"electronics", en:"Electronics", ko:"전자제품"},
+    {id:"clothing", en:"Clothing", ko:"의류"},
+    {id:"vehicles", en:"Vehicles", ko:"차량"},
+    {id:"other", en:"Other", ko:"기타"}
+  ];
+  const CONDITIONS = [
+    {id:"new", en:"New", ko:"새 상품"},
+    {id:"likenew", en:"Like New", ko:"거의 새것"},
+    {id:"used", en:"Used", ko:"중고"},
+    {id:"free", en:"Free", ko:"무료 나눔"}
+  ];
+  const MARKET_KEY = "lonera_marketplace";
+  const MARKET_SEED = [
+    {titleEn:"IKEA dining table + 4 chairs", titleKo:"이케아 식탁 + 의자 4개", cat:"furniture", cond:"used", price:"$120", area:"NW Calgary", postedTs: Date.now()-3600000*4, seeded:true},
+    {titleEn:"32\" LED monitor, barely used", titleKo:"32인치 LED 모니터, 거의 새것", cat:"electronics", cond:"likenew", price:"$90", area:"SE Calgary", postedTs: Date.now()-3600000*9, seeded:true},
+    {titleEn:"Kids winter jacket set (size 6-8)", titleKo:"아동 겨울 자켓 세트 (6-8사이즈)", cat:"clothing", cond:"used", price:"$25", area:"City-wide", postedTs: Date.now()-3600000*15, seeded:true},
+    {titleEn:"2016 Honda Civic, well maintained", titleKo:"2016 혼다 시빅, 관리 잘 됨", cat:"vehicles", cond:"used", price:"$13,500", area:"Downtown", postedTs: Date.now()-3600000*24, seeded:true},
+    {titleEn:"Moving boxes, free pickup", titleKo:"이사박스, 직접 픽업시 무료", cat:"other", cond:"free", price:"$0", area:"NE Calgary", postedTs: Date.now()-3600000*33, seeded:true},
+    {titleEn:"Rice cooker, brand new in box", titleKo:"전기밥솥, 미개봉 새 제품", cat:"other", cond:"new", price:"$65", area:"SW Calgary", postedTs: Date.now()-3600000*47, seeded:true}
+  ];
+  function loadMarket(){
+    try{ const stored = JSON.parse(localStorage.getItem(MARKET_KEY)); if(stored && stored.length) return stored; }catch(e){}
+    return MARKET_SEED;
+  }
+  function saveMarketItem(item){
+    const list = loadMarket();
+    list.unshift(item);
+    localStorage.setItem(MARKET_KEY, JSON.stringify(list.slice(0,60)));
+  }
+  let marketFilter = "all";
+  function renderMarketFilterChips(){
+    const wrap = document.getElementById("marketFilterChips");
+    if(!wrap) return;
+    wrap.innerHTML = MARKET_CATEGORIES.map(c=>`<button class="chip ${marketFilter===c.id?'active':''}" data-cat="${c.id}">${lang==="ko"?c.ko:c.en}</button>`).join("");
+    wrap.querySelectorAll("[data-cat]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{ marketFilter = btn.getAttribute("data-cat"); renderMarketFilterChips(); renderMarketGrid(); });
+    });
+  }
+  function renderMarketGrid(){
+    const wrap = document.getElementById("marketGrid");
+    if(!wrap) return;
+    let list = loadMarket().slice().sort((a,b)=>b.postedTs-a.postedTs);
+    if(marketFilter !== "all") list = list.filter(m=>m.cat===marketFilter);
+    if(!list.length){ wrap.innerHTML = `<div class="empty-msg">${lang==="ko"?"결과가 없어요.":"No matches yet."}</div>`; return; }
+    const condLabel = id => { const c = CONDITIONS.find(x=>x.id===id); return c ? (lang==="ko"?c.ko:c.en) : id; };
+    const catLabel = id => { const c = MARKET_CATEGORIES.find(x=>x.id===id); return c ? (lang==="ko"?c.ko:c.en) : id; };
+    wrap.innerHTML = list.map(m=>{
+      const title = escapeHtml(lang==="ko" ? m.titleKo : m.titleEn);
+      return `<div class="board-card">
+        <span class="cat-tag">${catLabel(m.cat)}</span>
+        <div class="b-title">${title}</div>
+        <div class="b-price">${escapeHtml(m.price)}</div>
+        <div class="b-meta"><span class="condition-badge">${condLabel(m.cond)}</span><span>${timeAgo(m.postedTs)}</span></div>
+        <div class="b-sub">${icon("ic-pin")}${escapeHtml(m.area)}</div>
+      </div>`;
+    }).join("");
+  }
+  function populateMarketSelects(){
+    const catSel = document.getElementById("itemCategoryInput");
+    const condSel = document.getElementById("itemConditionInput");
+    if(catSel) catSel.innerHTML = MARKET_CATEGORIES.filter(c=>c.id!=="all").map(c=>`<option value="${c.id}">${lang==="ko"?c.ko:c.en}</option>`).join("");
+    if(condSel) condSel.innerHTML = CONDITIONS.map(c=>`<option value="${c.id}">${lang==="ko"?c.ko:c.en}</option>`).join("");
+  }
+  document.getElementById("marketPostToggle").addEventListener("click", ()=>{
+    const form = document.getElementById("marketPostForm");
+    form.style.display = form.style.display === "block" ? "none" : "block";
+  });
+  document.getElementById("marketSubmitBtn").addEventListener("click", ()=>{
+    const title = document.getElementById("itemTitleInput").value.trim();
+    const price = document.getElementById("itemPriceInput").value.trim();
+    const area = document.getElementById("itemAreaInput").value.trim();
+    const cat = document.getElementById("itemCategoryInput").value;
+    const cond = document.getElementById("itemConditionInput").value;
+    if(!title) return;
+    saveMarketItem({titleEn:title, titleKo:title, cat, cond, price: price || (lang==="ko"?"가격 문의":"Ask for price"), area: area || (lang==="ko"?"캘거리":"Calgary"), postedTs: Date.now(), seeded:false});
+    ["itemTitleInput","itemPriceInput","itemAreaInput"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("marketPostForm").style.display = "none";
+    renderMarketGrid();
+  });
 
   const COMMUNITY_KEY = "lonera_community";
   const COMMUNITY_SEED = [
@@ -1530,7 +1800,7 @@
         const langMatches = matches.filter(l=>(l.langs||[]).includes(langFilter));
         if(langMatches.length){ matches = langMatches; } else { noneSpeak = true; }
       }
-      matches = matches.slice().sort((a,b)=>b.rating-a.rating);
+      matches = sortListings(matches);
       currentListings = matches;
       document.getElementById("resultsTitle").textContent = catName(cat);
       document.getElementById("clearBtn").style.display = "inline-block";
@@ -1549,6 +1819,13 @@
     }
     document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
   }
+
+  document.getElementById("resultsSort").addEventListener("change", function(){
+    currentSort = this.value;
+    currentListings = sortListings(currentListings);
+    renderListings(currentListings);
+    renderCompareTable(currentListings.slice(0,3));
+  });
 
   document.getElementById("textSearchBtn").addEventListener("click", ()=> runSearch(document.getElementById("textSearch").value));
   document.getElementById("textSearch").addEventListener("keydown", (e)=>{ if(e.key === "Enter") runSearch(e.target.value); });
