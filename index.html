@@ -112,12 +112,14 @@
   .readaloud-link.active{ color:var(--danger); }
 
   /* ===== Featured banner ===== */
-  .featured-banner{ max-width:1080px; margin:6px auto 4px; padding:0 20px; }
-  .featured-banner-inner{ background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border-radius:28px; padding:42px 38px; color:#fff; position:relative; overflow:hidden; }
+  .featured-banner{ margin:6px 0 4px; padding:0; }
+  .featured-banner-inner{ background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border-radius:0; padding:64px 20px 68px; min-height:300px; display:flex; flex-direction:column; justify-content:center; color:#fff; position:relative; overflow:hidden; }
   .featured-banner-inner::after{ content:""; position:absolute; right:-70px; top:-70px; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,0.08); pointer-events:none; }
+  .featured-banner-inner::before{ content:""; position:absolute; left:0; right:0; bottom:0; height:80px; background:linear-gradient(to bottom, rgba(255,255,255,0), var(--paper)); pointer-events:none; }
+  .featured-content{ max-width:1080px; margin:0 auto; width:100%; position:relative; }
   .featured-badge{ display:inline-block; background:#fff; color:var(--accent-deep); font-weight:800; font-size:calc(0.72rem * var(--scale)); padding:5px 14px; border-radius:999px; margin-bottom:14px; letter-spacing:0.4px; text-transform:uppercase; position:relative; }
-  .featured-banner-inner h2{ margin:0 0 10px; font-size:calc(1.6rem * var(--scale)); font-weight:800; max-width:580px; position:relative; }
-  .featured-banner-inner p{ margin:0 0 22px; color:rgba(255,255,255,0.9); font-size:calc(0.95rem * var(--scale)); max-width:520px; position:relative; }
+  .featured-banner-inner h2{ margin:0 0 12px; font-size:calc(2.3rem * var(--scale)); font-weight:800; max-width:620px; position:relative; letter-spacing:-0.01em; }
+  .featured-banner-inner p{ margin:0 0 26px; color:rgba(255,255,255,0.9); font-size:calc(1rem * var(--scale)); max-width:540px; position:relative; }
   .featured-actions{ display:flex; gap:10px; flex-wrap:wrap; position:relative; }
   .btn-featured-view{ background:#fff; color:var(--accent-deep); border:none; border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
   .btn-featured-contact{ background:rgba(255,255,255,0.16); color:#fff; border:1.5px solid rgba(255,255,255,0.55); border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
@@ -144,6 +146,8 @@
   section.block{padding:46px 20px;max-width:1080px;margin:0 auto;}
   section.block h2.section-title{ text-align:center; font-size: calc(1.65rem * var(--scale)); color:var(--ink); margin:0 0 8px; }
   section.block p.section-sub{ text-align:center;color:var(--muted);margin:0 0 32px; font-size: calc(1rem * var(--scale)); }
+  #categoriesBlock .section-title, #categoriesBlock .section-sub{ text-align:left; }
+  #categoriesBlock .section-sub{ margin-bottom:22px; }
 
   .steps{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
   .step{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:28px;max-width:280px;text-align:center;box-shadow:var(--shadow); }
@@ -156,11 +160,12 @@
   .tier-desc{color:var(--muted);margin:0 0 20px;font-size: calc(0.92rem * var(--scale));}
   .tile-grid{ display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x proximity; padding:2px 2px 10px; margin-bottom:32px; scrollbar-width:none; }
   .tile-grid::-webkit-scrollbar{ display:none; }
-  .tile{ background:var(--card);border:1.5px solid var(--border);border-radius:16px; padding:22px 12px;text-align:center; min-height:126px; flex:0 0 132px; scroll-snap-align:start; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; transition:border-color .15s ease, transform .15s ease; }
-  .tile:hover, .tile:focus{border-color:var(--teal); transform:translateY(-2px); outline:none;}
-  .tile .icon{ color:var(--accent-deep); width:1.9em; height:1.9em; }
-  .tile .name{font-weight:700;font-size: calc(0.9rem * var(--scale));color:var(--ink);}
-  .tile .price{font-size: calc(0.72rem * var(--scale));color:var(--muted);}
+  .tile{ background:var(--card);border:none;border-radius:16px; padding:14px 10px 16px;text-align:center; min-height:150px; flex:0 0 132px; scroll-snap-align:start; display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px; box-shadow:var(--shadow); transition:transform .18s ease, box-shadow .18s ease; transform-origin:center bottom; }
+  .tile:hover, .tile:focus{ transform:scale(1.08) translateY(-4px); box-shadow:0 18px 34px rgba(20,24,31,0.16); outline:none; z-index:2; }
+  .tile-poster{ width:100%; aspect-ratio:1/1; border-radius:12px; background:linear-gradient(135deg,var(--accent-tint),var(--accent)); display:flex; align-items:center; justify-content:center; }
+  .tile .icon{ color:#fff; width:1.9em; height:1.9em; }
+  .tile .name{font-weight:700;font-size: calc(0.88rem * var(--scale));color:var(--ink);}
+  .tile .price{font-size: calc(0.7rem * var(--scale));color:var(--muted);}
 
   #results{min-height:40px;}
   .results-heading{ display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px; }
@@ -322,8 +327,13 @@
   .board-grid{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x proximity; max-width:1080px; margin:0 auto 22px; padding:2px 2px 10px; scrollbar-width:none; }
   .board-grid::-webkit-scrollbar{ display:none; }
   .board-grid.expanded{ flex-wrap:wrap; overflow-x:visible; }
-  .board-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; flex:0 0 248px; scroll-snap-align:start; }
-  .board-grid.expanded .board-card{ flex:0 1 248px; }
+  .board-card{ background:var(--card); border:none; border-radius:var(--radius); padding:14px 16px 18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; flex:0 0 220px; scroll-snap-align:start; transition:transform .18s ease, box-shadow .18s ease; transform-origin:center bottom; }
+  .board-card:hover{ transform:scale(1.05) translateY(-4px); box-shadow:0 18px 34px rgba(20,24,31,0.16); z-index:2; }
+  .board-grid.expanded .board-card{ flex:0 1 220px; }
+  .card-poster{ width:100%; aspect-ratio:16/10; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
+  .card-poster .icon{ width:2.1em; height:2.1em; color:#fff; }
+  .jobs-poster{ background:linear-gradient(135deg,var(--blue-tint),var(--blue)); }
+  .market-poster{ background:linear-gradient(135deg,var(--teal-tint),var(--teal)); }
   .board-card .cat-tag{ display:inline-block; font-size:calc(0.7rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; align-self:flex-start; margin-bottom:2px; }
   .board-card .b-title{ font-weight:800; color:var(--ink); font-size:calc(0.96rem * var(--scale)); line-height:1.35; }
   .board-card .b-sub{ color:var(--muted); font-size:calc(0.82rem * var(--scale)); }
@@ -441,12 +451,14 @@
 
 <section class="featured-banner">
   <div class="featured-banner-inner" id="featuredBannerInner">
-    <span class="featured-badge" data-i18n="featuredBadge">Featured</span>
-    <h2 id="featuredBannerTitle"></h2>
-    <p id="featuredBannerBlurb"></p>
-    <div class="featured-actions">
-      <button class="btn-featured-view" id="featuredViewBtn" data-i18n="featuredViewBtn">View Details</button>
-      <button class="btn-featured-contact" id="featuredContactBtn" data-i18n="featuredContactBtn">Choose this business</button>
+    <div class="featured-content">
+      <span class="featured-badge" data-i18n="featuredBadge">Featured</span>
+      <h2 id="featuredBannerTitle"></h2>
+      <p id="featuredBannerBlurb"></p>
+      <div class="featured-actions">
+        <button class="btn-featured-view" id="featuredViewBtn" data-i18n="featuredViewBtn">View Details</button>
+        <button class="btn-featured-contact" id="featuredContactBtn" data-i18n="featuredContactBtn">Choose this business</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1061,7 +1073,7 @@
       const btn = document.createElement("button");
       btn.className = "tile";
       btn.type = "button";
-      btn.innerHTML = `${icon(cat.ic)}<span class="name">${catName(cat)}</span><span class="price">${cat.price}</span>`;
+      btn.innerHTML = `<span class="tile-poster">${icon(cat.ic)}</span><span class="name">${catName(cat)}</span><span class="price">${cat.price}</span>`;
       btn.addEventListener("click", ()=> showCategory(cat.id));
       (cat.tier === 1 ? t1 : t2).appendChild(btn);
     });
@@ -1428,6 +1440,7 @@
       const title = escapeHtml(lang==="ko" ? j.titleKo : j.titleEn);
       const company = escapeHtml(lang==="ko" ? j.companyKo : j.companyEn);
       return `<div class="board-card">
+        <div class="card-poster jobs-poster">${icon("ic-briefcase")}</div>
         <span class="cat-tag">${catLabel(j.cat)}</span>
         <div class="b-title">${title}</div>
         <div class="b-sub">${company}</div>
@@ -1522,6 +1535,7 @@
     wrap.innerHTML = list.map(m=>{
       const title = escapeHtml(lang==="ko" ? m.titleKo : m.titleEn);
       return `<div class="board-card">
+        <div class="card-poster market-poster">${icon("ic-tag")}</div>
         <span class="cat-tag">${catLabel(m.cat)}</span>
         <div class="b-title">${title}</div>
         <div class="b-price">${escapeHtml(m.price)}</div>
