@@ -71,26 +71,29 @@
   .icon-lg{ width:1.6em; height:1.6em; }
   .icon-xl{ width:2.1em; height:2.1em; }
 
-  /* ===== Top bar ===== */
-  header.topbar{ background:var(--ink); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:60; box-shadow:var(--shadow); }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.45rem * var(--scale)); letter-spacing:-0.01em; }
-  .brand .mark{ width:40px;height:40px;border-radius:12px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
-  .brand .mark .icon{ width:22px;height:22px; stroke-width:2.1; }
-  .brand small{ display:block;font-weight:500;font-size: calc(0.72rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
-  .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
+  /* ===== Site nav ===== */
+  header.site-nav{ background:#fff; border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; position:sticky; top:0; z-index:60; }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.28rem * var(--scale)); letter-spacing:-0.01em; text-decoration:none; color:var(--ink); flex-shrink:0; }
+  .brand .mark{ width:36px;height:36px;border-radius:10px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; flex-shrink:0; }
+  .brand .mark .icon{ width:20px;height:20px; stroke-width:2.1; }
+  .brand small{ display:block;font-weight:600;font-size: calc(0.66rem * var(--scale)); color:var(--muted);letter-spacing:0.2px; }
+  .site-nav-links{ display:flex; align-items:center; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
+  .site-nav-links::-webkit-scrollbar{ display:none; }
+  .site-nav-links a{ padding:9px 13px; border-radius:10px; font-weight:700; font-size:calc(0.88rem * var(--scale)); color:var(--text); text-decoration:none; white-space:nowrap; }
+  .site-nav-links a:hover, .site-nav-links a:focus-visible{ background:var(--paper); color:var(--accent-deep); }
+  .site-nav-utility{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
 
-  .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.88rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:44px; }
-  .ctrl-btn:hover{background:rgba(255,255,255,0.2);}
+  .nav-icon-btn{ width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--text); flex-shrink:0; }
+  .nav-icon-btn:hover{ border-color:var(--accent); color:var(--accent-deep); }
+  .nav-icon-btn[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .nav-post-btn{ background:var(--accent); color:#fff; border:none; border-radius:999px; padding:0 18px; min-height:40px; font-weight:800; font-size:calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; text-decoration:none; }
+  .nav-post-btn .icon{ width:1.05em; height:1.05em; }
+  .nav-post-btn:hover{ background:var(--accent-deep); }
+
+  .utility-bar{ background:var(--paper); border-bottom:1px solid var(--border); padding:8px 24px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
+  .ctrl-btn{ background:#fff; color:var(--text); border:1.5px solid var(--border); border-radius:999px; padding:7px 13px; font-size: calc(0.8rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:38px; }
+  .ctrl-btn:hover{ border-color:var(--accent); color:var(--accent-deep); }
   .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
-
-  /* ===== Icon category nav ===== */
-  .icon-nav-bar{ background:#fff; border-bottom:1px solid var(--border); display:flex; justify-content:center; align-items:flex-start; gap:6px; flex-wrap:wrap; padding:10px 16px; position:sticky; top:0; z-index:55; }
-  .icon-nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; text-decoration:none; color:var(--text); font-weight:700; font-size:calc(0.76rem * var(--scale)); padding:8px 16px; border-radius:14px; min-width:68px; background:none; border:none; font-family:inherit; }
-  .icon-nav-item .icon{ width:1.7em; height:1.7em; color:var(--accent); }
-  .icon-nav-item:hover, .icon-nav-item:focus-visible{ background:var(--accent-tint); }
-  .icon-nav-cta{ background:var(--accent); color:#fff; margin-left:6px; }
-  .icon-nav-cta .icon{ color:#fff; }
-  .icon-nav-cta:hover{ background:var(--accent-deep); }
 
   /* ===== Top search ===== */
   .top-search{ background:#fff; padding:40px 20px 34px; text-align:center; max-width:760px; margin:0 auto; }
@@ -107,6 +110,17 @@
   .voice-status-inline{ margin-top:12px; min-height:22px; color:var(--accent-deep); font-weight:700; font-size: calc(0.9rem * var(--scale)); }
   .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; text-decoration:underline; text-underline-offset:2px; }
   .readaloud-link.active{ color:var(--danger); }
+
+  /* ===== Featured banner ===== */
+  .featured-banner{ max-width:1080px; margin:6px auto 4px; padding:0 20px; }
+  .featured-banner-inner{ background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border-radius:28px; padding:42px 38px; color:#fff; position:relative; overflow:hidden; }
+  .featured-banner-inner::after{ content:""; position:absolute; right:-70px; top:-70px; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,0.08); pointer-events:none; }
+  .featured-badge{ display:inline-block; background:#fff; color:var(--accent-deep); font-weight:800; font-size:calc(0.72rem * var(--scale)); padding:5px 14px; border-radius:999px; margin-bottom:14px; letter-spacing:0.4px; text-transform:uppercase; position:relative; }
+  .featured-banner-inner h2{ margin:0 0 10px; font-size:calc(1.6rem * var(--scale)); font-weight:800; max-width:580px; position:relative; }
+  .featured-banner-inner p{ margin:0 0 22px; color:rgba(255,255,255,0.9); font-size:calc(0.95rem * var(--scale)); max-width:520px; position:relative; }
+  .featured-actions{ display:flex; gap:10px; flex-wrap:wrap; position:relative; }
+  .btn-featured-view{ background:#fff; color:var(--accent-deep); border:none; border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
+  .btn-featured-contact{ background:rgba(255,255,255,0.16); color:#fff; border:1.5px solid rgba(255,255,255,0.55); border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
 
   /* ===== Trust strip + stats ===== */
   .trust-strip{ display:flex;justify-content:center;flex-wrap:wrap;gap:26px; padding:28px 20px;background:#fff;border-bottom:1px solid var(--border); }
@@ -140,8 +154,9 @@
   .tier-label{ display:inline-flex;align-items:center;gap:8px; background:var(--ink);color:#fff;padding:9px 18px; border-radius:999px; font-weight:800;font-size: calc(0.88rem * var(--scale));margin-bottom:18px; }
   .tier-label.tier2{background:var(--teal);}
   .tier-desc{color:var(--muted);margin:0 0 20px;font-size: calc(0.92rem * var(--scale));}
-  .tile-grid{ display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:14px;margin-bottom:42px; }
-  .tile{ background:var(--card);border:1.5px solid var(--border);border-radius:16px; padding:22px 12px;text-align:center; min-height:126px; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; transition:border-color .15s ease, transform .15s ease; }
+  .tile-grid{ display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x proximity; padding:2px 2px 10px; margin-bottom:32px; scrollbar-width:none; }
+  .tile-grid::-webkit-scrollbar{ display:none; }
+  .tile{ background:var(--card);border:1.5px solid var(--border);border-radius:16px; padding:22px 12px;text-align:center; min-height:126px; flex:0 0 132px; scroll-snap-align:start; display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px; transition:border-color .15s ease, transform .15s ease; }
   .tile:hover, .tile:focus{border-color:var(--teal); transform:translateY(-2px); outline:none;}
   .tile .icon{ color:var(--accent-deep); width:1.9em; height:1.9em; }
   .tile .name{font-weight:700;font-size: calc(0.9rem * var(--scale));color:var(--ink);}
@@ -288,12 +303,27 @@
   .ticket-status.pending{ background:var(--amber-tint); color:#7a5709; }
   .ticket-status.resolved{ background:var(--teal-tint); color:var(--teal); }
 
+  /* ===== Row header (See all + arrows) ===== */
+  .row-header{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; max-width:1080px; margin:0 auto 16px; flex-wrap:wrap; }
+  .row-header .row-heading h2{ margin:0 0 2px; font-size:calc(1.3rem * var(--scale)); color:var(--ink); text-align:left; }
+  .row-header .row-heading p{ margin:0; color:var(--muted); font-size:calc(0.86rem * var(--scale)); text-align:left; }
+  .row-controls{ display:flex; align-items:center; gap:8px; }
+  .row-see-all{ background:none; border:none; color:var(--accent-deep); font-weight:800; font-size:calc(0.88rem * var(--scale)); display:inline-flex; align-items:center; gap:4px; padding:6px 4px; }
+  .row-arrow{ width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; color:var(--text); flex-shrink:0; }
+  .row-arrow:hover{ border-color:var(--accent); color:var(--accent-deep); }
+  .row-arrow .icon{ width:1.1em; height:1.1em; }
+  .row-arrow.prev .icon{ transform:rotate(90deg); }
+  .row-arrow.next .icon{ transform:rotate(-90deg); }
+
   /* ===== Jobs + Marketplace boards ===== */
   .filter-chips{ display:flex; gap:8px; flex-wrap:wrap; max-width:1080px; margin:0 auto 20px; justify-content:center; }
   .filter-chips .chip{ background:var(--card); border:1.5px solid var(--border); border-radius:999px; padding:8px 16px; font-weight:800; font-size:calc(0.84rem * var(--scale)); color:var(--muted); }
   .filter-chips .chip.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
-  .board-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; max-width:1080px; margin:0 auto 22px; }
-  .board-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; }
+  .board-grid{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x proximity; max-width:1080px; margin:0 auto 22px; padding:2px 2px 10px; scrollbar-width:none; }
+  .board-grid::-webkit-scrollbar{ display:none; }
+  .board-grid.expanded{ flex-wrap:wrap; overflow-x:visible; }
+  .board-card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; flex:0 0 248px; scroll-snap-align:start; }
+  .board-grid.expanded .board-card{ flex:0 1 248px; }
   .board-card .cat-tag{ display:inline-block; font-size:calc(0.7rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; align-self:flex-start; margin-bottom:2px; }
   .board-card .b-title{ font-weight:800; color:var(--ink); font-size:calc(0.96rem * var(--scale)); line-height:1.35; }
   .board-card .b-sub{ color:var(--muted); font-size:calc(0.82rem * var(--scale)); }
@@ -364,34 +394,36 @@
   </defs>
 </svg>
 
-<header class="topbar">
-  <div class="brand">
+<header class="site-nav">
+  <a href="#homeAnchor" class="brand">
     <div class="mark"><svg class="icon" aria-hidden="true"><use href="#ic-mark"/></svg></div>
     <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Marketplace for Newcomers</small></div>
-  </div>
-  <div class="topbar-controls">
+  </a>
+  <nav class="site-nav-links" aria-label="Section links">
+    <a href="#categoriesBlock" data-i18n="navSecServices">Services</a>
+    <a href="#jobsBlock" data-i18n="navSecJobs">Jobs</a>
+    <a href="#marketplaceBlock" data-i18n="navSecMarket">Marketplace</a>
+    <a href="#communityBlock" data-i18n="navSecCommunity">Community</a>
+    <a href="#supportBlock" data-i18n="navSecSupport">Support</a>
+  </nav>
+  <div class="site-nav-utility">
+    <button class="nav-icon-btn" id="navSearchIconBtn" aria-label="Search"><svg class="icon" aria-hidden="true"><use href="#ic-search"/></svg></button>
     <div class="notif-wrap">
-      <button class="ctrl-btn" id="notifBtn" aria-pressed="false" aria-label="Notifications"><svg class="icon" aria-hidden="true"><use href="#ic-bell"/></svg><span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
+      <button class="nav-icon-btn" id="notifBtn" aria-pressed="false" aria-label="Notifications"><svg class="icon" aria-hidden="true"><use href="#ic-bell"/></svg><span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
       <div class="notif-panel" id="notifPanel" style="display:none;">
         <h4 data-i18n="notifTitle">Notifications</h4>
         <div id="notifList"></div>
       </div>
     </div>
-    <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
-    <button class="ctrl-btn" id="fontMinus">A−</button>
-    <button class="ctrl-btn" id="fontPlus">A+</button>
-    <button class="ctrl-btn" id="contrastToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-contrast"/></svg><span data-i18n="contrastBtn">High Contrast</span></button>
+    <a href="dashboard.html" class="nav-post-btn" id="runBizBtn"><svg class="icon" aria-hidden="true"><use href="#ic-briefcase"/></svg><span data-i18n="pathBiz">I run a business</span></a>
   </div>
 </header>
-
-<nav class="icon-nav-bar" aria-label="Section links">
-  <a href="#categoriesBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-store"/></svg><span data-i18n="navSecServices">Services</span></a>
-  <a href="#jobsBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-briefcase"/></svg><span data-i18n="navSecJobs">Jobs</span></a>
-  <a href="#marketplaceBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-tag"/></svg><span data-i18n="navSecMarket">Marketplace</span></a>
-  <a href="#communityBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-chat"/></svg><span data-i18n="navSecCommunity">Community</span></a>
-  <a href="#supportBlock" class="icon-nav-item"><svg class="icon" aria-hidden="true"><use href="#ic-ticket"/></svg><span data-i18n="navSecSupport">Support</span></a>
-  <a href="dashboard.html" class="icon-nav-item icon-nav-cta" id="runBizBtn"><svg class="icon" aria-hidden="true"><use href="#ic-briefcase"/></svg><span data-i18n="pathBiz">I run a business</span></a>
-</nav>
+<div class="utility-bar">
+  <button class="ctrl-btn" id="langToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-globe"/></svg><span data-i18n="langBtn">한국어</span></button>
+  <button class="ctrl-btn" id="fontMinus">A−</button>
+  <button class="ctrl-btn" id="fontPlus">A+</button>
+  <button class="ctrl-btn" id="contrastToggle" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#ic-contrast"/></svg><span data-i18n="contrastBtn">High Contrast</span></button>
+</div>
 
 <main id="main">
 <section class="top-search" id="homeAnchor">
@@ -405,6 +437,18 @@
   <div id="micLabel" class="sr-only" data-i18n="micLabel">Tap to speak</div>
   <div id="voiceStatus" class="voice-status-inline" aria-live="polite"></div>
   <button class="readaloud-link" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
+</section>
+
+<section class="featured-banner">
+  <div class="featured-banner-inner" id="featuredBannerInner">
+    <span class="featured-badge" data-i18n="featuredBadge">Featured</span>
+    <h2 id="featuredBannerTitle"></h2>
+    <p id="featuredBannerBlurb"></p>
+    <div class="featured-actions">
+      <button class="btn-featured-view" id="featuredViewBtn" data-i18n="featuredViewBtn">View Details</button>
+      <button class="btn-featured-contact" id="featuredContactBtn" data-i18n="featuredContactBtn">Choose this business</button>
+    </div>
+  </div>
 </section>
 
 <div class="trust-strip">
@@ -473,8 +517,17 @@
 </section>
 
 <section class="block" id="jobsBlock">
-  <h2 class="section-title" data-i18n="jobsTitle">Jobs</h2>
-  <p class="section-sub" data-i18n="jobsSub">Local job postings from Calgary employers — hourly, salaried, and gig work.</p>
+  <div class="row-header">
+    <div class="row-heading">
+      <h2 data-i18n="jobsTitle">Jobs</h2>
+      <p data-i18n="jobsSub">Local job postings from Calgary employers — hourly, salaried, and gig work.</p>
+    </div>
+    <div class="row-controls">
+      <button class="row-see-all" id="jobsSeeAllBtn" data-i18n="seeAllBtn">See all →</button>
+      <button class="row-arrow prev" id="jobsPrevBtn" aria-label="Scroll left"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+      <button class="row-arrow next" id="jobsNextBtn" aria-label="Scroll right"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+    </div>
+  </div>
   <div class="filter-chips" id="jobsFilterChips"></div>
   <div id="jobsGrid" class="board-grid"></div>
   <div class="post-toggle-wrap"><button class="btn-cancel" id="jobsPostToggle" data-i18n="postAJob">+ Post a job</button></div>
@@ -491,8 +544,17 @@
 </section>
 
 <section class="block" id="marketplaceBlock">
-  <h2 class="section-title" data-i18n="marketTitle">Marketplace</h2>
-  <p class="section-sub" data-i18n="marketSub">Buy and sell with your neighbours — furniture, electronics, vehicles, and more.</p>
+  <div class="row-header">
+    <div class="row-heading">
+      <h2 data-i18n="marketTitle">Marketplace</h2>
+      <p data-i18n="marketSub">Buy and sell with your neighbours — furniture, electronics, vehicles, and more.</p>
+    </div>
+    <div class="row-controls">
+      <button class="row-see-all" id="marketSeeAllBtn" data-i18n="seeAllBtn">See all →</button>
+      <button class="row-arrow prev" id="marketPrevBtn" aria-label="Scroll left"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+      <button class="row-arrow next" id="marketNextBtn" aria-label="Scroll right"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+    </div>
+  </div>
   <div class="filter-chips" id="marketFilterChips"></div>
   <div id="marketGrid" class="board-grid"></div>
   <div class="post-toggle-wrap"><button class="btn-cancel" id="marketPostToggle" data-i18n="postAnItem">+ Post an item</button></div>
@@ -688,6 +750,7 @@
       jobsTitle:"Jobs", jobsSub:"Local job postings from Calgary employers — hourly, salaried, and gig work.",
       marketTitle:"Marketplace", marketSub:"Buy and sell with your neighbours — furniture, electronics, vehicles, and more.",
       postAJob:"+ Post a job", postAnItem:"+ Post an item", postSubmitBtn:"Post",
+      seeAllBtn:"See all →", showLessBtn:"Show less",
       jobTitlePlaceholder:"Job title", jobCompanyPlaceholder:"Company name", jobWagePlaceholder:"e.g. $22/hr or $55,000/yr", jobAreaPlaceholder:"Area (e.g. NE Calgary)",
       itemTitlePlaceholder:"What are you selling?", itemPricePlaceholder:"Price (e.g. $80)", itemAreaPlaceholder:"Area (e.g. SW Calgary)",
       navSecServices:"Services", navSecJobs:"Jobs", navSecMarket:"Marketplace", navSecCommunity:"Community", navSecSupport:"Support",
@@ -700,6 +763,7 @@
       ctaTitle:"Run a business on Lonera?",
       ctaSub:"See what your bookings, requests, and payments look like — open the Provider Dashboard.",
       ctaDashboardBtn:"Open the Provider Dashboard →",
+      featuredBadge:"Featured", featuredViewBtn:"View Details", featuredContactBtn:"Choose this business",
       micDenied:"We need microphone access to listen — please allow it in your browser, or type instead.",
       footTag:"Built by two Calgary students, for the community that raised us.",
       footNote:"This is an early preview of the Lonera platform — not all listings are live yet.",
@@ -770,6 +834,7 @@
       jobsTitle:"구인구직", jobsSub:"캘거리 고용주들의 지역 채용 공고 — 시급, 연봉, 단기직 모두 있어요.",
       marketTitle:"마켓플레이스", marketSub:"이웃과 사고 팔아보세요 — 가구, 전자제품, 차량 등 다양하게.",
       postAJob:"+ 채용 등록", postAnItem:"+ 물품 등록", postSubmitBtn:"등록",
+      seeAllBtn:"전체 보기 →", showLessBtn:"간단히 보기",
       jobTitlePlaceholder:"직무명", jobCompanyPlaceholder:"업체명", jobWagePlaceholder:"예: $22/시간 또는 $55,000/년", jobAreaPlaceholder:"지역 (예: NE 캘거리)",
       itemTitlePlaceholder:"판매하실 물품은 무엇인가요?", itemPricePlaceholder:"가격 (예: $80)", itemAreaPlaceholder:"지역 (예: SW 캘거리)",
       navSecServices:"서비스", navSecJobs:"구인구직", navSecMarket:"마켓플레이스", navSecCommunity:"커뮤니티", navSecSupport:"고객센터",
@@ -782,6 +847,7 @@
       ctaTitle:"로네라에서 업체를 운영하시나요?",
       ctaSub:"예약, 요청, 결제가 어떻게 보이는지 확인해보세요 — 프로바이더 대시보드를 열어보세요.",
       ctaDashboardBtn:"프로바이더 대시보드 열기 →",
+      featuredBadge:"추천", featuredViewBtn:"자세히 보기", featuredContactBtn:"이 업체 선택하기",
       micDenied:"음성을 듣기 위해 마이크 권한이 필요해요 — 브라우저에서 허용해 주시거나, 대신 입력해 주세요.",
       footTag:"우리를 키워준 커뮤니티를 위해, 캘거리 학생 두 명이 만들었습니다.",
       footNote:"이 사이트는 로네라 플랫폼의 초기 미리보기입니다 — 아직 모든 업체가 등록되지 않았습니다.",
@@ -828,6 +894,7 @@
     document.getElementById("modalClose").setAttribute("aria-label", T[lang].closeAria);
     document.getElementById("fontMinus").setAttribute("aria-label", T[lang].fontMinusAria);
     document.getElementById("fontPlus").setAttribute("aria-label", T[lang].fontPlusAria);
+    renderFeaturedBanner();
     renderCategoryTiles();
     renderListings(currentListings);
     renderCompareTable(currentListings.slice(0,3));
@@ -937,6 +1004,13 @@
   function catName(cat){ return lang === "ko" ? cat.ko : cat.en; }
   function listingName(l){ return lang === "ko" ? l.nameKo : l.nameEn; }
   function listingBlurb(l){ return lang === "ko" ? l.blurbKo : l.blurbEn; }
+  function renderFeaturedBanner(){
+    const l = LISTINGS.slice().sort((a,b)=>b.rating-a.rating)[0];
+    document.getElementById("featuredBannerTitle").textContent = listingName(l);
+    document.getElementById("featuredBannerBlurb").textContent = listingBlurb(l);
+    document.getElementById("featuredViewBtn").onclick = ()=> openModal(l);
+    document.getElementById("featuredContactBtn").onclick = ()=> openRequestModal(l);
+  }
   function starRow(rating){
     const full = Math.round(rating);
     let html = "";
@@ -1367,6 +1441,18 @@
     if(!sel) return;
     sel.innerHTML = JOB_CATEGORIES.filter(c=>c.id!=="all").map(c=>`<option value="${c.id}">${lang==="ko"?c.ko:c.en}</option>`).join("");
   }
+  function wireRowControls(gridId, seeAllBtnId, prevBtnId, nextBtnId){
+    const grid = document.getElementById(gridId);
+    const seeAllBtn = document.getElementById(seeAllBtnId);
+    seeAllBtn.addEventListener("click", ()=>{
+      const expanded = grid.classList.toggle("expanded");
+      seeAllBtn.textContent = expanded ? T[lang].showLessBtn : T[lang].seeAllBtn;
+    });
+    document.getElementById(prevBtnId).addEventListener("click", ()=>{ grid.scrollBy({left: -grid.clientWidth * 0.8, behavior:"smooth"}); });
+    document.getElementById(nextBtnId).addEventListener("click", ()=>{ grid.scrollBy({left: grid.clientWidth * 0.8, behavior:"smooth"}); });
+  }
+  wireRowControls("jobsGrid", "jobsSeeAllBtn", "jobsPrevBtn", "jobsNextBtn");
+  wireRowControls("marketGrid", "marketSeeAllBtn", "marketPrevBtn", "marketNextBtn");
   document.getElementById("jobsPostToggle").addEventListener("click", ()=>{
     const form = document.getElementById("jobsPostForm");
     form.style.display = form.style.display === "block" ? "none" : "block";
@@ -1861,6 +1947,7 @@
   }
   document.getElementById("navHome").addEventListener("click", ()=>{ setActiveNav("navHome"); document.getElementById("homeAnchor").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
+  document.getElementById("navSearchIconBtn").addEventListener("click", ()=>{ document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
   document.getElementById("navCats").addEventListener("click", ()=>{ setActiveNav("navCats"); document.getElementById("categoriesBlock").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navFav").addEventListener("click", ()=>{
     setActiveNav("navFav");
