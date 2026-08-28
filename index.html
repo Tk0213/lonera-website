@@ -111,9 +111,10 @@
   .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; text-decoration:underline; text-underline-offset:2px; }
   .readaloud-link.active{ color:var(--danger); }
 
-  /* ===== Featured banner ===== */
-  .featured-banner{ margin:6px 0 4px; padding:0; }
-  .featured-banner-inner{ background:linear-gradient(135deg, var(--accent-deep), var(--accent)); border-radius:0; padding:64px 20px 68px; min-height:300px; display:flex; flex-direction:column; justify-content:center; color:#fff; position:relative; overflow:hidden; }
+  /* ===== Featured banner (auto-rotating carousel) ===== */
+  .featured-banner{ position:relative; margin:6px 0 4px; padding:0; min-height:300px; overflow:hidden; }
+  .featured-banner-inner{ position:absolute; inset:0; background:linear-gradient(135deg, var(--accent-deep), var(--accent)); padding:64px 20px 68px; display:flex; flex-direction:column; justify-content:center; color:#fff; overflow:hidden; opacity:0; pointer-events:none; transition:opacity 1s ease; }
+  .featured-banner-inner.active{ opacity:1; pointer-events:auto; }
   .featured-banner-inner::after{ content:""; position:absolute; right:-70px; top:-70px; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,0.08); pointer-events:none; }
   .featured-banner-inner::before{ content:""; position:absolute; left:0; right:0; bottom:0; height:80px; background:linear-gradient(to bottom, rgba(255,255,255,0), var(--paper)); pointer-events:none; }
   .featured-content{ max-width:1080px; margin:0 auto; width:100%; position:relative; }
@@ -123,6 +124,16 @@
   .featured-actions{ display:flex; gap:10px; flex-wrap:wrap; position:relative; }
   .btn-featured-view{ background:#fff; color:var(--accent-deep); border:none; border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
   .btn-featured-contact{ background:rgba(255,255,255,0.16); color:#fff; border:1.5px solid rgba(255,255,255,0.55); border-radius:var(--radius-sm); padding:13px 22px; font-weight:800; font-size:calc(0.9rem * var(--scale)); min-height:48px; }
+  .hero-arrow{ position:absolute; top:50%; transform:translateY(-50%); z-index:20; width:40px;height:40px;border-radius:50%; background:rgba(255,255,255,0.85); color:var(--accent-deep); border:none; display:flex;align-items:center;justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,0.18); }
+  .hero-arrow:hover{ background:#fff; }
+  .hero-arrow .icon{ width:1.2em;height:1.2em; }
+  .hero-arrow.prev{ left:16px; }
+  .hero-arrow.next{ right:16px; }
+  .hero-arrow.prev .icon{ transform:rotate(90deg); }
+  .hero-arrow.next .icon{ transform:rotate(-90deg); }
+  .hero-dots{ position:absolute; z-index:20; left:0; right:0; bottom:20px; display:flex; justify-content:center; gap:6px; }
+  .hero-dot{ height:6px; width:12px; border-radius:999px; background:rgba(255,255,255,0.55); border:none; padding:0; transition:width .2s ease, background .2s ease; }
+  .hero-dot.active{ width:28px; background:#fff; }
 
   /* ===== Trust strip + stats ===== */
   .trust-strip{ display:flex;justify-content:center;flex-wrap:wrap;gap:26px; padding:28px 20px;background:#fff;border-bottom:1px solid var(--border); }
@@ -327,19 +338,22 @@
   .board-grid{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x proximity; max-width:1080px; margin:0 auto 22px; padding:2px 2px 10px; scrollbar-width:none; }
   .board-grid::-webkit-scrollbar{ display:none; }
   .board-grid.expanded{ flex-wrap:wrap; overflow-x:visible; }
-  .board-card{ background:var(--card); border:none; border-radius:var(--radius); padding:14px 16px 18px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; flex:0 0 220px; scroll-snap-align:start; transition:transform .18s ease, box-shadow .18s ease; transform-origin:center bottom; }
-  .board-card:hover{ transform:scale(1.05) translateY(-4px); box-shadow:0 18px 34px rgba(20,24,31,0.16); z-index:2; }
-  .board-grid.expanded .board-card{ flex:0 1 220px; }
-  .card-poster{ width:100%; aspect-ratio:16/10; border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:4px; }
-  .card-poster .icon{ width:2.1em; height:2.1em; color:#fff; }
+  .board-card{ flex:0 0 190px; scroll-snap-align:start; transition:transform .3s ease; }
+  .board-card:hover{ transform:scale(1.06); z-index:2; }
+  .board-grid.expanded .board-card{ flex:0 1 190px; }
+  .card-poster{ position:relative; width:100%; aspect-ratio:3/4; border-radius:var(--radius); overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); transition:box-shadow .3s ease; }
+  .board-card:hover .card-poster{ box-shadow:0 18px 34px rgba(20,24,31,0.22); }
+  .card-poster .icon{ width:2.4em; height:2.4em; color:rgba(255,255,255,0.85); }
   .jobs-poster{ background:linear-gradient(135deg,var(--blue-tint),var(--blue)); }
   .market-poster{ background:linear-gradient(135deg,var(--teal-tint),var(--teal)); }
-  .board-card .cat-tag{ display:inline-block; font-size:calc(0.7rem * var(--scale)); font-weight:800; background:var(--blue-tint); color:var(--blue); padding:3px 10px; border-radius:999px; align-self:flex-start; margin-bottom:2px; }
-  .board-card .b-title{ font-weight:800; color:var(--ink); font-size:calc(0.96rem * var(--scale)); line-height:1.35; }
-  .board-card .b-sub{ color:var(--muted); font-size:calc(0.82rem * var(--scale)); }
-  .board-card .b-price{ font-weight:800; color:var(--teal); font-size:calc(1.02rem * var(--scale)); margin-top:2px; }
-  .board-card .b-meta{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:calc(0.76rem * var(--scale)); color:var(--muted); }
-  .board-card .condition-badge{ font-size:calc(0.7rem * var(--scale)); font-weight:800; padding:3px 9px; border-radius:999px; background:var(--teal-tint); color:var(--teal); }
+  .card-poster-overlay{ position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.78), rgba(0,0,0,0.05) 55%, transparent); }
+  .card-poster .cat-tag{ position:absolute; top:10px; left:10px; font-size:calc(0.68rem * var(--scale)); font-weight:800; background:rgba(255,255,255,0.92); color:var(--ink); padding:3px 9px; border-radius:999px; }
+  .poster-text{ position:absolute; left:0; right:0; bottom:0; padding:10px 12px; color:#fff; }
+  .card-poster .b-price{ font-size:calc(0.76rem * var(--scale)); font-weight:700; color:#f4d5d5; margin:0 0 2px; }
+  .card-poster .b-title{ font-size:calc(0.86rem * var(--scale)); font-weight:800; line-height:1.3; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .board-card .b-sub{ color:var(--muted); font-size:calc(0.78rem * var(--scale)); margin-top:8px; padding:0 2px; }
+  .board-card .b-meta{ display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:calc(0.74rem * var(--scale)); color:var(--muted); padding:0 2px; }
+  .board-card .condition-badge{ font-size:calc(0.68rem * var(--scale)); font-weight:800; padding:3px 8px; border-radius:999px; background:var(--teal-tint); color:var(--teal); }
   .post-toggle-wrap{ max-width:1080px; margin:0 auto 16px; text-align:center; }
   .post-form{ max-width:680px; margin:0 auto 26px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; display:flex; flex-direction:column; gap:10px; }
   .post-form input, .post-form select{ padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size:calc(0.94rem * var(--scale)); font-family:inherit; background:#fff; width:100%; }
@@ -449,18 +463,11 @@
   <button class="readaloud-link" id="readAloudBtn"><svg class="icon" aria-hidden="true"><use href="#ic-speaker"/></svg><span data-i18n="readAloud">Read this page to me</span></button>
 </section>
 
-<section class="featured-banner">
-  <div class="featured-banner-inner" id="featuredBannerInner">
-    <div class="featured-content">
-      <span class="featured-badge" data-i18n="featuredBadge">Featured</span>
-      <h2 id="featuredBannerTitle"></h2>
-      <p id="featuredBannerBlurb"></p>
-      <div class="featured-actions">
-        <button class="btn-featured-view" id="featuredViewBtn" data-i18n="featuredViewBtn">View Details</button>
-        <button class="btn-featured-contact" id="featuredContactBtn" data-i18n="featuredContactBtn">Choose this business</button>
-      </div>
-    </div>
-  </div>
+<section class="featured-banner" id="featuredBanner">
+  <div id="featuredSlides"></div>
+  <button class="hero-arrow prev" id="heroPrevBtn" aria-label="Previous"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+  <button class="hero-arrow next" id="heroNextBtn" aria-label="Next"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+  <div class="hero-dots" id="heroDots"></div>
 </section>
 
 <div class="trust-strip">
@@ -1016,12 +1023,38 @@
   function catName(cat){ return lang === "ko" ? cat.ko : cat.en; }
   function listingName(l){ return lang === "ko" ? l.nameKo : l.nameEn; }
   function listingBlurb(l){ return lang === "ko" ? l.blurbKo : l.blurbEn; }
+  let heroSlides = [], heroIndex = 0, heroTimer = null;
   function renderFeaturedBanner(){
-    const l = LISTINGS.slice().sort((a,b)=>b.rating-a.rating)[0];
-    document.getElementById("featuredBannerTitle").textContent = listingName(l);
-    document.getElementById("featuredBannerBlurb").textContent = listingBlurb(l);
-    document.getElementById("featuredViewBtn").onclick = ()=> openModal(l);
-    document.getElementById("featuredContactBtn").onclick = ()=> openRequestModal(l);
+    heroSlides = LISTINGS.filter(l=>l.gold).slice().sort((a,b)=>b.rating-a.rating).slice(0,6);
+    if(!heroSlides.length) heroSlides = LISTINGS.slice(0,1);
+    const wrap = document.getElementById("featuredSlides");
+    wrap.innerHTML = heroSlides.map((l,i)=>`
+      <div class="featured-banner-inner${i===0?" active":""}">
+        <div class="featured-content">
+          <span class="featured-badge">${T[lang].featuredBadge}</span>
+          <h2>${listingName(l)}</h2>
+          <p>${listingBlurb(l)}</p>
+          <div class="featured-actions">
+            <button class="btn-featured-view" data-idx="${i}">${T[lang].featuredViewBtn}</button>
+            <button class="btn-featured-contact" data-idx="${i}">${T[lang].featuredContactBtn}</button>
+          </div>
+        </div>
+      </div>`).join("");
+    wrap.querySelectorAll(".btn-featured-view").forEach(b=>{ b.onclick = ()=> openModal(heroSlides[+b.dataset.idx]); });
+    wrap.querySelectorAll(".btn-featured-contact").forEach(b=>{ b.onclick = ()=> openRequestModal(heroSlides[+b.dataset.idx]); });
+    document.getElementById("heroDots").innerHTML = heroSlides.map((_,i)=>`<button class="hero-dot${i===0?" active":""}" data-idx="${i}" aria-label="Go to slide ${i+1}"></button>`).join("");
+    document.querySelectorAll("#heroDots .hero-dot").forEach(d=>{ d.onclick = ()=>{ showHeroSlide(+d.dataset.idx); startHeroTimer(); }; });
+    heroIndex = 0;
+    startHeroTimer();
+  }
+  function showHeroSlide(i){
+    heroIndex = (i + heroSlides.length) % heroSlides.length;
+    document.querySelectorAll("#featuredSlides .featured-banner-inner").forEach((el,idx)=> el.classList.toggle("active", idx===heroIndex));
+    document.querySelectorAll("#heroDots .hero-dot").forEach((el,idx)=> el.classList.toggle("active", idx===heroIndex));
+  }
+  function startHeroTimer(){
+    clearInterval(heroTimer);
+    if(heroSlides.length > 1) heroTimer = setInterval(()=> showHeroSlide(heroIndex+1), 6000);
   }
   function starRow(rating){
     const full = Math.round(rating);
@@ -1440,11 +1473,16 @@
       const title = escapeHtml(lang==="ko" ? j.titleKo : j.titleEn);
       const company = escapeHtml(lang==="ko" ? j.companyKo : j.companyEn);
       return `<div class="board-card">
-        <div class="card-poster jobs-poster">${icon("ic-briefcase")}</div>
-        <span class="cat-tag">${catLabel(j.cat)}</span>
-        <div class="b-title">${title}</div>
+        <div class="card-poster jobs-poster">
+          ${icon("ic-briefcase")}
+          <div class="card-poster-overlay"></div>
+          <span class="cat-tag">${catLabel(j.cat)}</span>
+          <div class="poster-text">
+            <p class="b-price">${escapeHtml(j.wage)}</p>
+            <p class="b-title">${title}</p>
+          </div>
+        </div>
         <div class="b-sub">${company}</div>
-        <div class="b-price">${escapeHtml(j.wage)}</div>
         <div class="b-meta"><span>${icon("ic-pin")}${escapeHtml(j.area)}</span><span>${timeAgo(j.postedTs)}</span></div>
       </div>`;
     }).join("");
@@ -1535,10 +1573,15 @@
     wrap.innerHTML = list.map(m=>{
       const title = escapeHtml(lang==="ko" ? m.titleKo : m.titleEn);
       return `<div class="board-card">
-        <div class="card-poster market-poster">${icon("ic-tag")}</div>
-        <span class="cat-tag">${catLabel(m.cat)}</span>
-        <div class="b-title">${title}</div>
-        <div class="b-price">${escapeHtml(m.price)}</div>
+        <div class="card-poster market-poster">
+          ${icon("ic-tag")}
+          <div class="card-poster-overlay"></div>
+          <span class="cat-tag">${catLabel(m.cat)}</span>
+          <div class="poster-text">
+            <p class="b-price">${escapeHtml(m.price)}</p>
+            <p class="b-title">${title}</p>
+          </div>
+        </div>
         <div class="b-meta"><span class="condition-badge">${condLabel(m.cond)}</span><span>${timeAgo(m.postedTs)}</span></div>
         <div class="b-sub">${icon("ic-pin")}${escapeHtml(m.area)}</div>
       </div>`;
@@ -1962,6 +2005,10 @@
   document.getElementById("navHome").addEventListener("click", ()=>{ setActiveNav("navHome"); document.getElementById("homeAnchor").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
   document.getElementById("navSearchIconBtn").addEventListener("click", ()=>{ document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
+  document.getElementById("heroPrevBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex-1); startHeroTimer(); });
+  document.getElementById("heroNextBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex+1); startHeroTimer(); });
+  document.getElementById("featuredBanner").addEventListener("mouseenter", ()=> clearInterval(heroTimer));
+  document.getElementById("featuredBanner").addEventListener("mouseleave", ()=> startHeroTimer());
   document.getElementById("navCats").addEventListener("click", ()=>{ setActiveNav("navCats"); document.getElementById("categoriesBlock").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navFav").addEventListener("click", ()=>{
     setActiveNav("navFav");
