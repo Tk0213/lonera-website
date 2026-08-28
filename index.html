@@ -23,9 +23,9 @@
     --scale: 1;
     --ink: #14181f;
     --ink-deep: #0a0d12;
-    --accent: #c23b3b;
-    --accent-deep: #9c2e2e;
-    --accent-tint: #f4cccc;
+    --accent: #e11d48;
+    --accent-deep: #be123c;
+    --accent-tint: #ffe4e6;
     --amber: #c1870f;
     --amber-tint: #f6e6bf;
     --teal: #1f6f63;
@@ -38,8 +38,8 @@
     --muted: #666f7d;
     --border: #e3e6e4;
     --danger: #b5342a;
-    --radius: 20px;
-    --radius-sm: 14px;
+    --radius: 16px;
+    --radius-sm: 12px;
     --shadow: 0 10px 28px rgba(20,24,31,0.06);
   }
   body.high-contrast{
@@ -112,7 +112,7 @@
   .readaloud-link.active{ color:var(--danger); }
 
   /* ===== Floating voice assistant button ===== */
-  .voice-fab{ position:fixed; bottom:22px; right:22px; z-index:65; display:flex; align-items:center; gap:8px; background:var(--accent); color:#fff; border:none; border-radius:999px; padding:15px 22px; font-weight:800; font-size:calc(0.92rem * var(--scale)); box-shadow:0 10px 28px rgba(194,59,59,0.4); transition:transform .15s ease, background .15s ease; }
+  .voice-fab{ position:fixed; bottom:22px; right:22px; z-index:65; display:flex; align-items:center; gap:8px; background:var(--accent); color:#fff; border:none; border-radius:999px; padding:15px 22px; font-weight:800; font-size:calc(0.92rem * var(--scale)); box-shadow:0 10px 28px rgba(225,29,72,0.4); transition:transform .15s ease, background .15s ease; }
   .voice-fab:hover{ background:var(--accent-deep); transform:translateY(-2px); }
   .voice-fab .icon{ width:1.15em; height:1.15em; }
   @media (max-width:760px){ .voice-fab{ bottom:86px; padding:14px; } .voice-fab span{ display:none; } }
