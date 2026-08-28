@@ -111,6 +111,12 @@
   .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; text-decoration:underline; text-underline-offset:2px; }
   .readaloud-link.active{ color:var(--danger); }
 
+  /* ===== Floating voice assistant button ===== */
+  .voice-fab{ position:fixed; bottom:22px; right:22px; z-index:65; display:flex; align-items:center; gap:8px; background:var(--accent); color:#fff; border:none; border-radius:999px; padding:15px 22px; font-weight:800; font-size:calc(0.92rem * var(--scale)); box-shadow:0 10px 28px rgba(194,59,59,0.4); transition:transform .15s ease, background .15s ease; }
+  .voice-fab:hover{ background:var(--accent-deep); transform:translateY(-2px); }
+  .voice-fab .icon{ width:1.15em; height:1.15em; }
+  @media (max-width:760px){ .voice-fab{ bottom:86px; padding:14px; } .voice-fab span{ display:none; } }
+
   /* ===== Featured banner (auto-rotating carousel) ===== */
   .featured-banner{ position:relative; margin:6px 0 4px; padding:0; min-height:300px; overflow:hidden; }
   .featured-banner-inner{ position:absolute; inset:0; background:linear-gradient(135deg, var(--accent-deep), var(--accent)); padding:64px 20px 68px; display:flex; flex-direction:column; justify-content:center; color:#fff; overflow:hidden; opacity:0; pointer-events:none; transition:opacity 1s ease; }
@@ -134,6 +140,7 @@
   .hero-dots{ position:absolute; z-index:20; left:0; right:0; bottom:20px; display:flex; justify-content:center; gap:6px; }
   .hero-dot{ height:6px; width:12px; border-radius:999px; background:rgba(255,255,255,0.55); border:none; padding:0; transition:width .2s ease, background .2s ease; }
   .hero-dot.active{ width:28px; background:#fff; }
+  @media (max-width:640px){ .hero-arrow{ display:none; } }
 
   /* ===== Trust strip + stats ===== */
   .trust-strip{ display:flex;justify-content:center;flex-wrap:wrap;gap:26px; padding:28px 20px;background:#fff;border-bottom:1px solid var(--border); }
@@ -699,6 +706,11 @@
   </div>
 </div>
 
+<button class="voice-fab" id="voiceFabBtn">
+  <svg class="icon" aria-hidden="true"><use href="#ic-mic"/></svg>
+  <span data-i18n="voiceFabLabel">Ask Lonera</span>
+</button>
+
 <nav class="bottom-nav" aria-label="Primary">
   <div class="row">
     <button id="navHome" class="active"><svg class="icon" aria-hidden="true"><use href="#ic-home"/></svg><span data-i18n="navHome">Home</span></button>
@@ -783,6 +795,7 @@
       ctaSub:"See what your bookings, requests, and payments look like — open the Provider Dashboard.",
       ctaDashboardBtn:"Open the Provider Dashboard →",
       featuredBadge:"Featured", featuredViewBtn:"View Details", featuredContactBtn:"Choose this business",
+      voiceFabLabel:"Ask Lonera",
       micDenied:"We need microphone access to listen — please allow it in your browser, or type instead.",
       footTag:"Built by two Calgary students, for the community that raised us.",
       footNote:"This is an early preview of the Lonera platform — not all listings are live yet.",
@@ -867,6 +880,7 @@
       ctaSub:"예약, 요청, 결제가 어떻게 보이는지 확인해보세요 — 프로바이더 대시보드를 열어보세요.",
       ctaDashboardBtn:"프로바이더 대시보드 열기 →",
       featuredBadge:"추천", featuredViewBtn:"자세히 보기", featuredContactBtn:"이 업체 선택하기",
+      voiceFabLabel:"로네라에게 물어보기",
       micDenied:"음성을 듣기 위해 마이크 권한이 필요해요 — 브라우저에서 허용해 주시거나, 대신 입력해 주세요.",
       footTag:"우리를 키워준 커뮤니티를 위해, 캘거리 학생 두 명이 만들었습니다.",
       footNote:"이 사이트는 로네라 플랫폼의 초기 미리보기입니다 — 아직 모든 업체가 등록되지 않았습니다.",
@@ -2005,6 +2019,10 @@
   document.getElementById("navHome").addEventListener("click", ()=>{ setActiveNav("navHome"); document.getElementById("homeAnchor").scrollIntoView({behavior:"smooth"}); });
   document.getElementById("navSearch").addEventListener("click", ()=>{ setActiveNav("navSearch"); document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
   document.getElementById("navSearchIconBtn").addEventListener("click", ()=>{ document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"}); document.getElementById("textSearch").focus(); });
+  document.getElementById("voiceFabBtn").addEventListener("click", ()=>{
+    document.querySelector(".search-pill").scrollIntoView({behavior:"smooth", block:"center"});
+    setTimeout(()=> document.getElementById("micBtn").click(), 450);
+  });
   document.getElementById("heroPrevBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex-1); startHeroTimer(); });
   document.getElementById("heroNextBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex+1); startHeroTimer(); });
   document.getElementById("featuredBanner").addEventListener("mouseenter", ()=> clearInterval(heroTimer));
