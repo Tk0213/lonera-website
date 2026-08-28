@@ -73,9 +73,8 @@
 
   /* ===== Site nav ===== */
   header.site-nav{ background:#fff; border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; position:sticky; top:0; z-index:60; }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.28rem * var(--scale)); letter-spacing:-0.01em; text-decoration:none; color:var(--ink); flex-shrink:0; }
-  .brand .mark{ width:36px;height:36px;border-radius:10px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; flex-shrink:0; }
-  .brand .mark .icon{ width:20px;height:20px; stroke-width:2.1; }
+  .brand{ display:flex; align-items:center; font-weight:800; font-size: calc(1.28rem * var(--scale)); letter-spacing:-0.01em; text-decoration:none; color:var(--ink); flex-shrink:0; }
+  .brand-dot{ color:var(--accent); }
   .brand small{ display:block;font-weight:600;font-size: calc(0.66rem * var(--scale)); color:var(--muted);letter-spacing:0.2px; }
   .site-nav-links{ display:flex; align-items:center; gap:2px; flex:1; overflow-x:auto; scrollbar-width:none; }
   .site-nav-links::-webkit-scrollbar{ display:none; }
@@ -86,14 +85,16 @@
   .nav-icon-btn{ width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;color:var(--text); flex-shrink:0; }
   .nav-icon-btn:hover{ border-color:var(--accent); color:var(--accent-deep); }
   .nav-icon-btn[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  #navSearchIconBtn{ border:none; background:none; }
+  #navSearchIconBtn:hover{ background:var(--accent-tint); }
   .nav-post-btn{ background:var(--accent); color:#fff; border:none; border-radius:999px; padding:0 18px; min-height:40px; font-weight:800; font-size:calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; white-space:nowrap; text-decoration:none; }
   .nav-post-btn .icon{ width:1.05em; height:1.05em; }
   .nav-post-btn:hover{ background:var(--accent-deep); }
 
   .utility-bar{ background:var(--paper); border-bottom:1px solid var(--border); padding:8px 24px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
-  .ctrl-btn{ background:#fff; color:var(--text); border:1.5px solid var(--border); border-radius:999px; padding:7px 13px; font-size: calc(0.8rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:38px; }
-  .ctrl-btn:hover{ border-color:var(--accent); color:var(--accent-deep); }
-  .ctrl-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ctrl-btn{ background:var(--accent-tint); color:var(--accent-deep); border:none; border-radius:999px; padding:7px 13px; font-size: calc(0.8rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:38px; }
+  .ctrl-btn:hover{ background:var(--accent); color:#fff; }
+  .ctrl-btn[aria-pressed="true"]{background:var(--accent);color:#fff;}
 
   /* ===== Top search ===== */
   .top-search{ background:#fff; padding:40px 20px 34px; text-align:center; max-width:760px; margin:0 auto; }
@@ -427,8 +428,7 @@
 
 <header class="site-nav">
   <a href="#homeAnchor" class="brand">
-    <div class="mark"><svg class="icon" aria-hidden="true"><use href="#ic-mark"/></svg></div>
-    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Calgary's Trusted Marketplace for Newcomers</small></div>
+    <div><span><span data-i18n="brandName">Lonera</span><span class="brand-dot">.</span></span><small data-i18n="brandTag">Calgary's Trusted Marketplace for Newcomers</small></div>
   </a>
   <nav class="site-nav-links" aria-label="Section links">
     <a href="#categoriesBlock" data-i18n="navSecServices">Services</a>
