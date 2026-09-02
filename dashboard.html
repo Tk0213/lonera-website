@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Provider Dashboard — Lonera</title>
 <meta name="description" content="Design preview of the Lonera Provider Dashboard — how Founding Providers will manage bookings, quotes, payments, and messages.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e2582d' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2314181f'/%3E%3Cpath d='M20 14v30h9M20 44h24' stroke='%23e11d48' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root{
     --scale: 1;
-    --ink:#14181f; --ink-deep:#0a0d12; --accent:#c23b3b; --accent-deep:#9c2e2e; --accent-tint:#f4cccc;
+    --ink:#14181f; --ink-deep:#0a0d12; --accent:#e11d48; --accent-deep:#be123c; --accent-tint:#ffe4e6;
     --amber:#c1870f; --amber-tint:#f6e6bf; --teal:#1f6f63; --teal-tint:#dcefe9; --blue:#29578f; --blue-tint:#e3edf9;
     --paper:#ffffff; --card:#ffffff; --text:#1d2129; --muted:#666f7d; --border:#e3e6e4; --danger:#b5342a;
-    --radius:18px; --radius-sm:12px; --shadow:0 10px 28px rgba(20,24,31,0.06); --sidebar-w:236px;
+    --radius:16px; --radius-sm:12px; --shadow:0 10px 28px rgba(20,24,31,0.06); --sidebar-w:236px;
   }
   body.high-contrast{
     --ink:#000000; --ink-deep:#000000; --accent:#8a1f1f; --accent-deep:#5c1414; --accent-tint:#f9dede;
@@ -30,9 +30,8 @@
   .icon{width:1.2em;height:1.2em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 
   header.topbar{ background:var(--ink); color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; position:sticky; top:0; z-index:60; box-shadow:var(--shadow); }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size: calc(1.3rem * var(--scale)); letter-spacing:-0.01em; }
-  .brand .mark{ width:36px;height:36px;border-radius:11px; background:var(--accent); display:flex;align-items:center;justify-content:center; color:#fff; }
-  .brand .mark .icon{ width:20px;height:20px; stroke-width:2.1; }
+  .brand{ display:flex; align-items:center; font-weight:800; font-size: calc(1.3rem * var(--scale)); letter-spacing:-0.01em; }
+  .brand-dot{ color:var(--accent); }
   .brand small{ display:block;font-weight:500;font-size: calc(0.7rem * var(--scale)); color:#b7c0cc;letter-spacing:0.2px; }
   .topbar-controls{ display:flex;align-items:center;gap:8px;flex-wrap:wrap; }
   .ctrl-btn{ background:rgba(255,255,255,0.1); color:#fff; border:1.5px solid rgba(255,255,255,0.28); border-radius:999px; padding:8px 14px; font-size: calc(0.85rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:40px; }
@@ -185,8 +184,7 @@
 
 <header class="topbar">
   <div class="brand">
-    <div class="mark"><svg class="icon" aria-hidden="true"><use href="#d-mark"/></svg></div>
-    <div><span data-i18n="brandName">Lonera</span><small data-i18n="brandTag">Provider Dashboard</small></div>
+    <div><span><span data-i18n="brandName">Lonera</span><span class="brand-dot">.</span></span><small data-i18n="brandTag">Provider Dashboard</small></div>
   </div>
   <div class="topbar-controls">
     <div class="notif-wrap">
