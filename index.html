@@ -92,7 +92,7 @@
   .nav-post-btn:hover{ background:var(--accent-deep); }
 
   .utility-bar{ background:var(--paper); border-bottom:1px solid var(--border); padding:8px 24px; display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; }
-  .ctrl-btn{ background:var(--accent-tint); color:var(--accent-deep); border:none; border-radius:999px; padding:7px 13px; font-size: calc(0.8rem * var(--scale)); font-weight:700; display:flex;align-items:center;gap:6px; min-height:38px; }
+  .ctrl-btn{ background:var(--accent-tint); color:var(--accent-deep); border:none; border-radius:999px; padding:7px 13px; font-size: calc(0.8rem * var(--scale)); font-weight:700; display:flex;align-items:center;justify-content:center;gap:6px; min-height:44px; min-width:44px; }
   .ctrl-btn:hover{ background:var(--accent); color:#fff; }
   .ctrl-btn[aria-pressed="true"]{background:var(--accent);color:#fff;}
 
@@ -109,7 +109,7 @@
   .search-pill input{ flex:1; min-width:0; border:none; outline:none; background:transparent; padding:10px 4px; font-size: calc(1rem * var(--scale)); font-family:inherit; color:var(--text); }
   .search-pill #textSearchBtn{ background:var(--ink); color:#fff; border:none; border-radius:999px; padding:12px 22px; font-weight:800; font-size: calc(0.94rem * var(--scale)); flex-shrink:0; }
   .voice-status-inline{ margin-top:12px; min-height:22px; color:var(--accent-deep); font-weight:700; font-size: calc(0.9rem * var(--scale)); }
-  .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; gap:6px; text-decoration:underline; text-underline-offset:2px; }
+  .readaloud-link{ margin-top:16px; background:none; border:none; color:var(--muted); font-weight:700; font-size: calc(0.86rem * var(--scale)); display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:underline; text-underline-offset:2px; padding:12px 8px; min-height:44px; }
   .readaloud-link.active{ color:var(--danger); }
 
   /* ===== Floating voice assistant button ===== */
@@ -139,8 +139,9 @@
   .hero-arrow.prev .icon{ transform:rotate(90deg); }
   .hero-arrow.next .icon{ transform:rotate(-90deg); }
   .hero-dots{ position:absolute; z-index:20; left:0; right:0; bottom:20px; display:flex; justify-content:center; gap:6px; }
-  .hero-dot{ height:6px; width:12px; border-radius:999px; background:rgba(255,255,255,0.55); border:none; padding:0; transition:width .2s ease, background .2s ease; }
-  .hero-dot.active{ width:28px; background:#fff; }
+  .hero-dot{ height:24px; width:24px; padding:0; border:none; background:none; display:flex; align-items:center; justify-content:center; }
+  .hero-dot-bar{ height:6px; width:12px; border-radius:999px; background:rgba(255,255,255,0.55); pointer-events:none; transition:width .2s ease, background .2s ease; }
+  .hero-dot.active .hero-dot-bar{ width:28px; background:#fff; }
   @media (max-width:640px){ .hero-arrow{ display:none; } }
 
   /* ===== Trust strip + stats ===== */
@@ -208,7 +209,7 @@
   .compare-actions button{ border:none;border-radius:999px;padding:8px 14px;font-weight:800;font-size:calc(0.8rem * var(--scale)); white-space:nowrap; }
   .listing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:18px;}
   .listing-card{ background:var(--card);border:1px solid var(--border);border-radius:var(--radius); padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px;position:relative; }
-  .fav-btn{ position:absolute; top:16px; right:16px; background:none; border:none; color:var(--border); min-height:36px; min-width:36px; padding:0; }
+  .fav-btn{ position:absolute; top:10px; right:10px; background:none; border:none; color:var(--border); min-height:44px; min-width:44px; padding:0; display:flex; align-items:center; justify-content:center; }
   .fav-btn .icon{width:1.4em;height:1.4em;}
   .fav-btn.active{color:var(--danger);}
   .listing-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer;}
@@ -1092,7 +1093,7 @@
       </div>`).join("");
     wrap.querySelectorAll(".btn-featured-view").forEach(b=>{ b.onclick = ()=> openModal(heroSlides[+b.dataset.idx]); });
     wrap.querySelectorAll(".btn-featured-contact").forEach(b=>{ b.onclick = ()=> openRequestModal(heroSlides[+b.dataset.idx]); });
-    document.getElementById("heroDots").innerHTML = heroSlides.map((_,i)=>`<button class="hero-dot${i===0?" active":""}" data-idx="${i}" aria-label="Go to slide ${i+1}"></button>`).join("");
+    document.getElementById("heroDots").innerHTML = heroSlides.map((_,i)=>`<button class="hero-dot${i===0?" active":""}" data-idx="${i}" aria-label="Go to slide ${i+1}"><span class="hero-dot-bar"></span></button>`).join("");
     document.querySelectorAll("#heroDots .hero-dot").forEach(d=>{ d.onclick = ()=>{ showHeroSlide(+d.dataset.idx); startHeroTimer(); }; });
     heroIndex = 0;
     startHeroTimer();
