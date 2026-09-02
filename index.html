@@ -362,6 +362,19 @@
   .board-card .b-sub{ color:var(--muted); font-size:calc(0.78rem * var(--scale)); margin-top:8px; padding:0 2px; }
   .board-card .b-meta{ display:flex; justify-content:space-between; align-items:center; margin-top:6px; font-size:calc(0.74rem * var(--scale)); color:var(--muted); padding:0 2px; }
   .board-card .condition-badge{ font-size:calc(0.68rem * var(--scale)); font-weight:800; padding:3px 8px; border-radius:999px; background:var(--teal-tint); color:var(--teal); }
+
+  /* ===== Grocery deals (real data, text cards — no fake photo) ===== */
+  .grocery-grid .grocery-card{ flex:0 0 230px; background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); scroll-snap-align:start; transition:transform .2s ease, box-shadow .2s ease; }
+  .grocery-grid .grocery-card:hover{ transform:translateY(-3px); box-shadow:0 14px 28px rgba(20,24,31,0.14); }
+  .grocery-grid.expanded .grocery-card{ flex:0 1 230px; }
+  .grocery-store-name{ font-weight:800; color:var(--ink); font-size:calc(1rem * var(--scale)); margin:0 0 2px; }
+  .grocery-valid{ font-size:calc(0.72rem * var(--scale)); color:var(--muted); margin:0 0 12px; }
+  .grocery-items{ display:flex; flex-direction:column; gap:7px; margin-bottom:12px; min-height:20px; }
+  .grocery-item{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-size:calc(0.82rem * var(--scale)); }
+  .grocery-item .g-name{ color:var(--text); }
+  .grocery-item .g-price{ font-weight:800; color:var(--teal); white-space:nowrap; }
+  .grocery-flyer-link{ font-size:calc(0.8rem * var(--scale)); font-weight:700; color:var(--accent-deep); text-decoration:none; }
+  .grocery-disclaimer{ max-width:1080px; margin:16px auto 0; padding:0 20px; font-size:calc(0.76rem * var(--scale)); color:var(--muted); text-align:center; line-height:1.5; }
   .post-toggle-wrap{ max-width:1080px; margin:0 auto 16px; text-align:center; }
   .post-form{ max-width:680px; margin:0 auto 26px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; display:flex; flex-direction:column; gap:10px; }
   .post-form input, .post-form select{ padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--border); font-size:calc(0.94rem * var(--scale)); font-family:inherit; background:#fff; width:100%; }
@@ -434,6 +447,7 @@
     <a href="#categoriesBlock" data-i18n="navSecServices">Services</a>
     <a href="#jobsBlock" data-i18n="navSecJobs">Jobs</a>
     <a href="#marketplaceBlock" data-i18n="navSecMarket">Marketplace</a>
+    <a href="#groceryBlock" data-i18n="navSecGrocery">Grocery Deals</a>
     <a href="#communityBlock" data-i18n="navSecCommunity">Community</a>
     <a href="#supportBlock" data-i18n="navSecSupport">Support</a>
   </nav>
@@ -594,6 +608,21 @@
     </div>
     <button class="btn-choose" id="marketSubmitBtn" data-i18n="postSubmitBtn">Post item</button>
   </div>
+</section>
+
+<section class="block" id="groceryBlock">
+  <div class="row-header">
+    <div class="row-heading">
+      <h2 data-i18n="groceryTitle">Grocery Deals</h2>
+      <p data-i18n="grocerySub">This week's real sale prices from Calgary grocery stores — pulled by hand, not a live feed.</p>
+    </div>
+    <div class="row-controls">
+      <button class="row-arrow prev" id="groceryPrevBtn" aria-label="Scroll left"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+      <button class="row-arrow next" id="groceryNextBtn" aria-label="Scroll right"><svg class="icon" aria-hidden="true"><use href="#ic-chevron"/></svg></button>
+    </div>
+  </div>
+  <div id="groceryGrid" class="board-grid grocery-grid"></div>
+  <p class="grocery-disclaimer" data-i18n="groceryDisclaimer">Real prices from each store's public flyer, checked on Sep 2, 2026 — updated by hand, not automatically. Lonera isn't affiliated with these retailers; always confirm prices in-store.</p>
 </section>
 
 <section class="block">
@@ -784,7 +813,10 @@
       seeAllBtn:"See all →", showLessBtn:"Show less",
       jobTitlePlaceholder:"Job title", jobCompanyPlaceholder:"Company name", jobWagePlaceholder:"e.g. $22/hr or $55,000/yr", jobAreaPlaceholder:"Area (e.g. NE Calgary)",
       itemTitlePlaceholder:"What are you selling?", itemPricePlaceholder:"Price (e.g. $80)", itemAreaPlaceholder:"Area (e.g. SW Calgary)",
-      navSecServices:"Services", navSecJobs:"Jobs", navSecMarket:"Marketplace", navSecCommunity:"Community", navSecSupport:"Support",
+      navSecServices:"Services", navSecJobs:"Jobs", navSecMarket:"Marketplace", navSecGrocery:"Grocery Deals", navSecCommunity:"Community", navSecSupport:"Support",
+      groceryTitle:"Grocery Deals", grocerySub:"This week's real sale prices from Calgary grocery stores — pulled by hand, not a live feed.",
+      groceryDisclaimer:"Real prices from each store's public flyer, checked on Sep 2, 2026 — updated by hand, not automatically. Lonera isn't affiliated with these retailers; always confirm prices in-store.",
+      groceryValidThrough:"Valid", groceryViewFlyer:"View flyer →", groceryCheckFlyer:"See this week's flyer →",
       faqTitle:"Common questions", faqSub:"Straight answers, no fine print.",
       aboutTitle:"Who's behind Lonera",
       aboutP1:"Lonera was started by TK Lim and Connor Kim, two students in Calgary who grew up watching their own families — and neighbours from Korean, Filipino, South Asian, and other newcomer communities — struggle to find local help they could trust in a new country.",
@@ -869,7 +901,10 @@
       seeAllBtn:"전체 보기 →", showLessBtn:"간단히 보기",
       jobTitlePlaceholder:"직무명", jobCompanyPlaceholder:"업체명", jobWagePlaceholder:"예: $22/시간 또는 $55,000/년", jobAreaPlaceholder:"지역 (예: NE 캘거리)",
       itemTitlePlaceholder:"판매하실 물품은 무엇인가요?", itemPricePlaceholder:"가격 (예: $80)", itemAreaPlaceholder:"지역 (예: SW 캘거리)",
-      navSecServices:"서비스", navSecJobs:"구인구직", navSecMarket:"마켓플레이스", navSecCommunity:"커뮤니티", navSecSupport:"고객센터",
+      navSecServices:"서비스", navSecJobs:"구인구직", navSecMarket:"마켓플레이스", navSecGrocery:"장보기 할인", navSecCommunity:"커뮤니티", navSecSupport:"고객센터",
+      groceryTitle:"장보기 할인", grocerySub:"캘거리 마트들의 이번 주 실제 할인가 — 직접 확인 후 업데이트하며, 실시간 연동은 아니에요.",
+      groceryDisclaimer:"각 마트의 공개 전단지를 2026년 9월 2일 기준으로 직접 확인한 실제 가격입니다 — 자동 업데이트가 아니에요. 로네라는 이 업체들과 제휴 관계가 아니며, 실제 가격은 매장에서 꼭 다시 확인해 주세요.",
+      groceryValidThrough:"유효기간", groceryViewFlyer:"전단지 보기 →", groceryCheckFlyer:"이번 주 전단지 확인 →",
       faqTitle:"자주 묻는 질문", faqSub:"복잡한 설명 없이, 명확한 답변만 드려요.",
       aboutTitle:"로네라를 만든 사람들",
       aboutP1:"로네라는 캘거리에서 나고 자란 두 학생, TK Lim과 Connor Kim이 시작했습니다. 저희 가족과, 한인·필리핀·남아시아 등 다양한 이민자 이웃들이 새로운 나라에서 믿을 수 있는 지역 업체를 찾기 위해 고생하는 모습을 보며 자랐습니다.",
@@ -941,6 +976,7 @@
     renderMarketFilterChips();
     renderMarketGrid();
     populateMarketSelects();
+    renderGroceryGrid();
     if(document.getElementById("modalOverlay").classList.contains("open") && currentModalListing){
       openModal(currentModalListing);
     }
@@ -1558,6 +1594,35 @@
     {titleEn:"Moving boxes, free pickup", titleKo:"이사박스, 직접 픽업시 무료", cat:"other", cond:"free", price:"$0", area:"NE Calgary", postedTs: Date.now()-3600000*33, seeded:true},
     {titleEn:"Rice cooker, brand new in box", titleKo:"전기밥솥, 미개봉 새 제품", cat:"other", cond:"new", price:"$65", area:"SW Calgary", postedTs: Date.now()-3600000*47, seeded:true}
   ];
+
+  // Real grocery deals, manually pulled from public store flyers on 2026-09-02.
+  // Not a live feed — refreshed by hand. Not affiliated with or endorsed by these retailers.
+  const GROCERY_STORES = [
+    {id:"walmart", nameEn:"Walmart", nameKo:"월마트", flyerUrl:"https://www.walmart.ca/en/flyer",
+      validEn:"Aug 27 – Sep 2, 2026", validKo:"8월 27일 – 9월 2일",
+      items:[
+        {en:"Large seedless watermelon", ko:"씨 없는 대형 수박", price:"$4.98 ea"},
+        {en:"Peaches (3L) or nectarines (2L)", ko:"복숭아(3L) 또는 천도복숭아(2L)", price:"$5.44"},
+        {en:"Pork back ribs, value 2-pack", ko:"돼지 등갈비 2팩", price:"$3.98/lb"}
+      ]},
+    {id:"safeway", nameEn:"Safeway", nameKo:"세이프웨이", flyerUrl:"https://www.safeway.ca/flyer",
+      validEn:"Aug 27 – Sep 2, 2026", validKo:"8월 27일 – 9월 2일",
+      items:[
+        {en:"Ground beef, regular", ko:"다진 소고기 (일반)", price:"$6.99/lb"},
+        {en:"Air-chilled chicken breast", ko:"에어칠드 닭가슴살", price:"$6.88/lb"},
+        {en:"Extra-large grapes", ko:"대형 포도", price:"$2.99/lb"}
+      ]},
+    {id:"nofrills", nameEn:"No Frills", nameKo:"노프릴스", flyerUrl:"https://www.nofrills.ca",
+      validEn:"Aug 27 – Sep 2, 2026", validKo:"8월 27일 – 9월 2일",
+      items:[
+        {en:"Roma tomatoes", ko:"로마 토마토", price:"$0.99/lb"},
+        {en:"Ground chicken, lean", ko:"다진 닭고기 (저지방)", price:"$3.88 ea"}
+      ]},
+    {id:"tnt", nameEn:"T&T Supermarket", nameKo:"T&T 슈퍼마켓", flyerUrl:"https://www.tntsupermarket.com",
+      validEn:"Aug 28 – Sep 3, 2026", validKo:"8월 28일 – 9월 3일", items:[]},
+    {id:"hmart", nameEn:"H Mart", nameKo:"H마트", flyerUrl:"https://calgary.hmart.ca/m/main.php?lang=en_US&type=flyer",
+      validEn:"See this week's flyer", validKo:"이번 주 전단지 확인", items:[]}
+  ];
   function loadMarket(){
     try{ const stored = JSON.parse(localStorage.getItem(MARKET_KEY)); if(stored && stored.length) return stored; }catch(e){}
     return MARKET_SEED;
@@ -1598,6 +1663,24 @@
         </div>
         <div class="b-meta"><span class="condition-badge">${condLabel(m.cond)}</span><span>${timeAgo(m.postedTs)}</span></div>
         <div class="b-sub">${icon("ic-pin")}${escapeHtml(m.area)}</div>
+      </div>`;
+    }).join("");
+  }
+  function renderGroceryGrid(){
+    const wrap = document.getElementById("groceryGrid");
+    if(!wrap) return;
+    wrap.innerHTML = GROCERY_STORES.map(s=>{
+      const name = lang==="ko" ? s.nameKo : s.nameEn;
+      const valid = lang==="ko" ? s.validKo : s.validEn;
+      const itemsHtml = s.items.length
+        ? s.items.map(it=>`<div class="grocery-item"><span class="g-name">${escapeHtml(lang==="ko"?it.ko:it.en)}</span><span class="g-price">${escapeHtml(it.price)}</span></div>`).join("")
+        : "";
+      const linkLabel = s.items.length ? T[lang].groceryViewFlyer : T[lang].groceryCheckFlyer;
+      return `<div class="grocery-card">
+        <div class="grocery-store-name">${escapeHtml(name)}</div>
+        <div class="grocery-valid">${escapeHtml(T[lang].groceryValidThrough)}: ${escapeHtml(valid)}</div>
+        <div class="grocery-items">${itemsHtml}</div>
+        <a class="grocery-flyer-link" href="${s.flyerUrl}" target="_blank" rel="noopener noreferrer">${linkLabel}</a>
       </div>`;
     }).join("");
   }
@@ -2025,6 +2108,8 @@
   });
   document.getElementById("heroPrevBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex-1); startHeroTimer(); });
   document.getElementById("heroNextBtn").addEventListener("click", ()=>{ showHeroSlide(heroIndex+1); startHeroTimer(); });
+  document.getElementById("groceryPrevBtn").addEventListener("click", ()=>{ const g = document.getElementById("groceryGrid"); g.scrollBy({left: -g.clientWidth * 0.8, behavior:"smooth"}); });
+  document.getElementById("groceryNextBtn").addEventListener("click", ()=>{ const g = document.getElementById("groceryGrid"); g.scrollBy({left: g.clientWidth * 0.8, behavior:"smooth"}); });
   document.getElementById("featuredBanner").addEventListener("mouseenter", ()=> clearInterval(heroTimer));
   document.getElementById("featuredBanner").addEventListener("mouseleave", ()=> startHeroTimer());
   document.getElementById("navCats").addEventListener("click", ()=>{ setActiveNav("navCats"); document.getElementById("categoriesBlock").scrollIntoView({behavior:"smooth"}); });
