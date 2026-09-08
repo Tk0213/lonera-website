@@ -204,6 +204,72 @@ button{font-family:inherit;cursor:pointer;}
 .tab .dot{position:absolute;top:5px;right:22%;background:var(--brand-btn);color:#fff;font-size:.58rem;
   font-weight:800;min-width:17px;height:17px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
 
+/* ---------- notification island: floats just above the search bar ---------- */
+.island{position:absolute;bottom:100%;left:12px;right:12px;margin-bottom:10px;
+  background:var(--text);color:#fff;border-radius:20px;padding:11px 12px;
+  display:flex;align-items:center;gap:11px;text-align:left;border:none;
+  box-shadow:0 14px 36px rgba(0,0,0,.30);
+  opacity:0;transform:translateY(16px) scale(.94);pointer-events:none;
+  transition:opacity .26s ease-out,transform .28s cubic-bezier(.2,.9,.3,1);z-index:46;}
+.island.on{opacity:1;transform:none;pointer-events:auto;}
+.island .iav{width:38px;height:38px;border-radius:13px;flex-shrink:0;overflow:hidden;position:relative;}
+.island .ibd{flex:1;min-width:0;}
+.island .it{font-size:.84rem;font-weight:800;margin:0 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.island .im{font-size:.8rem;margin:0;color:#d8d8d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.island .ix{width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.14);
+  color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .16s ease-out,transform .16s ease-out;}
+.island .ix:hover{background:rgba(255,255,255,.26);}
+.island .ix:active{transform:scale(.96);}
+
+/* ---------- verification badges ---------- */
+.vb{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:800;
+  padding:5px 9px 5px 7px;border-radius:999px;white-space:nowrap;}
+.vb.ok{background:var(--ok-tint);color:var(--ok);}
+.vb.b{background:#eaf1fb;color:#1a4d8f;}
+.vb.n{background:var(--brand-tint);color:var(--brand-ink);}
+.vb.w{background:var(--warn-tint);color:var(--warn);}
+.vb.off{background:var(--surface);color:#6a6a6a;}
+.vtick{display:inline-flex;vertical-align:-2px;color:var(--ok);margin-left:3px;}
+
+/* ---------- segmented control ---------- */
+.seg{display:flex;gap:6px;background:var(--surface);border-radius:999px;padding:4px;margin:12px 20px 0;}
+.seg button{flex:1;border:none;background:none;border-radius:999px;min-height:42px;font-family:inherit;
+  font-size:.88rem;font-weight:800;color:var(--text-2);
+  transition:background .16s ease-out,color .16s ease-out,transform .14s ease-out;}
+.seg button.on{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+.seg button:active{transform:scale(.96);}
+
+/* ---------- business dashboard ---------- */
+.backbar{display:flex;align-items:center;gap:10px;padding:8px 14px 0;}
+.backbar button{border:none;background:none;display:flex;align-items:center;gap:6px;
+  font-family:inherit;font-size:.9rem;font-weight:800;color:var(--brand-ink);
+  min-height:44px;padding:0 6px;border-radius:12px;transition:background .16s ease-out,transform .14s ease-out;}
+.backbar button:hover{background:var(--brand-tint);}
+.backbar button:active{transform:scale(.96);}
+.hero-fig{padding:6px 20px 0;}
+.hero-fig .hl{margin:0;font-size:.9rem;color:var(--text-2);font-weight:700;}
+.hero-fig .hv{margin:2px 0 0;font-size:3rem;font-weight:800;letter-spacing:-.03em;line-height:1.05;}
+.hero-fig .hd{margin:4px 0 0;font-size:.86rem;font-weight:800;}
+.hero-fig .hd.up{color:var(--ok);} .hero-fig .hd.down{color:#b3261e;}
+.tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;padding:14px 20px 0;}
+.tile{background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r);padding:11px 10px;}
+.tile .tl{margin:0;font-size:.72rem;color:var(--text-2);font-weight:700;line-height:1.25;}
+.tile .tv{margin:5px 0 0;font-size:1.35rem;font-weight:800;letter-spacing:-.02em;}
+.chartwrap{padding:18px 20px 0;position:relative;}
+.chartwrap h4{margin:0 0 2px;font-size:1rem;font-weight:800;}
+.chartwrap .csub{margin:0 0 10px;font-size:.8rem;color:var(--text-2);}
+.ctip{position:absolute;background:var(--text);color:#fff;font-size:.76rem;font-weight:700;
+  padding:6px 9px;border-radius:9px;pointer-events:none;opacity:0;transition:opacity .14s ease-out;
+  white-space:nowrap;z-index:5;transform:translate(-50%,-100%);}
+.ctip.on{opacity:1;}
+.invrow{display:flex;align-items:center;gap:11px;padding:13px;border:1.5px solid var(--line);
+  border-radius:var(--r);background:var(--bg);}
+.invrow .no{font-size:.8rem;color:var(--text-2);font-weight:700;margin:0 0 2px;
+  font-variant-numeric:tabular-nums;}
+.invrow .who{font-size:.94rem;font-weight:800;margin:0;}
+.invrow .amt{margin-left:auto;font-size:1rem;font-weight:800;font-variant-numeric:tabular-nums;}
+
 /* ---------- bottom sheet: every action opens here, in reach ---------- */
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.42);opacity:0;pointer-events:none;
   transition:opacity .24s ease-out;z-index:50;}
@@ -308,12 +374,19 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <section class="view" id="v-saved"></section>
       <section class="view" id="v-inbox"></section>
       <section class="view" id="v-community"></section>
+      <section class="view" id="v-biz"></section>
       <section class="view" id="v-you"></section>
     </div>
 
     <div class="toast" id="toast"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg><span id="toastT"></span></div>
 
     <div class="deck">
+      <button class="island" id="island" aria-live="polite">
+        <span class="iav" id="islandAv"></span>
+        <span class="ibd"><p class="it" id="islandT"></p><p class="im" id="islandM"></p></span>
+        <span class="ix" id="islandX" role="button" aria-label="Dismiss">
+          <svg class="ic ic-s" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+      </button>
       <div class="searchdock">
         <svg class="ic" viewBox="0 0 24 24" style="color:#767676"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
         <input id="q" aria-label="Search" placeholder="What do you need?">
@@ -400,7 +473,7 @@ const T={en:{
  join:"Join",joined:"Joined",members:"members",startComm:"Start a community",
  tJoined:"You joined. Say hello in the group.",
  askTitleV:"Ask Lonera",
- askSubV:"Speak or type, whichever is easier. Both work the same.",
+ askSubV:"Say what you need. To type instead, use the search bar below.",
  askPhV:"For example: find a Korean doctor near me and book an appointment tomorrow",
  tapSpeak:"Tap to speak",tapStop:"Stop listening",typeInstead:"Or type it here",
  weHeard:"What we understood",doIt:"Do it",
@@ -410,7 +483,26 @@ const T={en:{
  noMatch:"No business matches that yet. Try another wording.",
  nothingHeard:"Nothing to act on yet. Speak or type first.",
  anyAvailable:"anyone available",
- sizeS2:""
+ segMsgs:"Messages",segNotifs:"Notifications",
+ reply:"Reply",replyPh:"Write a reply",sendReply:"Send",tReplied:"Reply sent",
+ noNotifs:"No notifications yet",noNotifsSub:"Replies and updates land here.",
+ markRead:"Mark all read",unread:"new",
+ verifTitle:"Verification",verifSub:"Badges show what has been checked, and by whom.",
+ whoAmI:"Your account",getVerified:"Get verified",verifyStep:"Verify",verifDone:"Done",
+ vId:"ID verified",vBiz:"Business verified",vLic:"Licensed",vIns:"Insured",
+ vPay:"Payment protected",vNew:"New member",vTop:"Top rated",vPhone:"Phone confirmed",
+ vEmail:"Email confirmed",vAddr:"Address confirmed",
+ notVerified:"Not verified yet",memberSince:"Member since",
+ tVerified:"Sent for review. Most checks finish within a day.",
+ bizTitle:"Business dashboard",backToApp:"Back to the app",
+ visitsWeek:"Profile visits this week",vsLastWeek:"vs last week",
+ statRequests:"New requests",statBooked:"Jobs booked",statPaid:"Paid out",
+ chartTitle:"Visits per day",chartSub:"Last 7 days, Monday to Sunday",
+ reqTitle:"People who asked for a job",invTitle:"Invoices",
+ accept:"Accept",decline:"Decline",tAccepted:"Accepted. They have been told.",
+ tDeclined:"Declined.",newInvoice:"Create an invoice",
+ stPaid:"Paid",stSent:"Sent",stOverdue:"Overdue",stDraft:"Draft",
+ visits:"visits"
 },ko:{
  tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
  searchPh:"무엇이 필요하세요?",greet:"안녕하세요",greetSub:"필요한 것을 아래에서 말하거나 입력해 주세요.",
@@ -441,7 +533,7 @@ const T={en:{
  join:"가입",joined:"가입함",members:"명",startComm:"모임 만들기",
  tJoined:"가입했어요. 모임에 인사해 보세요.",
  askTitleV:"로네라에게 말하기",
- askSubV:"말하셔도 되고 입력하셔도 돼요. 결과는 같아요.",
+ askSubV:"필요한 것을 말씀해 주세요. 입력하시려면 아래 검색창을 이용하세요.",
  askPhV:"예: 근처 한국어 되는 병원 찾아서 내일 예약해 줘",
  tapSpeak:"눌러서 말하기",tapStop:"그만 듣기",typeInstead:"또는 여기에 입력하세요",
  weHeard:"이렇게 이해했어요",doIt:"실행하기",
@@ -451,7 +543,26 @@ const T={en:{
  noMatch:"아직 맞는 업체가 없어요. 다르게 말해 보세요.",
  nothingHeard:"아직 실행할 내용이 없어요. 먼저 말하거나 입력해 주세요.",
  anyAvailable:"가능한 곳 아무나",
- sizeS2:""
+ segMsgs:"메시지",segNotifs:"알림",
+ reply:"답장",replyPh:"답장을 입력하세요",sendReply:"보내기",tReplied:"답장을 보냈어요",
+ noNotifs:"아직 알림이 없어요",noNotifsSub:"답변과 소식이 여기에 표시돼요.",
+ markRead:"모두 읽음",unread:"새 소식",
+ verifTitle:"인증",verifSub:"무엇이 확인되었는지 배지로 알 수 있어요.",
+ whoAmI:"내 계정",getVerified:"인증 받기",verifyStep:"인증하기",verifDone:"완료",
+ vId:"실명 인증",vBiz:"사업자 인증",vLic:"자격 보유",vIns:"보험 가입",
+ vPay:"안전 결제",vNew:"신규 회원",vTop:"인기 업체",vPhone:"전화번호 확인",
+ vEmail:"이메일 확인",vAddr:"주소 확인",
+ notVerified:"아직 인증되지 않음",memberSince:"가입일",
+ tVerified:"검토 요청을 보냈어요. 보통 하루 안에 끝나요.",
+ bizTitle:"업체 대시보드",backToApp:"앱으로 돌아가기",
+ visitsWeek:"이번 주 프로필 방문",vsLastWeek:"지난주 대비",
+ statRequests:"새 요청",statBooked:"예약 확정",statPaid:"정산 완료",
+ chartTitle:"일별 방문",chartSub:"최근 7일, 월요일부터 일요일까지",
+ reqTitle:"작업을 요청한 사람",invTitle:"청구서",
+ accept:"수락",decline:"거절",tAccepted:"수락했어요. 상대방에게 알렸어요.",
+ tDeclined:"거절했어요.",newInvoice:"청구서 만들기",
+ stPaid:"결제 완료",stSent:"발송됨",stOverdue:"연체",stDraft:"임시 저장",
+ visits:"방문"
 }};
 let lang="en", scale=1, contrast=false;
 const t = k => T[lang][k];
@@ -459,27 +570,27 @@ const t = k => T[lang][k];
 /* ================= data (fictional demo) ================= */
 /* f:1 = shown in the swipeable Featured rail. sc = which illustration to draw. */
 const BIZ=[
- {id:"maple",lg:["Korean","English"],n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",sc:"home",v:1,e:1,free:1,f:1,
+ {id:"maple",vb:["id","biz","pay"],lg:["Korean","English"],n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",sc:"home",v:1,e:1,free:1,f:1,
   d:"Furnished rooms and townhouses near downtown. Bilingual leasing agent.",dk:"다운타운 근처 가구 완비 방과 타운하우스. 한국어 상담 가능."},
- {id:"sparkle",lg:["English","Tagalog"],n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",sc:"clean",v:1,e:0,free:1,f:1,
+ {id:"sparkle",vb:["id","biz"],lg:["English","Tagalog"],n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",sc:"clean",v:1,e:0,free:1,f:1,
   d:"Deep cleans and move-out cleans. Same-week booking most weeks.",dk:"딥 클리닝과 이사 청소. 대부분 당주 예약 가능."},
- {id:"bright",lg:["Korean","English","Mandarin"],n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",sc:"doc",v:1,e:1,free:0,f:1,
+ {id:"bright",vb:["id","biz","lic","pay"],lg:["Korean","English","Mandarin"],n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",sc:"doc",v:1,e:1,free:0,f:1,
   d:"Licensed consultant. Work permits and permanent residence.",dk:"공인 컨설턴트. 취업 비자 및 영주권 상담."},
- {id:"haneul",lg:["Korean","English"],n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",sc:"hair",v:1,e:0,free:1,f:1,
+ {id:"haneul",vb:["id","biz","top"],lg:["Korean","English"],n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",sc:"hair",v:1,e:0,free:1,f:1,
   d:"Cuts, perms and colour. Korean and English spoken.",dk:"커트, 펌, 염색. 한국어와 영어 가능."},
- {id:"north",lg:["English","Mandarin"],n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",sc:"book",v:1,e:0,free:0,
+ {id:"north",vb:["id","lic"],lg:["English","Mandarin"],n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",sc:"book",v:1,e:0,free:0,
   d:"Math and English tutoring, grades 4 to 12.",dk:"4학년부터 12학년까지 수학과 영어 과외."},
- {id:"truebuild",lg:["English","Punjabi"],n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",sc:"tools",v:1,e:1,free:1,f:1,
+ {id:"truebuild",vb:["id","biz","lic","ins","pay"],lg:["English","Punjabi"],n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",sc:"tools",v:1,e:1,free:1,f:1,
   d:"Basement development and additions. Red Seal certified.",dk:"지하실 개발 및 증축. 레드씰 자격 보유."},
- {id:"riverbend",lg:["English","Tagalog"],n:"Riverbend Dental",nk:"리버벤드 치과",c:"Dental",ck:"치과",p:"$120-900",r:4.8,rv:47,a:"SW Calgary",g:"g5",sc:"tooth",v:1,e:1,free:1,f:1,
+ {id:"riverbend",vb:["id","biz","lic","pay"],lg:["English","Tagalog"],n:"Riverbend Dental",nk:"리버벤드 치과",c:"Dental",ck:"치과",p:"$120-900",r:4.8,rv:47,a:"SW Calgary",g:"g5",sc:"tooth",v:1,e:1,free:1,f:1,
   d:"Checkups, cleanings and emergency visits. Direct billing to most plans.",dk:"검진, 스케일링, 응급 진료. 대부분의 보험 직접 청구."},
- {id:"hometable",lg:["Korean","Tagalog"],n:"Home Table Catering",nk:"홈테이블 케이터링",c:"Catering",ck:"케이터링",p:"$14-28/person",r:4.9,rv:33,a:"City-wide",g:"g4",sc:"food",v:1,e:1,free:0,f:1,
+ {id:"hometable",vb:["id","biz","ins"],lg:["Korean","Tagalog"],n:"Home Table Catering",nk:"홈테이블 케이터링",c:"Catering",ck:"케이터링",p:"$14-28/person",r:4.9,rv:33,a:"City-wide",g:"g4",sc:"food",v:1,e:1,free:0,f:1,
   d:"Korean and Filipino party trays. Two days notice for large orders.",dk:"한식과 필리핀식 파티 트레이. 대량 주문은 이틀 전 예약."},
- {id:"aurora",lg:["Punjabi","English"],n:"Aurora Auto Repair",nk:"오로라 자동차 정비",c:"Auto",ck:"정비",p:"$90-1,200",r:4.7,rv:58,a:"NE Calgary",g:"g6",sc:"car",v:1,e:0,free:1,
+ {id:"aurora",vb:["id","biz","ins"],lg:["Punjabi","English"],n:"Aurora Auto Repair",nk:"오로라 자동차 정비",c:"Auto",ck:"정비",p:"$90-1,200",r:4.7,rv:58,a:"NE Calgary",g:"g6",sc:"car",v:1,e:0,free:1,
   d:"Brakes, tires and out-of-province inspections. Free shuttle.",dk:"브레이크, 타이어, 타주 차량 검사. 무료 셔틀 운행."},
- {id:"bowriver",n:"Bow River Family Clinic",nk:"보우리버 가정의학과",c:"Clinic",ck:"의원",p:"Covered by AHCIP",r:4.9,rv:71,a:"NW Calgary",g:"g3",sc:"clinic",lg:["Korean","English"],v:1,e:0,free:1,f:1,
+ {id:"bowriver",vb:["id","biz","lic","top"],n:"Bow River Family Clinic",nk:"보우리버 가정의학과",c:"Clinic",ck:"의원",p:"Covered by AHCIP",r:4.9,rv:71,a:"NW Calgary",g:"g3",sc:"clinic",lg:["Korean","English"],v:1,e:0,free:1,f:1,
   d:"Family doctor, walk-ins and same-week appointments. Korean-speaking staff.",dk:"가정의학과, 워크인 및 당주 예약. 한국어 가능 직원 상주."},
- {id:"chinook",lg:["Mandarin","English"],n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
+ {id:"chinook",vb:["id","biz","lic","pay"],lg:["Mandarin","English"],n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
   d:"Personal and small business returns. First consultation is free.",dk:"개인 및 소상공인 세금 신고. 첫 상담 무료."}
 ];
 const CATS=[["Cleaning","청소","g3","clean"],["Rentals","렌탈","g5","home"],["Tutoring","과외","g6","book"],["Hair","미용","g2","hair"],
@@ -513,6 +624,50 @@ const GROUPS=[
   d:"Recipe swaps and a monthly potluck in the community hall.",dk:"레시피 나눔과 매달 포트럭 모임."}
 ];
 let JOINED=[];
+
+/* ---- verification: one badge vocabulary used for people and businesses ---- */
+const VERIF={
+ id:  {k:"vId", i:"id",     c:"ok"},
+ biz: {k:"vBiz",i:"brief",  c:"b"},
+ lic: {k:"vLic",i:"shield", c:"b"},
+ ins: {k:"vIns",i:"shield", c:"ok"},
+ pay: {k:"vPay",i:"shield", c:"b"},
+ new: {k:"vNew",i:"user",   c:"n"},
+ top: {k:"vTop",i:"star",   c:"w"}
+};
+const vbadge=key=>{const v=VERIF[key];return v?`<span class="vb ${v.c}">${ic(v.i,"ic-s")}${t(v.k)}</span>`:"";};
+/* who I am */
+const ME={name:"TK Lim",area:"Calgary",since:"2026",
+  has:["id","phone"], steps:["id","phone","email","addr"]};
+const STEPLABEL={id:"vId",phone:"vPhone",email:"vEmail",addr:"vAddr"};
+
+/* ---- messages and notifications ---- */
+let NOTIFS=[
+ {id:"n1",t:"Sparkle Home Services",tk:"스파클 홈 서비스",sc:"clean",w:"2m",read:false,
+  m:"Accepted your request. Friday 11:30am works.",mk:"요청을 수락했어요. 금요일 오전 11시 30분 가능합니다."},
+ {id:"n2",t:"Bow River Family Clinic",tk:"보우리버 가정의학과",sc:"clinic",w:"1h",read:false,
+  m:"Your Wednesday appointment is confirmed.",mk:"수요일 예약이 확정되었습니다."},
+ {id:"n3",t:"Lonera",tk:"로네라",sc:"doc",w:"Yesterday",read:true,
+  m:"Your ID check passed. You are now ID verified.",mk:"실명 인증이 완료되었습니다."}
+];
+
+/* ---- the business side: what a provider sees ---- */
+const BIZDASH={
+ name:"Sparkle Home Services",nameK:"스파클 홈 서비스",
+ visits:[38,52,41,66,73,58,84], prevTotal:352,
+ booked:9, paid:1840,
+ requests:[
+  {n:"Marites R.",j:"Move-out clean, 2 bedroom",jk:"이사 청소, 침실 2개",w:"20m",vb:["id"]},
+  {n:"Daniel N.",j:"Weekly clean, 3 bedroom",jk:"주 1회 청소, 침실 3개",w:"2h",vb:["id","pay"]},
+  {n:"Ji-woo P.",j:"Deep clean before guests",jk:"손님 오기 전 딥 클리닝",w:"Yesterday",vb:["new"]}
+ ],
+ invoices:[
+  {no:"INV-1042",who:"D. Nguyen",amt:180,st:"paid"},
+  {no:"INV-1041",who:"A. Okafor",amt:240,st:"sent"},
+  {no:"INV-1039",who:"M. Reyes",amt:120,st:"overdue"},
+  {no:"INV-1043",who:"S. Gill",amt:300,st:"draft"}
+ ]
+};
 let INBOX=[{n:"Sparkle Home Services",nk:"스파클 홈 서비스",m:"Move-out clean, 2 bedroom, before Friday.",mk:"이사 청소, 침실 2개, 금요일 전에요.",st:"ok"},
  {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",m:"Basement quote for a 900 sq ft space.",mk:"900제곱피트 지하실 견적 문의드려요.",st:"wait"},
  {n:"Lonera support",nk:"로네라 고객센터",m:"Ticket LNR-2091: how do I change my listing language?",mk:"티켓 LNR-2091: 리스팅 언어를 어떻게 바꾸나요?",st:"done"}];
@@ -693,13 +848,28 @@ function viewSaved(){
     : `<div class="head" style="padding-top:10px"><h2>${t("savedTitle")}</h2></div>
        <div class="empty">${ic("heart")}<p>${t("emptySaved")}</p><span>${t("emptySavedSub")}</span></div>`;
 }
+let inboxSeg="msgs";
 function viewInbox(){
   const map={ok:["ok","statusOk"],wait:["w","statusWait"],done:["ok","statusDone"],new:["n","statusNew"]};
-  $("v-inbox").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("inboxTitle")}</h2><p>${t("inboxSub")}</p></div>
-    <div class="stack">${INBOX.map(x=>{const m=map[x.st];
-      return `<div class="row"><div class="av g2">${esc((lang==="ko"?x.nk:x.n)[0])}</div>
+  const unread=NOTIFS.filter(n=>!n.read).length;
+  const seg=`<div class="seg" role="tablist">
+      <button role="tab" data-seg="msgs" class="${inboxSeg==="msgs"?"on":""}" aria-selected="${inboxSeg==="msgs"}">${t("segMsgs")}</button>
+      <button role="tab" data-seg="notifs" class="${inboxSeg==="notifs"?"on":""}" aria-selected="${inboxSeg==="notifs"}">${t("segNotifs")}${unread?` (${unread})`:""}</button>
+    </div>`;
+  const msgs=`<div class="stack">${INBOX.map((x,i)=>{const m=map[x.st];
+      return `<button class="row" data-msg="${i}"><div class="av g2">${esc((lang==="ko"?x.nk:x.n)[0])}</div>
       <div class="bd"><p class="t">${esc(lang==="ko"?x.nk:x.n)}</p><p class="s">${esc(lang==="ko"?x.mk:x.m)}</p></div>
-      <span class="tagp ${m[0]}">${t(m[1])}</span></div>`;}).join("")}</div>`;
+      <span class="tagp ${m[0]}">${t(m[1])}</span></button>`;}).join("")}</div>`;
+  const notifs=NOTIFS.length
+    ? `<div class="stack">${NOTIFS.map(n=>`<button class="row" data-notif="${n.id}">
+        <div class="av" style="overflow:hidden;position:relative"><div class="art ph-${n.sc}"></div></div>
+        <div class="bd"><p class="t">${esc(lang==="ko"?n.tk:n.t)}${n.read?"":` <span class="tagp n" style="margin-left:4px">${t("unread")}</span>`}</p>
+        <p class="s">${esc(lang==="ko"?n.mk:n.m)}</p></div>
+        <span class="tagp ok">${esc(n.w)}</span></button>`).join("")}
+       <button class="btn sec" data-act="readall">${ic("check")}${t("markRead")}</button></div>`
+    : `<div class="empty">${ic("bell")}<p>${t("noNotifs")}</p><span>${t("noNotifsSub")}</span></div>`;
+  $("v-inbox").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("inboxTitle")}</h2><p>${t("inboxSub")}</p></div>
+    ${seg}${inboxSeg==="msgs"?msgs:notifs}`;
 }
 function groupCard(g){
   const on=JOINED.includes(g.id);
@@ -725,31 +895,127 @@ function viewCommunity(){
     <div class="stack">${COMMUNITY.map(c=>rowItem(lang==="ko"?c.qk:c.q,lang==="ko"?c.tk:c.tag,`${c.r}`,"n","g6")).join("")}
       <button class="btn sec" data-act="askcomm">${ic("chat")}${t("askCommunity")}</button></div>`;
 }
+/* Single series, so one hue for every column and no legend: the heading
+   names what is plotted. Columns are capped, 4px rounded at the data end,
+   square at the baseline, with a 2px surface gap between neighbours. */
+function visitsChart(){
+  const d=BIZDASH.visits, W=335, H=132, n=d.length;
+  const max=Math.max(...d), top=Math.ceil(max/20)*20;      // clean tick
+  const band=W/n, bw=Math.min(24,band-2), gap=(band-bw)/2;
+  const peak=d.indexOf(max);
+  const bars=d.map((v,i)=>{
+    const h=Math.max(3,Math.round(v/top*(H-26)));
+    const x=Math.round(i*band+gap), y=H-18-h;
+    return `<rect class="cbar" data-i="${i}" x="${x}" y="${y}" width="${bw}" height="${h}"
+      rx="4" ry="4" fill="var(--brand-btn)"></rect>
+      <rect x="${x}" y="${H-22}" width="${bw}" height="4" fill="var(--brand-btn)"></rect>`;
+  }).join("");
+  const labels=DAYS.map((dd,i)=>{
+    const x=Math.round(i*band+band/2);
+    return `<text x="${x}" y="${H-4}" text-anchor="middle" font-size="10" font-weight="700"
+      fill="var(--text-2)">${lang==="ko"?dd[1]:dd[0]}</text>`;}).join("");
+  // label the peak only; the rest live in the tooltip
+  const px=Math.round(peak*band+band/2), ph=Math.round(max/top*(H-26));
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img"
+      aria-label="${t("chartTitle")}: ${d.join(", ")}">
+      <line x1="0" y1="${H-18}" x2="${W}" y2="${H-18}" stroke="var(--line)" stroke-width="1"/>
+      <line x1="0" y1="${H-18-(H-26)}" x2="${W}" y2="${H-18-(H-26)}" stroke="var(--line)" stroke-width="1"/>
+      <text x="0" y="${H-24-(H-26)+10}" font-size="10" font-weight="700" fill="var(--text-2)">${top}</text>
+      ${bars}${labels}
+      <text x="${px}" y="${H-24-ph}" text-anchor="middle" font-size="11" font-weight="800"
+        fill="var(--text)">${max}</text>
+    </svg>`;
+}
+function viewBiz(){
+  const total=BIZDASH.visits.reduce((a,b)=>a+b,0);
+  const delta=Math.round((total-BIZDASH.prevTotal)/BIZDASH.prevTotal*100);
+  const ST={paid:["ok","stPaid"],sent:["n","stSent"],overdue:["w","stOverdue"],draft:["ok","stDraft"]};
+  $("v-biz").innerHTML=`
+    <div class="backbar"><button data-go="you">${ic("home","ic-s")}${t("backToApp")}</button></div>
+    <div class="head" style="padding-top:2px"><h2>${t("bizTitle")}</h2>
+      <p>${esc(lang==="ko"?BIZDASH.nameK:BIZDASH.name)}</p></div>
+    <div class="hero-fig">
+      <p class="hl">${t("visitsWeek")}</p>
+      <p class="hv">${total.toLocaleString()}</p>
+      <p class="hd ${delta>=0?"up":"down"}">${delta>=0?"+":""}${delta}% ${t("vsLastWeek")}</p>
+    </div>
+    <div class="tiles">
+      <div class="tile"><p class="tl">${t("statRequests")}</p><p class="tv">${BIZDASH.requests.length}</p></div>
+      <div class="tile"><p class="tl">${t("statBooked")}</p><p class="tv">${BIZDASH.booked}</p></div>
+      <div class="tile"><p class="tl">${t("statPaid")}</p><p class="tv">$${BIZDASH.paid.toLocaleString()}</p></div>
+    </div>
+    <div class="chartwrap" id="chartWrap">
+      <h4>${t("chartTitle")}</h4><p class="csub">${t("chartSub")}</p>
+      ${visitsChart()}
+      <div class="ctip" id="ctip"></div>
+    </div>
+    <div class="rowtitle"><h3>${t("reqTitle")}</h3></div>
+    <div class="stack">${BIZDASH.requests.map((r,i)=>`
+      <div class="row" style="flex-wrap:wrap">
+        <div class="av g3">${esc(r.n[0])}</div>
+        <div class="bd"><p class="t">${esc(r.n)}</p><p class="s">${esc(lang==="ko"?r.jk:r.j)} · ${esc(r.w)}</p></div>
+        <div style="flex-basis:100%;display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">
+          ${(r.vb||[]).map(vbadge).join("")}
+        </div>
+        <div style="flex-basis:100%;display:flex;gap:9px;margin-top:4px">
+          <button class="btn pri" style="flex:1" data-act="acceptreq" data-id="${i}">${t("accept")}</button>
+          <button class="btn sec" style="flex:1" data-act="declinereq" data-id="${i}">${t("decline")}</button>
+        </div>
+      </div>`).join("")}</div>
+    <div class="rowtitle"><h3>${t("invTitle")}</h3></div>
+    <div class="stack">${BIZDASH.invoices.map(v=>{const st=ST[v.st];
+      return `<div class="invrow">
+        <div class="bd"><p class="no">${esc(v.no)}</p><p class="who">${esc(v.who)}</p></div>
+        <span class="tagp ${st[0]}">${t(st[1])}</span>
+        <span class="amt">$${v.amt}</span></div>`;}).join("")}
+      <button class="btn sec" data-act="newinv">${ic("plus")}${t("newInvoice")}</button></div>`;
+  wireChart();
+}
+function wireChart(){
+  const wrap=$("chartWrap"), tip=$("ctip"); if(!wrap||!tip) return;
+  wrap.querySelectorAll(".cbar").forEach(b=>{
+    const show=()=>{const i=+b.dataset.i, r=b.getBoundingClientRect(), w=wrap.getBoundingClientRect();
+      tip.textContent=`${lang==="ko"?DAYS[i][1]:DAYS[i][0]} · ${BIZDASH.visits[i]} ${t("visits")}`;
+      tip.style.left=(r.left-w.left+r.width/2)+"px";
+      tip.style.top=(r.top-w.top-6)+"px"; tip.classList.add("on");};
+    b.addEventListener("mouseenter",show);
+    b.addEventListener("focus",show);
+    b.addEventListener("mouseleave",()=>tip.classList.remove("on"));
+    b.addEventListener("blur",()=>tip.classList.remove("on"));
+  });
+}
 function viewYou(){
   $("v-you").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("youTitle")}</h2></div>
     <div class="stack">
-      <div class="row" style="pointer-events:none"><div class="av g2">TK</div>
-        <div class="bd"><p class="t">TK Lim</p><p class="s">Calgary</p></div></div>
+      <button class="row" data-act="verify">
+        <div class="av g2">TK</div>
+        <div class="bd"><p class="t">${esc(ME.name)}</p>
+          <p class="s">${esc(ME.area)} · ${t("memberSince")} ${ME.since}</p>
+          <div class="trust" style="margin-top:7px">${ME.has.includes("id")?vbadge("id"):`<span class="vb off">${t("notVerified")}</span>`}</div>
+        </div>
+        <span class="rt">›</span>
+      </button>
     </div>
     <div class="stack" style="gap:0;margin-top:6px">
       <button class="opt" data-act="lang">${ic("globe")}<span>${t("language")}</span><span class="rt">${lang==="ko"?"한국어":"English"}</span></button>
       <button class="opt" data-act="size">${ic("type")}<span>${t("textSize")}</span><span class="rt">${scale===1?t("sizeS"):scale===1.15?t("sizeL"):t("sizeXL")}</span></button>
       <button class="opt" data-act="contrast">${ic("contrast")}<span>${t("contrast")}</span><span class="sw ${contrast?"on":""}"><i></i></span></button>
       <button class="opt" data-act="aloud">${ic("speaker")}<span>${t("readAloud")}</span></button>
-      <button class="opt" data-act="notif">${ic("bell")}<span>${t("notif")}</span><span class="rt">2</span></button>
+      <button class="opt" data-act="verify">${ic("shield")}<span>${t("verifTitle")}</span><span class="rt">${ME.has.length}/${ME.steps.length}</span></button>
+      <button class="opt" data-act="notif">${ic("bell")}<span>${t("notif")}</span><span class="rt">${NOTIFS.filter(n=>!n.read).length}</span></button>
       <button class="opt" data-act="biz">${ic("brief")}<span>${t("runBiz")}</span><span class="rt">›</span></button>
       <button class="opt" data-act="help">${ic("help")}<span>${t("help")}</span><span class="rt">›</span></button>
     </div>`;
 }
-function paint(){viewHome();viewBrowse();viewSaved();viewInbox();viewCommunity();viewYou();
+function paint(){viewHome();viewBrowse();viewSaved();viewInbox();viewCommunity();viewBiz();viewYou();
   $("q").placeholder=t("searchPh");
   $("tabs").innerHTML=TABS.map(x=>`<button class="tab${x.k===cur?" on":""}" data-go="${x.k}">
-    ${ic(x.i)}${x.b?`<span class="dot">${x.b}</span>`:""}<span>${t(x.t)}</span></button>`).join("");
+    ${ic(x.i)}${x.b?`<span class="dot">${NOTIFS.filter(n=>!n.read).length}</span>`:""}<span>${t(x.t)}</span></button>`).join("");
   document.documentElement.lang=lang;
 }
 const TABS=[{k:"home",i:"home",t:"tabHome"},{k:"browse",i:"grid",t:"tabBrowse"},
  {k:"community",i:"group",t:"tabCommunity"},
- {k:"saved",i:"heart",t:"tabSaved"},{k:"inbox",i:"inbox",t:"tabInbox",b:2},{k:"you",i:"user",t:"tabYou"}];
+ {k:"saved",i:"heart",t:"tabSaved"},{k:"inbox",i:"inbox",t:"tabInbox",b:1},{k:"you",i:"user",t:"tabYou"}];
 let cur="home";
 
 /* ================= business sheet: details, book, choose ================= */
@@ -761,9 +1027,8 @@ function openBiz(id){
     `<div class="pic ${b.g}" style="height:110px;border-radius:14px;margin-bottom:12px"></div>
      <p style="margin:0;font-size:.95rem;line-height:1.55">${esc(bd(b))}</p>
      <div class="trust">
-       ${b.v?`<span class="tb">${ic("id","ic-s")}${t("verified")}</span>`:""}
-       ${b.e?`<span class="tb b">${ic("shield","ic-s")}${t("protected")}</span>`:""}
-       ${b.free?`<span class="tb">${ic("clock","ic-s")}${t("openNow")}</span>`:""}
+       ${(b.vb||[]).map(vbadge).join("")}
+       ${b.free?`<span class="vb ok">${ic("clock","ic-s")}${t("openNow")}</span>`:""}
      </div>
      <p style="margin:14px 0 0;font-size:1.05rem;font-weight:800">${b.p}</p>`,
     `<button class="btn pri" data-act="ask" data-id="${id}">${ic("chat")}${t("choose")}</button>
@@ -810,7 +1075,8 @@ function openForm(kind){
            item:{ti:t("postItem"),f:[["itemName","text"],["price","text"],["area","text"]]},
            ask:{ti:t("askCommunity"),f:[["question","area"]]},
            help:{ti:t("getHelp"),f:[["describe","area"]]},
-           group:{ti:t("startComm"),f:[["jobTitle","text"],["area","text"],["describe","area"]]}}[kind];
+           group:{ti:t("startComm"),f:[["jobTitle","text"],["area","text"],["describe","area"]]},
+           invoice:{ti:t("newInvoice"),f:[["company","text"],["price","text"],["describe","area"]]}}[kind];
   sheet(F.ti,"",F.f.map(([k,ty])=>`<label class="lb" for="f_${k}">${t(k)}</label>`+
     (ty==="area"?`<textarea class="field" id="f_${k}" rows="3"></textarea>`:`<input class="field" id="f_${k}" type="text">`)).join(""),
     `<button class="btn pri" data-act="formdone">${ic("check")}${kind==="help"?t("submit"):t("post")}</button>
@@ -825,6 +1091,54 @@ function openGroup(gid){
     `<button class="btn ${on?"sec":"pri"}" data-act="joingroup" data-id="${gid}">${ic(on?"check":"plus")}${on?t("joined"):t("join")}</button>
      <button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
 }
+/* ---------------- notification island ---------------- */
+let islandTimer=null, islandCur=null;
+function showIsland(n){
+  islandCur=n;
+  $("islandAv").innerHTML=`<div class="art ph-${n.sc}"></div>`;
+  $("islandT").textContent=lang==="ko"?n.tk:n.t;
+  $("islandM").textContent=lang==="ko"?n.mk:n.m;
+  $("island").classList.add("on");
+  clearTimeout(islandTimer);
+  islandTimer=setTimeout(hideIsland,6500);
+}
+function hideIsland(){$("island").classList.remove("on");clearTimeout(islandTimer);}
+$("island").onclick=e=>{
+  if(e.target.closest("#islandX")){hideIsland();return;}
+  if(islandCur){islandCur.read=true;inboxSeg="notifs";viewInbox();paintBadge();go("inbox");}
+  hideIsland();
+};
+
+/* ---------------- verification ---------------- */
+function openVerify(){
+  const rows=ME.steps.map(k=>{
+    const done=ME.has.includes(k);
+    return `<button class="opt"${done?' style="pointer-events:none"':` data-act="dostep" data-id="${k}"`}>
+      ${ic(done?"check":"shield")}<span>${t(STEPLABEL[k])}</span>
+      <span class="rt" style="color:${done?"var(--ok)":"var(--brand-ink)"}">${done?t("verifDone"):t("verifyStep")}</span></button>`;
+  }).join("");
+  sheet(t("verifTitle"),t("verifSub"),
+    `<div class="trust" style="margin:0 0 6px">
+       ${ME.has.filter(k=>VERIF[k]).map(vbadge).join("")||`<span class="vb off">${t("notVerified")}</span>`}
+     </div>
+     <p class="lb" style="margin-top:16px">${t("whoAmI")}</p>
+     <div style="display:flex;flex-direction:column">${rows}</div>
+     <p class="lb" style="margin-top:18px">${t("verifTitle")}</p>
+     <div class="trust">${Object.keys(VERIF).map(vbadge).join("")}</div>`,
+    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
+}
+
+/* ---------------- message thread ---------------- */
+function openMsg(i){
+  const x=INBOX[i]; if(!x) return;
+  sheet(esc(lang==="ko"?x.nk:x.n),"",
+    `<div class="note">${esc(lang==="ko"?x.mk:x.m)}</div>
+     <label class="lb" for="rTxt">${t("reply")}</label>
+     <textarea class="field" id="rTxt" rows="3" placeholder="${t("replyPh")}"></textarea>`,
+    `<button class="btn pri" data-act="sendreply" data-id="${i}">${ic("chat")}${t("sendReply")}</button>
+     <button class="btn sec" data-act="close">${t("cancel")}</button>`);
+}
+
 function openNotif(){
   sheet(t("notif"),"",
     `<div style="display:flex;flex-direction:column;gap:10px">
@@ -929,7 +1243,6 @@ if(SR){
     let txt="";
     for(let i=0;i<e.results.length;i++) txt+=e.results[i][0].transcript;
     vHeard=tidy(txt);
-    const ta=$("vText"); if(ta) ta.value=vHeard;
     renderParse();
   };
 }
@@ -948,6 +1261,9 @@ function renderParse(){
   if(p.language) out+=chip(t("iLang"),p.language);
   if(p.when!==null) out+=chip(t("iWhen"),lang==="ko"?DAYS[p.when][1]:DAYS[p.when][0]);
   if(p.action)   out+=chip(t("iAction"),A[p.action]||p.action);
+  const said=$("vSaid");
+  if(said) said.innerHTML = vHeard
+    ? `<p class="lb">${t("heard")}</p><div class="note">${esc(vHeard)}</div>` : "";
   const box=$("vParse");
   if(box) box.innerHTML = out
     ? `<p class="lb" style="margin-top:16px">${t("weHeard")}</p><div>${out}</div>` : "";
@@ -958,14 +1274,11 @@ function renderParse(){
 function openVoice(){
   vHeard="";
   sheet(t("askTitleV"),t("askSubV"),
-   `<button class="btn pri" id="vMic" style="margin-bottom:16px">${ic("mic")}<span id="vMicT">${t("tapSpeak")}</span></button>
-    <label class="lb" for="vText">${t("typeInstead")}</label>
-    <textarea class="field" id="vText" rows="3" placeholder="${t("askPhV")}"></textarea>
+   `<button class="btn pri" id="vMic" style="margin-bottom:14px">${ic("mic")}<span id="vMicT">${t("tapSpeak")}</span></button>
+    <div id="vSaid"></div>
     <div id="vParse"></div>`,
    `<button class="btn pri" data-act="runvoice">${ic("check")}${t("doIt")}</button>
     <button class="btn sec" data-act="close">${t("cancel")}</button>`);
-  const ta=$("vText");
-  ta.oninput=()=>{vHeard=ta.value;renderParse();};
   const mb=$("vMic"); if(mb) mb.onclick=toggleMic;
   renderParse();
 }
@@ -983,6 +1296,10 @@ document.addEventListener("click",e=>{
   const biz=e.target.closest("[data-biz]"); if(biz){openBiz(biz.dataset.biz);return;}
   const cat=e.target.closest("[data-cat]"); if(cat){const b=BIZ.find(x=>x.c===cat.dataset.cat);
     b?openBiz(b.id):toast(cat.dataset.cat);return;}
+  const sg=e.target.closest("[data-seg]"); if(sg){inboxSeg=sg.dataset.seg;viewInbox();return;}
+  const msg=e.target.closest("[data-msg]"); if(msg){openMsg(+msg.dataset.msg);return;}
+  const nt=e.target.closest("[data-notif]");
+  if(nt){const n=NOTIFS.find(x=>x.id===nt.dataset.notif); if(n){n.read=true;viewInbox();paintBadge();} return;}
   const grp=e.target.closest("[data-group]"); if(grp){openGroup(grp.dataset.group);return;}
   const dot=e.target.closest("[data-dot]"); if(dot){goSlide(+dot.dataset.dot);return;}
   const day=e.target.closest("[data-day]"); if(day){day.parentNode.querySelectorAll(".slot").forEach(x=>x.classList.remove("on"));day.classList.add("on");return;}
@@ -992,7 +1309,7 @@ document.addEventListener("click",e=>{
   const a=e.target.closest("[data-act]"); if(!a) return;
   const id=a.dataset.id||"";
   switch(a.dataset.act){
-    case "biz": id?openBiz(id):openBizPortal(); break;
+    case "biz": id?openBiz(id):go("biz"); break;
     case "bookday": openBookDay(id); break;
     case "booktime": openBookTime(id); break;
     case "bookdone": closeSheet(); toast(t("tBooked")); break;
@@ -1020,7 +1337,22 @@ document.addEventListener("click",e=>{
     case "notif": openNotif(); break;
     case "help": openForm("help"); break;
     case "formdone": closeSheet(); toast(t("tPosted")); break;
-    case "runvoice": runIntent(parseIntent(($("vText")||{value:vHeard}).value)); break;
+    case "runvoice": runIntent(parseIntent(vHeard)); break;
+    case "verify": openVerify(); break;
+    case "dostep": if(!ME.has.includes(id))ME.has.push(id); viewYou(); openVerify(); toast(t("tVerified")); break;
+    case "readall": NOTIFS.forEach(n=>n.read=true); viewInbox(); paintBadge(); break;
+    case "sendreply": {
+      const v=($("rTxt")||{value:""}).value.trim();
+      if(v && INBOX[+id]){INBOX[+id].m=v; INBOX[+id].mk=v; INBOX[+id].st="wait"; viewInbox();}
+      closeSheet(); toast(t("tReplied")); break;
+    }
+    case "acceptreq": {
+      const r=BIZDASH.requests[+id];
+      if(r){BIZDASH.requests.splice(+id,1);BIZDASH.booked++;viewBiz();}
+      toast(t("tAccepted")); break;
+    }
+    case "declinereq": BIZDASH.requests.splice(+id,1); viewBiz(); toast(t("tDeclined")); break;
+    case "newinv": openForm("invoice"); break;
     case "startcomm": openForm("group"); break;
     case "askcomm": openForm("ask"); break;
     case "joingroup": {
@@ -1032,12 +1364,19 @@ document.addEventListener("click",e=>{
 });
 function go(k){cur=k;document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
   $("v-"+k).classList.add("on");
-  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.go===k));
+  const lit = k==="biz" ? "you" : k;      // the dashboard is reached from You
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.go===lit));
   $("screen").scrollTop=0;}
+function paintBadge(){
+  const n=NOTIFS.filter(x=>!x.read).length, d=document.querySelector('.tab[data-go="inbox"] .dot');
+  if(d){d.textContent=n; d.style.display=n?"flex":"none";}
+}
 
 (function clock(){const el=$("clk");const f=()=>{const d=new Date();
   el.textContent=(d.getHours()%12||12)+":"+String(d.getMinutes()).padStart(2,"0");};f();setInterval(f,20000);})();
 
-paint();
+paint(); paintBadge();
+/* the island is the point of this surface, so make sure it is seen once */
+setTimeout(()=>{const n=NOTIFS.find(x=>!x.read); if(n) showIsland(n);},3500);
 })();
 </script>
