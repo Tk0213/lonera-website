@@ -1,0 +1,415 @@
+<title>Lonera App Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#121212; --bg-deep:#0a0a0a; --surface:#1c1c1e; --surface-2:#2c2c2e;
+  --text:#ffffff; --text-2:#e0e0e0; --text-muted:#a1a1aa;
+  --accent:#e11d48; --accent-press:#be123c;
+  --border:rgba(255,255,255,0.12);
+  --r-sm:10px; --r:14px; --r-lg:20px;
+  --safe-top:44px; --safe-bottom:34px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+body{margin:0;background:#0b0b0d;font-family:Inter,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px 16px;color:var(--text);}
+
+/* ---------- shell ---------- */
+.stage{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;}
+.stage-head{text-align:center;max-width:420px;}
+.stage-head h1{margin:0 0 4px;font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.stage-head p{margin:0;font-size:0.82rem;color:#71717a;line-height:1.5;}
+.phone{width:390px;max-width:100%;height:844px;max-height:82vh;background:var(--bg);border-radius:44px;
+  border:1px solid #26262b;box-shadow:0 40px 90px rgba(0,0,0,.7);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:118px;height:32px;background:#000;border-radius:20px;z-index:60;}
+
+.statusbar{height:var(--safe-top);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 26px 6px;font-size:0.78rem;font-weight:600;color:#fff;position:relative;z-index:55;}
+.statusbar .icons{display:flex;gap:5px;align-items:center;}
+
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.screen::-webkit-scrollbar{display:none;}
+.view{display:none;padding-bottom:24px;}
+.view.on{display:block;}
+
+/* ---------- hero ---------- */
+.hero{position:relative;height:460px;display:flex;align-items:flex-end;padding:0 20px 18px;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(150deg,#7f1d33,#e11d48 55%,#f43f5e);}
+.hero-bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg) 2%,rgba(18,18,18,.55) 32%,rgba(18,18,18,0) 62%);}
+.hero-in{position:relative;z-index:2;width:100%;}
+.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);color:#fff;font-size:0.66rem;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;padding:5px 10px;border-radius:999px;margin-bottom:12px;}
+.hero h2{margin:0 0 6px;font-size:2rem;line-height:1.08;font-weight:800;letter-spacing:-0.03em;}
+.hero .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:0.78rem;color:var(--text-2);margin-bottom:6px;}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--text-muted);}
+.hero p{margin:0 0 16px;font-size:0.85rem;line-height:1.5;color:var(--text-2);}
+.hero-actions{display:flex;gap:10px;}
+.btn{border:none;font-family:inherit;font-weight:700;border-radius:var(--r-sm);display:inline-flex;
+  align-items:center;justify-content:center;gap:7px;min-height:46px;font-size:0.9rem;
+  transition:transform .12s ease,background .15s ease,opacity .15s ease;cursor:pointer;}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:#fff;color:#000;flex:1;}
+.btn-primary:active{background:#d4d4d8;}
+.btn-ghost{background:rgba(255,255,255,.16);color:#fff;flex:1;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);}
+.btn-ghost:active{background:rgba(255,255,255,.26);}
+
+/* ---------- rows ---------- */
+.row{margin-top:26px;}
+.row-head{display:flex;align-items:baseline;justify-content:space-between;padding:0 20px;margin-bottom:11px;gap:10px;}
+.row-head h3{margin:0;font-size:1.02rem;font-weight:700;letter-spacing:-0.01em;}
+.row-head .ko{font-size:.78rem;color:var(--accent);font-weight:600;}
+.row-head button{background:none;border:none;color:var(--text-muted);font-family:inherit;font-size:.78rem;
+  font-weight:600;padding:8px 0 8px 12px;min-height:44px;cursor:pointer;}
+.row-head button:active{color:#fff;}
+.rail{display:flex;gap:11px;overflow-x:auto;padding:2px 20px 4px;scroll-snap-type:x proximity;scrollbar-width:none;}
+.rail::-webkit-scrollbar{display:none;}
+.poster{flex:0 0 128px;scroll-snap-align:start;background:none;border:none;padding:0;font-family:inherit;
+  text-align:left;cursor:pointer;transition:transform .16s ease;}
+.poster:active{transform:scale(.95);}
+.poster-img{position:relative;width:100%;aspect-ratio:2/3;border-radius:var(--r);overflow:hidden;
+  display:flex;align-items:flex-end;padding:10px;}
+.poster-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.05) 58%);}
+.poster-txt{position:relative;z-index:2;width:100%;}
+.poster .price{font-size:.7rem;font-weight:700;color:#fda4af;margin:0 0 2px;}
+.poster .name{font-size:.8rem;font-weight:700;line-height:1.25;margin:0;color:#fff;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.poster .sub{font-size:.72rem;color:var(--text-muted);margin:7px 0 0;display:flex;align-items:center;gap:4px;}
+.tag{position:absolute;top:8px;left:8px;z-index:3;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);
+  color:#fff;font-size:.6rem;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em;}
+.g1{background:linear-gradient(150deg,#334155,#0f172a);} .g2{background:linear-gradient(150deg,#7c2d4a,#450a1e);}
+.g3{background:linear-gradient(150deg,#155e63,#042f2e);} .g4{background:linear-gradient(150deg,#78350f,#431407);}
+.g5{background:linear-gradient(150deg,#3730a3,#1e1b4b);} .g6{background:linear-gradient(150deg,#4c1d95,#2e1065);}
+
+/* ---------- generic screens ---------- */
+.page-head{padding:12px 20px 4px;}
+.page-head h2{margin:0;font-size:1.85rem;font-weight:800;letter-spacing:-0.03em;}
+.page-head p{margin:5px 0 0;font-size:.85rem;color:var(--text-muted);line-height:1.5;}
+.searchbar{margin:16px 20px 0;display:flex;align-items:center;gap:9px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r);padding:0 14px;min-height:48px;}
+.searchbar input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:inherit;font-size:.92rem;min-width:0;}
+.searchbar input::placeholder{color:#71717a;}
+.mic{width:36px;height:36px;border-radius:50%;background:var(--accent);border:none;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .12s ease;}
+.mic:active{transform:scale(.9);background:var(--accent-press);}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 20px 2px;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;background:var(--surface);border:1px solid var(--border);color:var(--text-2);
+  font-family:inherit;font-size:.8rem;font-weight:600;padding:9px 15px;border-radius:999px;min-height:40px;cursor:pointer;transition:.15s;}
+.chip.on{background:#fff;color:#000;border-color:#fff;}
+.chip:active{transform:scale(.95);}
+
+.list{padding:8px 20px 0;display:flex;flex-direction:column;gap:9px;}
+.item{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;text-align:left;font-family:inherit;cursor:pointer;transition:transform .12s ease,background .15s;}
+.item:active{transform:scale(.985);background:var(--surface-2);}
+.thumb{width:52px;height:52px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:1.05rem;color:#fff;}
+.item .body{flex:1;min-width:0;}
+.item .t{font-size:.9rem;font-weight:700;color:#fff;margin:0 0 3px;}
+.item .s{font-size:.76rem;color:var(--text-muted);margin:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.pill{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:999px;}
+.pill.ok{background:rgba(16,185,129,.16);color:#6ee7b7;}
+.pill.wait{background:rgba(245,158,11,.16);color:#fcd34d;}
+.pill.new{background:rgba(225,29,72,.18);color:#fda4af;}
+
+.empty{padding:64px 34px;text-align:center;}
+.empty svg{color:#3f3f46;margin-bottom:14px;}
+.empty p{margin:0 0 6px;font-size:.92rem;font-weight:700;color:var(--text-2);}
+.empty span{font-size:.82rem;color:var(--text-muted);line-height:1.5;display:block;}
+
+.prof-top{display:flex;align-items:center;gap:14px;padding:16px 20px 20px;}
+.avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(140deg,#e11d48,#7f1d33);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;}
+.prof-top .t{font-size:1.15rem;font-weight:700;margin:0;}
+.prof-top .s{font-size:.8rem;color:var(--text-muted);margin:3px 0 0;}
+.settings{padding:0 20px;display:flex;flex-direction:column;gap:1px;background:var(--border);
+  border-radius:var(--r);overflow:hidden;margin:0 20px;}
+.srow{display:flex;align-items:center;gap:12px;background:var(--surface);border:none;width:100%;
+  padding:15px 14px;font-family:inherit;font-size:.9rem;color:#fff;text-align:left;min-height:52px;cursor:pointer;transition:background .15s;}
+.srow:active{background:var(--surface-2);}
+.srow .lbl{flex:1;font-weight:500;}
+.srow .val{font-size:.82rem;color:var(--text-muted);font-weight:600;}
+.switch{width:48px;height:29px;border-radius:999px;background:#3f3f46;position:relative;transition:background .2s;flex-shrink:0;}
+.switch.on{background:var(--accent);}
+.switch i{position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;transition:transform .2s;}
+.switch.on i{transform:translateX(19px);}
+
+/* ---------- tab bar ---------- */
+.tabbar{flex-shrink:0;display:flex;background:rgba(18,18,18,.92);backdrop-filter:blur(22px);
+  border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);}
+.tab{flex:1;background:none;border:none;font-family:inherit;padding:9px 2px 5px;display:flex;
+  flex-direction:column;align-items:center;gap:3px;color:#71717a;font-size:.62rem;font-weight:600;
+  min-height:52px;cursor:pointer;transition:color .15s;}
+.tab.on{color:var(--accent);}
+.tab:active{opacity:.6;}
+.tab .badge{position:absolute;transform:translate(11px,-4px);background:var(--accent);color:#fff;
+  font-size:.55rem;font-weight:700;min-width:15px;height:15px;border-radius:999px;display:flex;
+  align-items:center;justify-content:center;padding:0 3px;}
+
+.toast{position:absolute;left:16px;right:16px;bottom:calc(var(--safe-bottom) + 68px);background:var(--surface-2);
+  border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;font-size:.85rem;font-weight:600;
+  display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(10px);pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease;z-index:50;box-shadow:0 12px 30px rgba(0,0,0,.5);}
+.toast.show{opacity:1;transform:translateY(0);}
+
+.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.icon-sm{width:14px;height:14px;stroke-width:2.1;}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
+@media (max-width:430px){ body{padding:0;} .phone{width:100%;height:100vh;max-height:none;border-radius:0;border:none;} .stage-head{display:none;} }
+</style>
+
+<div class="stage">
+  <div class="stage-head">
+    <h1>Lonera — app prototype</h1>
+    <p>Tap the tabs. Prototype only — not published to any store.</p>
+  </div>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span id="clock">9:41</span>
+      <span class="icons">
+        <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM4.2 6.6a5.6 5.6 0 017.6 0l-1.2 1.2a3.9 3.9 0 00-5.2 0zM1.4 3.7a9.6 9.6 0 0113.2 0l-1.2 1.2a7.9 7.9 0 00-10.8 0z"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" opacity=".4"/><rect x="2.2" y="2.2" width="15" height="7.6" rx="1.6" fill="currentColor"/><path d="M22.4 4.2v3.6a2 2 0 000-3.6z" fill="currentColor" opacity=".5"/></svg>
+      </span>
+    </div>
+
+    <div class="screen" id="screen">
+
+      <!-- HOME -->
+      <section class="view on" id="v-home">
+        <div class="hero">
+          <div class="hero-bg"></div>
+          <div class="hero-in">
+            <span class="hero-badge" data-t="featured">Featured today</span>
+            <h2 data-t="heroName">Maple Grove Property Group</h2>
+            <div class="meta">
+              <span>★ 4.9</span><span class="dot"></span><span data-t="heroCat">Rentals &amp; Housing</span>
+              <span class="dot"></span><span data-t="heroArea">NW Calgary</span>
+            </div>
+            <p data-t="heroDesc">Furnished rooms &amp; townhouses near downtown. Bilingual leasing agent.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" data-toast="saved">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg>
+                <span data-t="save">Save</span>
+              </button>
+              <button class="btn btn-ghost" data-toast="requested">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+                <span data-t="choose">Choose</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-head"><h3><span data-t="rowNear">Trusted near you</span> <span class="ko">믿을 수 있는 업체</span></h3><button data-t="seeAll">See all</button></div>
+          <div class="rail" id="railNear"></div>
+        </div>
+        <div class="row">
+          <div class="row-head"><h3><span data-t="rowToday">Available today</span> <span class="ko">오늘 가능</span></h3><button data-t="seeAll">See all</button></div>
+          <div class="rail" id="railToday"></div>
+        </div>
+        <div class="row">
+          <div class="row-head"><h3><span data-t="rowJobs">Jobs hiring now</span> <span class="ko">지금 채용 중</span></h3><button data-t="seeAll">See all</button></div>
+          <div class="rail" id="railJobs"></div>
+        </div>
+        <div class="row">
+          <div class="row-head"><h3><span data-t="rowGrocery">Grocery deals</span> <span class="ko">장보기 할인</span></h3><button data-t="seeAll">See all</button></div>
+          <div class="rail" id="railGrocery"></div>
+        </div>
+      </section>
+
+      <!-- SEARCH -->
+      <section class="view" id="v-search">
+        <div class="page-head"><h2 data-t="navSearch">Search</h2><p data-t="searchHint">Say what you need, in your language.</p></div>
+        <div class="searchbar">
+          <svg class="icon" viewBox="0 0 24 24" style="color:#71717a"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
+          <input type="text" data-ph="searchPh" placeholder="Cleaning, tutor, dentist…" aria-label="Search">
+          <button class="mic" aria-label="Voice search" data-toast="listening">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#fff"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+          </button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="list" id="searchList"></div>
+      </section>
+
+      <!-- SAVED -->
+      <section class="view" id="v-saved">
+        <div class="page-head"><h2 data-t="navSaved">Saved</h2></div>
+        <div class="empty">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg>
+          <p data-t="emptySaved">Nothing saved yet</p>
+          <span data-t="emptySavedSub">Tap Save on any business and it will show up here.</span>
+        </div>
+      </section>
+
+      <!-- REQUESTS -->
+      <section class="view" id="v-req">
+        <div class="page-head"><h2 data-t="navReq">Requests</h2><p data-t="reqHint">What you asked for, and where it stands.</p></div>
+        <div class="list" id="reqList"></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section class="view" id="v-me">
+        <div class="page-head" style="padding-bottom:0"><h2 data-t="navMe">You</h2></div>
+        <div class="prof-top">
+          <div class="avatar">TK</div>
+          <div><p class="t">TK Lim</p><p class="s" data-t="memberSince">Member since 2026 · Calgary</p></div>
+        </div>
+        <div class="settings">
+          <button class="srow" id="langRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span class="lbl" data-t="language">Language</span><span class="val" id="langVal">English</span></button>
+          <button class="srow" id="contrastRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18z" fill="currentColor" stroke="none"/></svg><span class="lbl" data-t="bigText">Larger text</span><span class="switch" id="sw1"><i></i></span></button>
+          <button class="srow" id="motionRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></svg><span class="lbl" data-t="reduceMotion">Reduce motion</span><span class="switch" id="sw2"><i></i></span></button>
+          <button class="srow" data-toast="soon"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 012-2h3a2 2 0 012 2v1.5M3 13h18"/></svg><span class="lbl" data-t="runBiz">I run a business</span><span class="val">›</span></button>
+          <button class="srow" data-toast="soon"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><path d="M3 9V6.5A1.5 1.5 0 014.5 5h15A1.5 1.5 0 0121 6.5V9a2 2 0 000 6v2.5a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 17.5V15a2 2 0 000-6z"/></svg><span class="lbl" data-t="help">Get help</span><span class="val">›</span></button>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast"><svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#6ee7b7"><path d="M4 12.5l5.5 5.5L20 7"/></svg><span id="toastTxt"></span></div>
+
+    <nav class="tabbar">
+      <button class="tab on" data-go="home"><svg class="icon" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/></svg><span data-t="navHome">Home</span></button>
+      <button class="tab" data-go="search"><svg class="icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg><span data-t="navSearch">Search</span></button>
+      <button class="tab" data-go="saved"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg><span data-t="navSaved">Saved</span></button>
+      <button class="tab" data-go="req"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M4 13.5h5l1.3 2.3h3.4L15 13.5h5"/></svg><span class="badge">2</span><span data-t="navReq">Requests</span></button>
+      <button class="tab" data-go="me"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c0-3.6 3.2-6 7.5-6s7.5 2.4 7.5 6"/></svg><span data-t="navMe">You</span></button>
+    </nav>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const T = {
+  en:{featured:"Featured today", heroName:"Maple Grove Property Group", heroCat:"Rentals & Housing", heroArea:"NW Calgary",
+    heroDesc:"Furnished rooms & townhouses near downtown. Bilingual leasing agent.", save:"Save", choose:"Choose",
+    rowNear:"Trusted near you", rowToday:"Available today", rowJobs:"Jobs hiring now", rowGrocery:"Grocery deals",
+    seeAll:"See all", navHome:"Home", navSearch:"Search", navSaved:"Saved", navReq:"Requests", navMe:"You",
+    searchHint:"Say what you need, in your language.", searchPh:"Cleaning, tutor, dentist…",
+    emptySaved:"Nothing saved yet", emptySavedSub:"Tap Save on any business and it will show up here.",
+    reqHint:"What you asked for, and where it stands.", memberSince:"Member since 2026 · Calgary",
+    language:"Language", bigText:"Larger text", reduceMotion:"Reduce motion", runBiz:"I run a business", help:"Get help",
+    tSaved:"Saved to your list", tRequested:"Request sent", tListening:"Listening…", tSoon:"Coming in the full app"},
+  ko:{featured:"오늘의 추천", heroName:"메이플 그로브 부동산", heroCat:"렌탈 및 주거", heroArea:"NW 캘거리",
+    heroDesc:"다운타운 근처 가구 완비 방 및 타운하우스. 한/영 상담 가능.", save:"저장", choose:"선택",
+    rowNear:"믿을 수 있는 업체", rowToday:"오늘 가능", rowJobs:"지금 채용 중", rowGrocery:"장보기 할인",
+    seeAll:"전체 보기", navHome:"홈", navSearch:"검색", navSaved:"저장됨", navReq:"요청", navMe:"내 정보",
+    searchHint:"필요한 것을 말씀해 주세요.", searchPh:"청소, 과외, 치과…",
+    emptySaved:"저장한 항목이 없어요", emptySavedSub:"업체에서 저장을 누르면 여기에 표시됩니다.",
+    reqHint:"요청하신 내용과 진행 상황이에요.", memberSince:"2026년 가입 · 캘거리",
+    language:"언어", bigText:"큰 글자", reduceMotion:"모션 줄이기", runBiz:"업체를 운영해요", help:"도움 받기",
+    tSaved:"목록에 저장했어요", tRequested:"요청을 보냈어요", tListening:"듣고 있어요…", tSoon:"정식 앱에서 제공됩니다"}
+};
+let lang = "en";
+
+const D = {
+  near:[{n:"Sparkle Home Services",nk:"스파클 홈 서비스",p:"$100–220",s:"★ 4.7 · SE Calgary",g:"g3",t:"Cleaning"},
+        {n:"Bright Path Immigration",nk:"브라이트패스 이민상담",p:"$300–2,000",s:"★ 4.8 · City-wide",g:"g1",t:"Immigration"},
+        {n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",p:"$30–120",s:"★ 4.9 · Downtown",g:"g2",t:"Hair"},
+        {n:"Northstar Learning",nk:"노스스타 학습센터",p:"$30–60/hr",s:"★ 4.8 · NW Calgary",g:"g5",t:"Tutoring"},
+        {n:"Riverbend Dental",nk:"리버벤드 치과",p:"Insurance",s:"★ 4.7 · SW Calgary",g:"g6",t:"Dental"}],
+  today:[{n:"Clean Slate Calgary",nk:"클린 슬레이트 캘거리",p:"$100–220",s:"★ 4.8 · Today 2pm",g:"g3",t:"Open"},
+        {n:"Home Table Catering",nk:"홈테이블 케이터링",p:"$300–1,000",s:"★ 4.9 · Today 5pm",g:"g4",t:"Open"},
+        {n:"Gentle Hands Care",nk:"젠틀핸즈 돌봄센터",p:"$25–35/hr",s:"★ 4.8 · Today 9am",g:"g2",t:"Open"},
+        {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",p:"$2,000+",s:"★ 4.9 · Today",g:"g1",t:"Open"}],
+  jobs:[{n:"Kitchen Prep Cook",nk:"주방 프렙 쿡",p:"$19/hr",s:"Home Table · City-wide",g:"g4",t:"Food"},
+        {n:"Front Desk Assistant",nk:"프론트 데스크 보조",p:"$21/hr",s:"Riverbend · SW",g:"g1",t:"Office"},
+        {n:"Delivery Driver",nk:"배달 기사",p:"$22/hr",s:"Sparkle · SE",g:"g5",t:"Driving"},
+        {n:"Junior Carpenter",nk:"주니어 목수",p:"$28–34/hr",s:"TrueBuild · City-wide",g:"g3",t:"Trades"}],
+  grocery:[{n:"Ground beef",nk:"다진 소고기",p:"$6.99/lb",s:"Safeway · to Sep 2",g:"g2",t:"Deal"},
+        {n:"Roma tomatoes",nk:"로마 토마토",p:"$0.99/lb",s:"No Frills · to Sep 2",g:"g3",t:"Deal"},
+        {n:"Seedless watermelon",nk:"씨 없는 수박",p:"$4.98",s:"Walmart · to Sep 2",g:"g4",t:"Deal"},
+        {n:"Air-chilled chicken",nk:"에어칠드 닭가슴살",p:"$6.88/lb",s:"Safeway · to Sep 2",g:"g1",t:"Deal"}]
+};
+const CHIPS = [["All","전체"],["Cleaning","청소"],["Tutoring","과외"],["Hair","미용"],["Dental","치과"],["Moving","이사"]];
+const REQS = [
+  {n:"Sparkle Home Services",nk:"스파클 홈 서비스",m:"Move-out clean, 2 bed",mk:"이사 청소, 방 2개",st:"ok",g:"g3"},
+  {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",m:"Basement quote",mk:"지하실 견적",st:"wait",g:"g1"},
+  {n:"Northstar Learning",nk:"노스스타 학습센터",m:"Grade 9 math, weekly",mk:"9학년 수학, 주 1회",st:"new",g:"g5"}];
+const ST = {ok:{en:"Accepted",ko:"수락됨"}, wait:{en:"Waiting",ko:"대기 중"}, new:{en:"New",ko:"신규"}};
+
+const nm = o => lang==="ko" ? o.nk : o.n;
+
+function poster(o){
+  return `<button class="poster"><div class="poster-img ${o.g}"><span class="tag">${o.t}</span>
+    <div class="poster-txt"><p class="price">${o.p}</p><p class="name">${nm(o)}</p></div></div>
+    <p class="sub">${o.s}</p></button>`;
+}
+function paint(){
+  document.getElementById("railNear").innerHTML = D.near.map(poster).join("");
+  document.getElementById("railToday").innerHTML = D.today.map(poster).join("");
+  document.getElementById("railJobs").innerHTML = D.jobs.map(poster).join("");
+  document.getElementById("railGrocery").innerHTML = D.grocery.map(poster).join("");
+  document.getElementById("chips").innerHTML = CHIPS.map((c,i)=>
+    `<button class="chip${i===0?" on":""}">${lang==="ko"?c[1]:c[0]}</button>`).join("");
+  document.getElementById("searchList").innerHTML = D.near.map(o=>
+    `<button class="item"><div class="thumb ${o.g}">${nm(o)[0]}</div>
+     <div class="body"><p class="t">${nm(o)}</p><p class="s">${o.s} <span class="pill ok">${o.p}</span></p></div>
+     <svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#52525b"><path d="M9 6l6 6-6 6"/></svg></button>`).join("");
+  document.getElementById("reqList").innerHTML = REQS.map(o=>
+    `<button class="item"><div class="thumb ${o.g}">${nm(o)[0]}</div>
+     <div class="body"><p class="t">${nm(o)}</p><p class="s">${lang==="ko"?o.mk:o.m}</p></div>
+     <span class="pill ${o.st}">${ST[o.st][lang]}</span></button>`).join("");
+  wire();
+}
+function wire(){
+  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
+  });
+  document.querySelectorAll(".poster,.item").forEach(el=>{
+    if(el.dataset.wired) return; el.dataset.wired="1";
+    el.onclick=()=>toast(T[lang].tSoon);
+  });
+}
+function applyLang(){
+  document.querySelectorAll("[data-t]").forEach(el=>{
+    const k = el.getAttribute("data-t"); if(T[lang][k]!==undefined) el.textContent = T[lang][k];
+  });
+  document.querySelectorAll("[data-ph]").forEach(el=>{
+    const k = el.getAttribute("data-ph"); if(T[lang][k]!==undefined) el.placeholder = T[lang][k];
+  });
+  document.getElementById("langVal").textContent = lang==="ko" ? "한국어" : "English";
+  document.documentElement.lang = lang;
+  paint();
+}
+
+let tt;
+function toast(msg){
+  const t = document.getElementById("toast");
+  document.getElementById("toastTxt").textContent = msg;
+  t.classList.add("show"); clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("show"), 2100);
+}
+const TOASTS = {saved:"tSaved", requested:"tRequested", listening:"tListening", soon:"tSoon"};
+document.querySelectorAll("[data-toast]").forEach(b=> b.onclick = ()=> toast(T[lang][TOASTS[b.dataset.toast]]));
+
+document.querySelectorAll(".tab").forEach(b=> b.onclick = ()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  document.getElementById("v-"+b.dataset.go).classList.add("on");
+  document.getElementById("screen").scrollTop = 0;
+});
+
+document.getElementById("langRow").onclick = ()=>{ lang = lang==="en" ? "ko" : "en"; applyLang(); };
+[["sw1","contrastRow"],["sw2","motionRow"]].forEach(([sw,row])=>{
+  document.getElementById(row).onclick = ()=>{
+    const s = document.getElementById(sw); s.classList.toggle("on");
+    if(sw==="sw1") document.querySelector(".phone").style.fontSize = s.classList.contains("on") ? "112%" : "";
+  };
+});
+
+(function clock(){
+  const el = document.getElementById("clock");
+  const tick = ()=>{ const d=new Date(); let h=d.getHours()%12||12;
+    el.textContent = h+":"+String(d.getMinutes()).padStart(2,"0"); };
+  tick(); setInterval(tick, 20000);
+})();
+
+applyLang();
+})();
+</script>
