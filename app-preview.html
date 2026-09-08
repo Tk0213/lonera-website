@@ -162,9 +162,61 @@ button{font-family:inherit;cursor:pointer;}
 .empty p{margin:14px 0 6px;font-size:1rem;font-weight:800;}
 .empty span{font-size:.88rem;color:var(--text-2);line-height:1.55;}
 
-/* ---------- BOTTOM CONTROL DECK (everything tappable lives here) ---------- */
-.deck{flex-shrink:0;background:var(--bg);border-top:1.5px solid var(--line);
-  padding:10px 14px calc(var(--safe-b) + 4px);position:relative;z-index:40;}
+/* ---------- BOTTOM CONTROL DECK ----------
+   A floating island rather than a docked bar: content scrolls behind it
+   under a blur, the way the App Store tab bar behaves. */
+.deck{position:absolute;left:10px;right:10px;bottom:var(--safe-b);
+  background:rgba(255,255,255,.80);
+  -webkit-backdrop-filter:blur(24px) saturate(1.7);backdrop-filter:blur(24px) saturate(1.7);
+  border:1px solid rgba(0,0,0,.07);border-radius:28px;
+  box-shadow:0 10px 34px rgba(0,0,0,.16),0 2px 8px rgba(0,0,0,.05);
+  padding:9px 10px 8px;z-index:40;}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .deck{background:var(--bg);}
+}
+/* the island floats, so the scroller has to reserve room under it */
+.view{padding-bottom:172px;}
+.sc-inner{will-change:transform;}
+.sc-inner.spring{transition:transform .38s cubic-bezier(.22,1,.36,1);}
+
+/* pull-to-reload indicator, revealed by the overscroll drag */
+.pullind{position:absolute;top:52px;left:50%;transform:translateX(-50%) scale(.6);
+  width:38px;height:38px;border-radius:50%;background:var(--bg);
+  box-shadow:0 4px 14px rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;z-index:35;color:var(--brand-ink);}
+.pullind svg{width:20px;height:20px;}
+.pullind.go svg{animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- full-screen voice search ---------- */
+.vs{position:absolute;inset:0;background:var(--bg);z-index:65;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:scale(1.03);
+  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1);}
+.vs.on{opacity:1;pointer-events:auto;transform:none;}
+.vs-top{display:flex;align-items:center;justify-content:flex-end;padding:14px 14px 0;}
+.vs-x{width:44px;height:44px;border-radius:50%;border:none;background:var(--surface);color:var(--text);
+  display:flex;align-items:center;justify-content:center;transition:background .16s ease-out,transform .14s ease-out;}
+.vs-x:hover{background:var(--surface-2);} .vs-x:active{transform:scale(.96);}
+.vs-body{padding:6px 22px 0;}
+.vs-state{display:flex;align-items:center;gap:9px;font-size:.86rem;font-weight:800;
+  color:var(--brand-ink);margin:0 0 14px;}
+.vs-wave{display:flex;align-items:flex-end;gap:3px;height:18px;}
+.vs-wave i{width:3px;border-radius:99px;background:var(--brand-btn);height:5px;}
+.vs.live .vs-wave i{animation:wv .9s ease-in-out infinite;}
+.vs.live .vs-wave i:nth-child(2){animation-delay:.12s}
+.vs.live .vs-wave i:nth-child(3){animation-delay:.24s}
+.vs.live .vs-wave i:nth-child(4){animation-delay:.36s}
+@keyframes wv{0%,100%{height:5px}50%{height:17px}}
+.vs-input{width:100%;border:none;outline:none;background:none;font-family:inherit;
+  font-size:1.5rem;font-weight:800;letter-spacing:-.02em;line-height:1.25;color:var(--text);
+  resize:none;overflow:hidden;min-height:96px;}
+.vs-input::placeholder{color:#a6a6a6;}
+.vs-chips{padding:2px 22px 0;display:flex;flex-wrap:wrap;gap:6px;}
+.vs-go{margin:16px 22px 0;}
+.vs-res{flex:1;overflow-y:auto;padding-top:6px;scrollbar-width:none;}
+.vs-res::-webkit-scrollbar{display:none;}
+
+/* ---------- bottom sheet: every action opens here, in reach ---------- */
 .searchdock{display:flex;align-items:center;gap:9px;background:var(--surface);border:1.5px solid var(--line);
   border-radius:999px;padding:5px 6px 5px 16px;margin-bottom:9px;transition:border-color .16s ease-out,transform .16s ease-out;}
 .searchdock:focus-within{border-color:var(--brand);transform:scale(1.012);}
@@ -320,7 +372,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
   box-shadow:0 1px 3px rgba(0,0,0,.28);}
 .sw.on i{transform:translateX(20px);}
 
-.toast{position:absolute;left:14px;right:14px;bottom:calc(var(--safe-b) + 128px);background:var(--text);color:#fff;
+.toast{position:absolute;left:14px;right:14px;bottom:calc(var(--safe-b) + 150px);background:var(--text);color:#fff;
   border-radius:var(--r);padding:14px 16px;font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:9px;
   opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .22s ease-out,transform .22s ease-out;z-index:70;}
 .toast.on{opacity:1;transform:translateY(0);}
@@ -368,7 +420,12 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       </span>
     </div>
 
+    <div class="pullind" id="pullind">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 4v8M8.5 8.5L12 5l3.5 3.5"/><path d="M4.5 13a7.5 7.5 0 1015 0" opacity=".35"/></svg>
+    </div>
     <div class="screen" id="screen">
+     <div class="sc-inner" id="scInner">
       <section class="view on" id="v-home"></section>
       <section class="view" id="v-browse"></section>
       <section class="view" id="v-saved"></section>
@@ -376,6 +433,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <section class="view" id="v-community"></section>
       <section class="view" id="v-biz"></section>
       <section class="view" id="v-you"></section>
+     </div>
     </div>
 
     <div class="toast" id="toast"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg><span id="toastT"></span></div>
@@ -400,6 +458,20 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <nav class="tabs" id="tabs"></nav>
     </div>
 
+    <div class="vs" id="vs">
+      <div class="vs-top">
+        <button class="vs-x" id="vsX" aria-label="Close">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="vs-body">
+        <p class="vs-state"><span class="vs-wave"><i></i><i></i><i></i><i></i></span>
+          <span id="vsState"></span></p>
+        <textarea class="vs-input" id="vsInput" rows="2" enterkeyhint="search"></textarea>
+      </div>
+      <div class="vs-chips" id="vsChips"></div>
+      <div class="vs-go"><button class="btn pri" id="vsGo"></button></div>
+      <div class="vs-res" id="vsRes"></div>
+    </div>
     <div class="scrim" id="scrim"></div>
     <div class="sheet" id="sheet">
       <div class="grip"></div>
@@ -463,7 +535,7 @@ const T={en:{
  language:"Language",textSize:"Text size",contrast:"High contrast",readAloud:"Read page aloud",
  runBiz:"I run a business",help:"Help and support",notif:"Notifications",
  tSaved:"Saved to your list",tSent:"Sent. The business will reply here.",tPosted:"Posted",tBooked:"Booking confirmed",
- tAloud:"Reading the page aloud",tNoVoice:"Voice needs a microphone. Type below instead.",
+ tAloud:"Reading the page aloud",tNoVoice:"Voice needs a microphone. Type it instead.",
  statusNew:"New",statusWait:"Waiting",statusOk:"Accepted",statusDone:"Resolved",
  compare:"Compare top 3",closeCmp:"Done",
  sizeS:"Normal",sizeL:"Large",sizeXL:"Extra large",
@@ -502,7 +574,11 @@ const T={en:{
  accept:"Accept",decline:"Decline",tAccepted:"Accepted. They have been told.",
  tDeclined:"Declined.",newInvoice:"Create an invoice",
  stPaid:"Paid",stSent:"Sent",stOverdue:"Overdue",stDraft:"Draft",
- visits:"visits"
+ visits:"visits",
+ vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
+ vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
+ vsNone:"Nothing matched. Try different words.",pullRefresh:"Release to refresh",
+ tRefreshed:"Up to date"
 },ko:{
  tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
  searchPh:"무엇이 필요하세요?",greet:"안녕하세요",greetSub:"필요한 것을 아래에서 말하거나 입력해 주세요.",
@@ -523,7 +599,7 @@ const T={en:{
  language:"언어",textSize:"글자 크기",contrast:"고대비",readAloud:"페이지 읽어주기",
  runBiz:"업체를 운영해요",help:"도움말",notif:"알림",
  tSaved:"목록에 저장했어요",tSent:"보냈어요. 답변은 받은함에 표시돼요.",tPosted:"등록했어요",tBooked:"예약이 확정됐어요",
- tAloud:"페이지를 읽어드릴게요",tNoVoice:"음성은 마이크가 필요해요. 아래에 입력해 주세요.",
+ tAloud:"페이지를 읽어드릴게요",tNoVoice:"음성은 마이크가 필요해요. 직접 입력해 주세요.",
  statusNew:"신규",statusWait:"대기 중",statusOk:"수락됨",statusDone:"해결됨",
  compare:"상위 3곳 비교",closeCmp:"완료",
  sizeS:"보통",sizeL:"크게",sizeXL:"아주 크게",
@@ -562,7 +638,11 @@ const T={en:{
  accept:"수락",decline:"거절",tAccepted:"수락했어요. 상대방에게 알렸어요.",
  tDeclined:"거절했어요.",newInvoice:"청구서 만들기",
  stPaid:"결제 완료",stSent:"발송됨",stOverdue:"연체",stDraft:"임시 저장",
- visits:"방문"
+ visits:"방문",
+ vsListening:"듣고 있어요. 말씀해 주세요.",vsPaused:"입력 후 엔터를 눌러 주세요",
+ vsPh:"필요한 것을 말씀하세요",vsGo:"결과 보기",vsResults:"가장 알맞은 곳",
+ vsNone:"맞는 결과가 없어요. 다르게 말해 보세요.",pullRefresh:"놓으면 새로고침",
+ tRefreshed:"최신 상태예요"
 }};
 let lang="en", scale=1, contrast=false;
 const t = k => T[lang][k];
@@ -1229,6 +1309,7 @@ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null,listening=false,vHeard="";
 function setMicUI(on){
   listening=on;
+  if(typeof vsState==="function") vsState();
   const b=$("voice");
   if(b){b.classList.toggle("live",on);b.setAttribute("aria-label",on?t("listening"):t("askVoice"));}
   const m=$("vMicT"); if(m) m.textContent=on?t("tapStop"):t("tapSpeak");
@@ -1243,6 +1324,7 @@ if(SR){
     let txt="";
     for(let i=0;i<e.results.length;i++) txt+=e.results[i][0].transcript;
     vHeard=tidy(txt);
+    const vi=$("vsInput"); if(vi) vi.value=vHeard;
     renderParse();
   };
 }
@@ -1255,34 +1337,85 @@ function toggleMic(){
 function renderParse(){
   const p=parseIntent(vHeard);
   const A={book:t("aBook"),find:t("aFind"),sell:t("aSell"),job:t("aJob"),ask:t("aAsk")};
-  const chip=(l,v)=>`<span class="aiflag" style="margin:0 6px 6px 0">${esc(l)}: ${esc(v)}</span>`;
+  const chip=(l,v)=>`<span class="aiflag" style="margin:0">${esc(l)}: ${esc(v)}</span>`;
   let out="";
   if(p.service)  out+=chip(t("iService"),p.service);
   if(p.language) out+=chip(t("iLang"),p.language);
   if(p.when!==null) out+=chip(t("iWhen"),lang==="ko"?DAYS[p.when][1]:DAYS[p.when][0]);
   if(p.action)   out+=chip(t("iAction"),A[p.action]||p.action);
-  const said=$("vSaid");
-  if(said) said.innerHTML = vHeard
-    ? `<p class="lb">${t("heard")}</p><div class="note">${esc(vHeard)}</div>` : "";
-  const box=$("vParse");
-  if(box) box.innerHTML = out
-    ? `<p class="lb" style="margin-top:16px">${t("weHeard")}</p><div>${out}</div>` : "";
+  const box=$("vsChips"); if(box) box.innerHTML=out;
   return p;
 }
-/* One sheet for both input methods: the mic fills the same box you can type in,
-   so speaking and writing are the same flow, not two. */
-function openVoice(){
-  vHeard="";
-  sheet(t("askTitleV"),t("askSubV"),
-   `<button class="btn pri" id="vMic" style="margin-bottom:14px">${ic("mic")}<span id="vMicT">${t("tapSpeak")}</span></button>
-    <div id="vSaid"></div>
-    <div id="vParse"></div>`,
-   `<button class="btn pri" data-act="runvoice">${ic("check")}${t("doIt")}</button>
-    <button class="btn sec" data-act="close">${t("cancel")}</button>`);
-  const mb=$("vMic"); if(mb) mb.onclick=toggleMic;
-  renderParse();
+/* ---------------- full screen voice search ----------------
+   Score every business against the phrase, best first, laid out left to
+   right in the same poster rail the rest of the app uses. */
+function rankBiz(p,q){
+  const s=q.toLowerCase();
+  const score=b=>{
+    let sc=0;
+    if(p.service && b.c===p.service) sc+=50;
+    if(p.language && (b.lg||[]).includes(p.language)) sc+=30;
+    if(s.includes(b.c.toLowerCase())) sc+=12;
+    if(bn(b).toLowerCase().split(/\s+/).some(w=>w.length>3 && s.includes(w))) sc+=20;
+    if(b.free) sc+=6;
+    return sc+b.r;
+  };
+  let pool=BIZ.slice();
+  /* a named service is a requirement, not a hint: asking for a dentist must
+     never surface a rental just because it shares the language */
+  if(p.service){
+    const exact=pool.filter(b=>b.c===p.service);
+    if(exact.length) pool=exact;
+  }
+  if(p.language && pool.length>1){
+    const both=pool.filter(b=>(b.lg||[]).includes(p.language));
+    if(both.length) pool=both;              // prefer, but never return nothing
+  }
+  if(!p.service && !p.language){            // free text: require a real signal
+    pool=pool.filter(b=>score(b)>=17);
+  }
+  return pool.map(b=>({b,sc:score(b)})).sort((x,y)=>y.sc-x.sc).slice(0,6).map(x=>x.b);
 }
-$("voice").onclick=()=>{openVoice();toggleMic();};
+function vsState(){
+  const el=$("vsState"); if(!el) return;
+  el.textContent = listening ? t("vsListening") : t("vsPaused");
+  $("vs").classList.toggle("live",listening);
+}
+function vsOpen(){
+  vHeard="";
+  const i=$("vsInput");
+  i.value=""; i.placeholder=t("vsPh");
+  $("vsGo").innerHTML=`${ic("check")}${t("vsGo")}`;
+  $("vsRes").innerHTML=""; $("vsChips").innerHTML="";
+  $("vs").classList.add("on");
+  vsState();
+  toggleMic();                     // listening starts on open, nothing to tap
+  setTimeout(()=>{try{i.focus();}catch(e){}},90);
+}
+function vsClose(){
+  if(listening&&rec){try{rec.stop();}catch(e){}}
+  $("vs").classList.remove("on");
+}
+function vsRun(){
+  const q=($("vsInput").value||"").trim();
+  if(!q) return;
+  vHeard=q;
+  if(listening&&rec){try{rec.stop();}catch(e){}}
+  const p=parseIntent(q);
+  renderParse();
+  const list=rankBiz(p,q);
+  $("vsRes").innerHTML = list.length
+    ? `<div class="rowtitle"><h3>${t("vsResults")}</h3></div>
+       <div class="rail">${list.map(bizCard).join("")}</div>`
+    : `<div class="empty">${ic("help")}<p>${t("vsNone")}</p></div>`;
+}
+$("vsX").onclick=vsClose;
+$("vsGo").onclick=vsRun;
+$("vsInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();vsRun();}
+});
+$("vsInput").addEventListener("input",()=>{vHeard=$("vsInput").value;renderParse();});
+$("voice").onclick=vsOpen;
 $("q").addEventListener("keydown",e=>{
   if(e.key==="Enter"&&$("q").value.trim()){
     const v=$("q").value.trim(); $("q").value="";
@@ -1293,7 +1426,8 @@ $("q").addEventListener("keydown",e=>{
 /* ================= events ================= */
 document.addEventListener("click",e=>{
   const tab=e.target.closest("[data-go]"); if(tab){go(tab.dataset.go);return;}
-  const biz=e.target.closest("[data-biz]"); if(biz){openBiz(biz.dataset.biz);return;}
+  const biz=e.target.closest("[data-biz]");
+  if(biz){ if($("vs").classList.contains("on")) vsClose(); openBiz(biz.dataset.biz); return; }
   const cat=e.target.closest("[data-cat]"); if(cat){const b=BIZ.find(x=>x.c===cat.dataset.cat);
     b?openBiz(b.id):toast(cat.dataset.cat);return;}
   const sg=e.target.closest("[data-seg]"); if(sg){inboxSeg=sg.dataset.seg;viewInbox();return;}
@@ -1371,6 +1505,71 @@ function paintBadge(){
   const n=NOTIFS.filter(x=>!x.read).length, d=document.querySelector('.tab[data-go="inbox"] .dot');
   if(d){d.textContent=n; d.style.display=n?"flex":"none";}
 }
+
+/* ---------------- rubber-band overscroll + pull to reload ----------------
+   Past either end the content keeps moving with exponential resistance, then
+   springs back. Pull far enough at the top and it reloads. Implemented rather
+   than left to the browser so the behaviour is the same on Android as on iOS. */
+(function bounce(){
+  const SC=$("screen"), IN=$("scInner"), PI=$("pullind");
+  if(!SC||!IN) return;
+  const MAX=120, TRIP=76;
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let y0=0, dy=0, drag=false, busy=false, wheelT=null;
+
+  const atTop=()=>SC.scrollTop<=0;
+  const atBot=()=>SC.scrollTop+SC.clientHeight>=SC.scrollHeight-1;
+  const damp=d=>Math.sign(d)*MAX*(1-Math.exp(-Math.abs(d)/MAX));
+  function paintPull(v){
+    if(!PI) return;
+    const k=Math.min(1,Math.max(0,v/TRIP));
+    PI.style.opacity=k;
+    PI.style.transform=`translateX(-50%) scale(${.6+k*.4}) rotate(${k*180}deg)`;
+  }
+  function setY(v){ dy=v; IN.style.transform=v?`translateY(${v}px)`:""; if(v>0)paintPull(v); }
+  function release(){
+    IN.classList.add("spring");
+    if(dy>=TRIP && !busy){ reload(); }
+    else { setY(0); paintPull(0); }
+  }
+  function reload(){
+    busy=true;
+    IN.style.transform="translateY(58px)";
+    if(PI){PI.style.opacity=1;PI.classList.add("go");}
+    setTimeout(()=>{
+      paint(); paintBadge();
+      IN.classList.add("spring"); setY(0); paintPull(0);
+      if(PI)PI.classList.remove("go");
+      busy=false; toast(t("tRefreshed"));
+    }, reduce?120:850);
+  }
+
+  SC.addEventListener("touchstart",e=>{
+    if(busy) return;
+    y0=e.touches[0].clientY; dy=0; drag=false; IN.classList.remove("spring");
+  },{passive:true});
+  SC.addEventListener("touchmove",e=>{
+    if(busy) return;
+    const d=e.touches[0].clientY-y0;
+    if(!drag && !((d>0&&atTop())||(d<0&&atBot()))) return;
+    drag=true; e.preventDefault();
+    setY(damp(d));
+  },{passive:false});
+  SC.addEventListener("touchend",()=>{ if(!drag||busy)return; drag=false; release(); },{passive:true});
+  SC.addEventListener("touchcancel",()=>{ if(!drag||busy)return; drag=false; release(); },{passive:true});
+
+  /* trackpad and mouse wheel get the same feel, so it is demoable on desktop */
+  SC.addEventListener("wheel",e=>{
+    if(busy) return;
+    const past=(e.deltaY<0&&atTop())||(e.deltaY>0&&atBot());
+    if(!past) return;
+    e.preventDefault();
+    IN.classList.remove("spring");
+    setY(damp(dy - e.deltaY*0.6));
+    clearTimeout(wheelT);
+    wheelT=setTimeout(()=>{ release(); },140);
+  },{passive:false});
+})();
 
 (function clock(){const el=$("clk");const f=()=>{const d=new Date();
   el.textContent=(d.getHours()%12||12)+":"+String(d.getMinutes()).padStart(2,"0");};f();setInterval(f,20000);})();
