@@ -19,14 +19,15 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{margin:0;background:#e9eaec;font-family:Manrope,"Noto Sans KR",-apple-system,sans-serif;
-  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:22px 14px;color:var(--text);}
+  display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;
+  padding:22px 14px;color:var(--text);}
 button{font-family:inherit;cursor:pointer;}
 
 .stage{display:flex;flex-direction:column;align-items:center;gap:12px;}
 .stage > h1{margin:0;font-size:.95rem;font-weight:800;color:#222;}
 .stage > p{margin:0;font-size:.8rem;color:#6a6a6a;text-align:center;max-width:390px;line-height:1.5;}
 
-.phone{width:390px;max-width:100%;height:844px;max-height:84vh;background:var(--bg);border-radius:42px;
+.phone{width:390px;max-width:100%;height:844px;max-height:calc(100dvh - 92px);background:var(--bg);border-radius:42px;
   border:1px solid #d3d5d8;box-shadow:0 30px 70px rgba(0,0,0,.22);overflow:hidden;position:relative;display:flex;flex-direction:column;}
 .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:112px;height:28px;background:#111;border-radius:18px;z-index:80;}
 .statusbar{height:42px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
@@ -119,7 +120,8 @@ button{font-family:inherit;cursor:pointer;}
 .card .s{font-size:.84rem;color:var(--text-2);margin:0;line-height:1.45;}
 .card .p{font-size:.94rem;font-weight:800;margin:8px 0 0;color:var(--text);}
 
-.rail{display:flex;gap:12px;overflow-x:auto;padding:12px 20px 6px;scroll-snap-type:x proximity;scrollbar-width:none;}
+.rail{display:flex;gap:12px;overflow-x:auto;padding:12px 20px 6px;scroll-snap-type:x proximity;
+  scroll-padding-inline:20px;scrollbar-width:none;}  /* snap respects the gutter */
 .rail::-webkit-scrollbar{display:none;}
 .rail .card{flex:0 0 216px;scroll-snap-align:start;}
 .rail .poster{flex:0 0 138px;scroll-snap-align:start;}
@@ -261,7 +263,26 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .tb.b{background:#eaf1fb;color:#1a4d8f;}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
-@media (max-width:430px){body{padding:0;} .phone{width:100%;height:100vh;max-height:none;border-radius:0;border:none;} .stage > h1,.stage > p{display:none;}}
+/* Real phone: drop the mockup and become the app. The device already has a
+   notch, a status bar and a home indicator, so drawing our own on top of them
+   wastes 42px and looks broken. 100dvh (not 100vh) so the bottom deck stays
+   on screen while the browser chrome shows and hides. */
+@media (max-width:600px){
+  body{padding:0;display:block;background:var(--bg);}
+  .stage{gap:0;display:block;}
+  .stage > h1,.stage > p{display:none;}
+  .phone{width:100%;max-width:none;height:100vh;height:100dvh;max-height:none;
+    border-radius:0;border:none;box-shadow:none;}
+  .notch,.statusbar{display:none;}
+  :root{--safe-b:max(14px,env(safe-area-inset-bottom));}
+}
+/* Short landscape window: same treatment, the mockup cannot fit */
+@media (max-height:560px) and (min-width:601px){
+  body{padding:0;}
+  .stage > h1,.stage > p{display:none;}
+  .phone{height:100dvh;max-height:none;border-radius:0;border:none;}
+  .notch,.statusbar{display:none;}
+}
 </style>
 
 <div class="stage">
