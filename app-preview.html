@@ -62,6 +62,8 @@ button{font-family:inherit;cursor:pointer;}
 .poster:active{transform:scale(.97);}
 .pw{position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;border:1.5px solid var(--line);
   display:flex;align-items:flex-end;transition:border-color .17s,box-shadow .17s;}
+/* drawn artwork layer: sits on the gradient, under the scrim */
+.art{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;}
 .pw::after{content:"";position:absolute;inset:0;
   background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.34) 38%,rgba(0,0,0,0) 68%);}
 .pw .flag{position:absolute;top:9px;left:9px;z-index:3;background:rgba(255,255,255,.96);color:var(--text);
@@ -78,10 +80,15 @@ button{font-family:inherit;cursor:pointer;}
 .hero:hover,.hero:focus-visible{transform:scale(1.012);outline:none;}
 .hero:hover .hw{box-shadow:inset 0 0 0 3px var(--brand);}
 .hero:active{transform:scale(.99);}
-.hw{position:relative;height:392px;display:flex;align-items:flex-end;overflow:hidden;
+.hw{position:relative;height:356px;display:flex;align-items:flex-end;overflow:hidden;
   transition:box-shadow .18s;}
 .hw::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to top,#fff 1%,rgba(255,255,255,.86) 20%,rgba(255,255,255,.30) 52%,rgba(255,255,255,0) 78%);}
+  background:linear-gradient(to top,#fff 4%,rgba(255,255,255,.92) 34%,rgba(255,255,255,.34) 58%,rgba(255,255,255,0) 82%);}
+/* the hero drawing lives in the top two thirds and dissolves into the page,
+   so the headline never sits on top of it */
+.hw .art{inset:0 0 auto 0;height:66%;
+  -webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 58%,transparent 100%);}
 .hb{position:relative;z-index:2;padding:0 20px 18px;width:100%;}
 .hflag{display:inline-flex;align-items:center;gap:5px;background:var(--brand-btn);color:#fff;font-size:.68rem;
   font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;margin-bottom:11px;}
@@ -90,6 +97,22 @@ button{font-family:inherit;cursor:pointer;}
 .hb .hd{margin:0 0 13px;font-size:.9rem;line-height:1.5;color:var(--text-2);}
 .hcue{display:inline-flex;align-items:center;gap:7px;background:var(--text);color:#fff;font-size:.88rem;
   font-weight:800;padding:11px 17px;border-radius:12px;}
+
+/* ---------- Featured rail: swipe between full-width hero slides ---------- */
+.herorail{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.herorail::-webkit-scrollbar{display:none;}
+.herorail .hero{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;}
+.herorail .hero:hover,.herorail .hero:focus-visible{transform:none;}   /* scaling a snap slide fights the scroller */
+.herodots{display:flex;justify-content:center;align-items:center;gap:1px;padding:9px 0 0;}
+.hdot{background:none;border:none;padding:0;width:28px;height:28px;display:flex;
+  align-items:center;justify-content:center;border-radius:50%;transition:background .16s;}
+.hdot i{display:block;width:8px;height:8px;border-radius:99px;background:#c8c8c8;
+  transition:width .22s cubic-bezier(.2,.8,.3,1),background .22s;}
+.hdot[aria-current="true"] i{width:24px;background:var(--brand-btn);}
+.hdot:hover{background:var(--brand-tint);}
+.hdot:hover i{background:var(--brand);}
+.hdot:focus-visible{outline:2.5px solid var(--brand);outline-offset:-2px;}
 .card .t{font-size:.98rem;font-weight:800;margin:0 0 3px;line-height:1.3;}
 .card .s{font-size:.84rem;color:var(--text-2);margin:0;line-height:1.45;}
 .card .p{font-size:.94rem;font-weight:800;margin:8px 0 0;color:var(--text);}
@@ -102,9 +125,9 @@ button{font-family:inherit;cursor:pointer;}
 .rowtitle h3{margin:0;font-size:1.12rem;font-weight:800;letter-spacing:-.01em;}
 .rowtitle .ko{font-size:.82rem;color:var(--brand-ink);font-weight:700;}
 
-.g1{background:linear-gradient(135deg,#ffd6c9,#ffb199);} .g2{background:linear-gradient(135deg,#ffe0ea,#ffadc6);}
-.g3{background:linear-gradient(135deg,#d4f0e6,#a7dbc8);} .g4{background:linear-gradient(135deg,#ffe9c7,#ffd08a);}
-.g5{background:linear-gradient(135deg,#d9e4ff,#adc3f5);} .g6{background:linear-gradient(135deg,#e8ddff,#c6b3f0);}
+.g1{background:linear-gradient(160deg,#ffd9cb 8%,#ffa588 92%);} .g2{background:linear-gradient(160deg,#ffe2ec 8%,#ff9ebb 92%);}
+.g3{background:linear-gradient(160deg,#d6f2e8 8%,#94d3bd 92%);} .g4{background:linear-gradient(160deg,#ffecce 8%,#ffc571 92%);}
+.g5{background:linear-gradient(160deg,#dde7ff 8%,#9fb6ef 92%);} .g6{background:linear-gradient(160deg,#eae0ff 8%,#b9a4ec 92%);}
 
 .stack{padding:14px 20px 0;display:flex;flex-direction:column;gap:12px;}
 .chips{display:flex;gap:9px;overflow-x:auto;padding:14px 20px 4px;scrollbar-width:none;}
@@ -326,30 +349,42 @@ let lang="en", scale=1, contrast=false;
 const t = k => T[lang][k];
 
 /* ================= data (fictional demo) ================= */
+/* f:1 = shown in the swipeable Featured rail. sc = which illustration to draw. */
 const BIZ=[
- {id:"maple",n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",v:1,e:1,free:1,
+ {id:"maple",n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",sc:"home",v:1,e:1,free:1,f:1,
   d:"Furnished rooms and townhouses near downtown. Bilingual leasing agent.",dk:"다운타운 근처 가구 완비 방과 타운하우스. 한국어 상담 가능."},
- {id:"sparkle",n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",v:1,e:0,free:1,
+ {id:"sparkle",n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",sc:"clean",v:1,e:0,free:1,f:1,
   d:"Deep cleans and move-out cleans. Same-week booking most weeks.",dk:"딥 클리닝과 이사 청소. 대부분 당주 예약 가능."},
- {id:"bright",n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",v:1,e:1,free:0,
+ {id:"bright",n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",sc:"doc",v:1,e:1,free:0,f:1,
   d:"Licensed consultant. Work permits and permanent residence.",dk:"공인 컨설턴트. 취업 비자 및 영주권 상담."},
- {id:"haneul",n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",v:1,e:0,free:1,
+ {id:"haneul",n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",sc:"hair",v:1,e:0,free:1,f:1,
   d:"Cuts, perms and colour. Korean and English spoken.",dk:"커트, 펌, 염색. 한국어와 영어 가능."},
- {id:"north",n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",v:1,e:0,free:0,
+ {id:"north",n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",sc:"book",v:1,e:0,free:0,
   d:"Math and English tutoring, grades 4 to 12.",dk:"4학년부터 12학년까지 수학과 영어 과외."},
- {id:"truebuild",n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",v:1,e:1,free:1,
-  d:"Basement development and additions. Red Seal certified.",dk:"지하실 개발 및 증축. 레드씰 자격 보유."}
+ {id:"truebuild",n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",sc:"tools",v:1,e:1,free:1,f:1,
+  d:"Basement development and additions. Red Seal certified.",dk:"지하실 개발 및 증축. 레드씰 자격 보유."},
+ {id:"riverbend",n:"Riverbend Dental",nk:"리버벤드 치과",c:"Dental",ck:"치과",p:"$120-900",r:4.8,rv:47,a:"SW Calgary",g:"g5",sc:"tooth",v:1,e:1,free:1,f:1,
+  d:"Checkups, cleanings and emergency visits. Direct billing to most plans.",dk:"검진, 스케일링, 응급 진료. 대부분의 보험 직접 청구."},
+ {id:"hometable",n:"Home Table Catering",nk:"홈테이블 케이터링",c:"Catering",ck:"케이터링",p:"$14-28/person",r:4.9,rv:33,a:"City-wide",g:"g4",sc:"food",v:1,e:1,free:0,f:1,
+  d:"Korean and Filipino party trays. Two days notice for large orders.",dk:"한식과 필리핀식 파티 트레이. 대량 주문은 이틀 전 예약."},
+ {id:"aurora",n:"Aurora Auto Repair",nk:"오로라 자동차 정비",c:"Auto",ck:"정비",p:"$90-1,200",r:4.7,rv:58,a:"NE Calgary",g:"g6",sc:"car",v:1,e:0,free:1,
+  d:"Brakes, tires and out-of-province inspections. Free shuttle.",dk:"브레이크, 타이어, 타주 차량 검사. 무료 셔틀 운행."},
+ {id:"chinook",n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
+  d:"Personal and small business returns. First consultation is free.",dk:"개인 및 소상공인 세금 신고. 첫 상담 무료."}
 ];
-const CATS=[["Cleaning","청소","g3"],["Rentals","렌탈","g5"],["Tutoring","과외","g6"],["Hair","미용","g2"],
- ["Immigration","이민","g1"],["Renovation","리노베이션","g4"],["Dental","치과","g5"],["Catering","케이터링","g4"]];
-const JOBS=[{n:"Kitchen prep cook",nk:"주방 프렙 쿡",c:"Home Table Catering",ck:"홈테이블 케이터링",p:"$19/hr",a:"City-wide"},
- {n:"Front desk assistant",nk:"프론트 데스크 보조",c:"Riverbend Dental",ck:"리버벤드 치과",p:"$21/hr",a:"SW Calgary"},
- {n:"Junior carpenter",nk:"주니어 목수",c:"TrueBuild",ck:"트루빌드",p:"$28-34/hr",a:"City-wide"}];
-const MARKET=[{n:"IKEA dining table and 4 chairs",nk:"이케아 식탁과 의자 4개",p:"$120",a:"NW Calgary",cond:"Used",ck2:"중고"},
- {n:"32 inch monitor, barely used",nk:"32인치 모니터, 거의 새것",p:"$90",a:"SE Calgary",cond:"Like new",ck2:"거의 새것"},
- {n:"Rice cooker, still boxed",nk:"전기밥솥, 미개봉",p:"$65",a:"SW Calgary",cond:"New",ck2:"새 상품"}];
+const CATS=[["Cleaning","청소","g3","clean"],["Rentals","렌탈","g5","home"],["Tutoring","과외","g6","book"],["Hair","미용","g2","hair"],
+ ["Immigration","이민","g1","doc"],["Renovation","리노베이션","g4","tools"],["Dental","치과","g5","tooth"],["Catering","케이터링","g4","food"]];
+const JOBS=[{n:"Kitchen prep cook",nk:"주방 프렙 쿡",c:"Home Table Catering",ck:"홈테이블 케이터링",p:"$19/hr",a:"City-wide",g:"g4",sc:"food"},
+ {n:"Front desk assistant",nk:"프론트 데스크 보조",c:"Riverbend Dental",ck:"리버벤드 치과",p:"$21/hr",a:"SW Calgary",g:"g5",sc:"tooth"},
+ {n:"Junior carpenter",nk:"주니어 목수",c:"TrueBuild",ck:"트루빌드",p:"$28-34/hr",a:"City-wide",g:"g1",sc:"tools"},
+ {n:"Weekend cleaner",nk:"주말 청소 담당",c:"Sparkle Home Services",ck:"스파클 홈 서비스",p:"$22/hr",a:"SE Calgary",g:"g3",sc:"clean"}];
+const MARKET=[{n:"IKEA dining table and 4 chairs",nk:"이케아 식탁과 의자 4개",p:"$120",a:"NW Calgary",cond:"Used",ck2:"중고",g:"g3",sc:"goods"},
+ {n:"32 inch monitor, barely used",nk:"32인치 모니터, 거의 새것",p:"$90",a:"SE Calgary",cond:"Like new",ck2:"거의 새것",g:"g5",sc:"screen"},
+ {n:"Rice cooker, still boxed",nk:"전기밥솥, 미개봉",p:"$65",a:"SW Calgary",cond:"New",ck2:"새 상품",g:"g4",sc:"food"},
+ {n:"Toddler stroller, folds flat",nk:"유아 유모차, 접이식",p:"$75",a:"NE Calgary",cond:"Used",ck2:"중고",g:"g6",sc:"goods"}];
 const GROCERY=[{s:"Safeway",i:"Ground beef",ik:"다진 소고기",p:"$6.99/lb"},{s:"No Frills",i:"Roma tomatoes",ik:"로마 토마토",p:"$0.99/lb"},
- {s:"Walmart",i:"Seedless watermelon",ik:"씨 없는 수박",p:"$4.98"},{s:"Safeway",i:"Chicken breast",ik:"닭가슴살",p:"$6.88/lb"}];
+ {s:"Walmart",i:"Seedless watermelon",ik:"씨 없는 수박",p:"$4.98"},{s:"Safeway",i:"Chicken breast",ik:"닭가슴살",p:"$6.88/lb"},
+ {s:"No Frills",i:"Yellow onions, 3 lb bag",ik:"양파 3파운드",p:"$2.47"}];
 const COMMUNITY=[{q:"Where can I find a Korean-speaking dentist in NW?",qk:"NW에 한국어 되는 치과 있을까요?",r:6,tag:"Korean community",tk:"한인 커뮤니티"},
  {q:"Any Tagalog tutor for kids in SE Calgary?",qk:"SE 캘거리에 아이 타갈로그어 선생님 계신가요?",r:3,tag:"Filipino community",tk:"필리핀 커뮤니티"}];
 let INBOX=[{n:"Sparkle Home Services",nk:"스파클 홈 서비스",m:"Move-out clean, 2 bedroom, before Friday.",mk:"이사 청소, 침실 2개, 금요일 전에요.",st:"ok"},
@@ -390,6 +425,88 @@ const I={
 };
 const ic=(n,c)=>`<svg class="ic ${c||''}" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
 
+/* ================= illustration set =================
+   Flat vector scenes drawn inline. No network, no photo API, no CDN.
+   viewBox 200x300 with slice, so one drawing works at 2:3 (poster)
+   and at ~1:1 (hero). Subject lives in y 60-205 so neither crop
+   nor the scrim eats it. Ink tones sit on the .g1-.g6 gradient bed. */
+const SCENE={
+ home:`<circle cx="150" cy="58" r="30" fill="#fff" opacity=".5"/>
+  <g fill="#2b3654" opacity=".15"><rect x="2" y="118" width="26" height="90" rx="2"/><rect x="32" y="144" width="19" height="64" rx="2"/><rect x="152" y="130" width="22" height="78" rx="2"/><rect x="178" y="156" width="20" height="52" rx="2"/></g>
+  <path d="M56 208v-64l34-25 34 25v64z" fill="#2b3654"/>
+  <path d="M48 146 90 115l42 31z" fill="#41507a"/>
+  <g fill="#ffd9a0"><rect x="68" y="156" width="16" height="18" rx="2"/><rect x="96" y="156" width="16" height="18" rx="2"/></g>
+  <rect x="82" y="184" width="18" height="24" rx="2" fill="#ffd9a0" opacity=".8"/>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ clean:`<circle cx="148" cy="62" r="26" fill="#fff" opacity=".45"/>
+  <g fill="#2b3654"><rect x="72" y="122" width="48" height="86" rx="11"/><rect x="84" y="104" width="24" height="20" rx="3"/><path d="M108 98h26v13h-26z"/><path d="M134 92l16 12-16 12z"/></g>
+  <rect x="80" y="142" width="32" height="30" rx="4" fill="#fff" opacity=".7"/>
+  <g fill="#fff" opacity=".9"><circle cx="158" cy="88" r="5"/><circle cx="174" cy="76" r="3.4"/><circle cx="168" cy="106" r="2.8"/><circle cx="186" cy="96" r="2.2"/></g>
+  <g fill="#fff" opacity=".5"><circle cx="42" cy="122" r="10"/><circle cx="28" cy="150" r="6.5"/><circle cx="52" cy="156" r="4.5"/></g>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ doc:`<rect x="54" y="104" width="92" height="112" rx="8" fill="#2b3654"/>
+  <rect x="63" y="104" width="83" height="112" rx="7" fill="#41507a"/>
+  <path d="M104 118l5 13 11-5-3 12 12-1-8 11 13 5-13 6 8 9-13-2 3 13-11-7-2 18-4 0-2-18-11 7 3-13-13 2 8-9-13-6 13-5-8-11 12 1-3-12 11 5z" fill="#fff" opacity=".9"/>
+  <rect x="78" y="192" width="52" height="5" rx="2.5" fill="#fff" opacity=".5"/>
+  <rect x="88" y="202" width="32" height="5" rx="2.5" fill="#fff" opacity=".35"/>
+  <g transform="rotate(-14 156 176)"><circle cx="156" cy="176" r="19" fill="none" stroke="#e31c5f" stroke-width="4.5" opacity=".8"/><rect x="141" y="171" width="30" height="9" rx="2" fill="#e31c5f" opacity=".8"/></g>`,
+ hair:`<g stroke="#2b3654" stroke-width="9" stroke-linecap="round" fill="none"><path d="M84 106 134 176"/><path d="M134 106 84 176"/></g>
+  <g fill="none" stroke="#2b3654" stroke-width="8"><circle cx="80" cy="192" r="13"/><circle cx="138" cy="192" r="13"/></g>
+  <circle cx="109" cy="141" r="6" fill="#fff"/>
+  <g fill="#41507a"><rect x="28" y="118" width="15" height="72" rx="5"/><rect x="14" y="124" width="15" height="6" rx="3"/><rect x="14" y="138" width="15" height="6" rx="3"/><rect x="14" y="152" width="15" height="6" rx="3"/><rect x="14" y="166" width="15" height="6" rx="3"/><rect x="14" y="180" width="15" height="6" rx="3"/></g>
+  <path d="M166 96l4 11 11 4-11 4-4 11-4-11-11-4 11-4z" fill="#fff" opacity=".7"/>`,
+ book:`<circle cx="152" cy="122" r="27" fill="#ffd9a0" opacity=".55"/>
+  <g fill="#2b3654"><rect x="146" y="128" width="7" height="80" rx="3"/><path d="M128 128h44l-13-26h-18z"/></g>
+  <rect x="46" y="190" width="104" height="18" rx="5" fill="#2b3654"/>
+  <rect x="54" y="170" width="94" height="18" rx="5" fill="#41507a"/>
+  <rect x="50" y="150" width="86" height="18" rx="5" fill="#2b3654" opacity=".85"/>
+  <path d="M52 148q24-13 48 0 24-13 48 0v-9q-24-13-48 0-24-13-48 0z" fill="#fff" opacity=".9"/>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ tools:`<g stroke="#2b3654" stroke-width="6" opacity=".2" fill="none"><rect x="22" y="78" width="156" height="132"/><path d="M74 78v132M126 78v132M22 144h156"/></g>
+  <g transform="rotate(-26 100 152)"><rect x="94" y="128" width="13" height="78" rx="6" fill="#41507a"/><path d="M72 108h50a5 5 0 0 1 5 5v16a5 5 0 0 1-5 5H72q-14-13 0-26z" fill="#2b3654"/></g>
+  <g transform="rotate(34 100 152)"><rect x="96" y="124" width="12" height="82" rx="6" fill="#2b3654"/><circle cx="102" cy="118" r="17" fill="#2b3654"/><circle cx="102" cy="116" r="7.5" fill="#fff" opacity=".55"/></g>`,
+ tooth:`<path d="M58 108q42-24 84 0 12 30-6 62-7 24-18 24-11 0-13-24-2-17-9-17t-9 17q-2 24-13 24-11 0-18-24-18-32-6-62z" fill="#fff" opacity=".92"/>
+  <path d="M78 126q14-8 28-2" stroke="#c9134a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".3"/>
+  <path d="M156 100l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="#fff" opacity=".85"/>`,
+ food:`<path d="M42 152h116a58 58 0 0 1-116 0z" fill="#2b3654"/>
+  <rect x="34" y="145" width="132" height="11" rx="5.5" fill="#41507a"/>
+  <g stroke="#fff" stroke-width="6" stroke-linecap="round" fill="none" opacity=".7"><path d="M78 128q9-11 0-22t0-18"/><path d="M100 126q9-12 0-24t0-16"/><path d="M122 128q9-11 0-22t0-18"/></g>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ grocer:`<circle cx="80" cy="112" r="17" fill="#ff8fa6"/>
+  <circle cx="118" cy="108" r="15" fill="#8fd6b4"/>
+  <path d="M118 93q11-11 20-7-5 11-20 7z" fill="#5fbf95"/>
+  <path d="M58 130h84l7 82a9 9 0 0 1-9 10H60a9 9 0 0 1-9-10z" fill="#2b3654"/>
+  <rect x="50" y="122" width="100" height="15" rx="4" fill="#41507a"/>
+  <g fill="#fff" opacity=".3"><rect x="72" y="160" width="56" height="6" rx="3"/><rect x="72" y="176" width="40" height="6" rx="3"/></g>`,
+ work:`<g fill="#2b3654" opacity=".16"><rect x="10" y="86" width="46" height="122" rx="2"/><rect x="146" y="104" width="44" height="104" rx="2"/></g>
+  <path d="M82 136v-11a9 9 0 0 1 9-9h18a9 9 0 0 1 9 9v11" fill="none" stroke="#2b3654" stroke-width="8"/>
+  <rect x="52" y="136" width="96" height="70" rx="10" fill="#2b3654"/>
+  <rect x="52" y="162" width="96" height="10" fill="#fff" opacity=".5"/>
+  <rect x="90" y="157" width="20" height="20" rx="4" fill="#fff" opacity=".85"/>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ goods:`<g fill="#41507a"><rect x="70" y="112" width="10" height="50" rx="4"/><rect x="70" y="112" width="42" height="10" rx="5"/></g>
+  <rect x="108" y="118" width="46" height="36" rx="5" fill="#2b3654" opacity=".8"/>
+  <rect x="108" y="131" width="46" height="6" fill="#fff" opacity=".4"/>
+  <g fill="#2b3654"><rect x="40" y="152" width="120" height="12" rx="6"/><rect x="50" y="164" width="10" height="44" rx="4"/><rect x="140" y="164" width="10" height="44" rx="4"/></g>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ screen:`<rect x="38" y="106" width="124" height="80" rx="9" fill="#2b3654"/>
+  <rect x="47" y="115" width="106" height="62" rx="4" fill="#fff" opacity=".55"/>
+  <g fill="#2b3654" opacity=".35"><rect x="57" y="126" width="52" height="7" rx="3.5"/><rect x="57" y="141" width="76" height="7" rx="3.5"/><rect x="57" y="156" width="40" height="7" rx="3.5"/></g>
+  <rect x="90" y="186" width="20" height="16" fill="#41507a"/>
+  <rect x="66" y="200" width="68" height="10" rx="5" fill="#2b3654"/>`,
+ car:`<path d="M32 172l16-34a16 16 0 0 1 14-9h76a16 16 0 0 1 14 9l16 34v22a7 7 0 0 1-7 7h-12a7 7 0 0 1-7-7v-5H58v5a7 7 0 0 1-7 7H39a7 7 0 0 1-7-7z" fill="#2b3654"/>
+  <path d="M64 133h72l10 24H54z" fill="#fff" opacity=".55"/>
+  <circle cx="62" cy="186" r="12" fill="#1b2338"/><circle cx="138" cy="186" r="12" fill="#1b2338"/>
+  <g fill="#ffd9a0"><rect x="34" y="163" width="14" height="9" rx="4"/><rect x="152" y="163" width="14" height="9" rx="4"/></g>
+  <rect x="0" y="206" width="200" height="94" fill="#2b3654" opacity=".12"/>`,
+ chat:`<path d="M30 96h92a14 14 0 0 1 14 14v44a14 14 0 0 1-14 14H66l-24 20v-20H30a14 14 0 0 1-14-14v-44a14 14 0 0 1 14-14z" fill="#2b3654"/>
+  <g fill="#fff" opacity=".75"><circle cx="56" cy="132" r="7"/><circle cx="78" cy="132" r="7"/><circle cx="100" cy="132" r="7"/></g>
+  <path d="M104 148h62a14 14 0 0 1 14 14v40a14 14 0 0 1-14 14h-6v18l-20-18h-36a14 14 0 0 1-14-14v-40a14 14 0 0 1 14-14z" fill="#fff" opacity=".88"/>
+  <g fill="#2b3654" opacity=".45"><rect x="118" y="166" width="48" height="7" rx="3.5"/><rect x="118" y="182" width="34" height="7" rx="3.5"/></g>`
+};
+/* decorative: the name and price beside it carry the meaning */
+const art=(k,anchor)=>SCENE[k]?`<svg class="art" viewBox="0 0 200 300" preserveAspectRatio="${anchor||"xMidYMid"} slice" aria-hidden="true" focusable="false">${SCENE[k]}</svg>`:"";
+
 /* ================= toast ================= */
 let tid;
 function toast(msg){const el=$("toast");$("toastT").textContent=msg;el.classList.add("on");
@@ -405,19 +522,21 @@ function closeSheet(){$("sheet").classList.remove("on");$("scrim").classList.rem
 $("scrim").onclick=closeSheet;
 
 /* ================= renderers ================= */
-/* Netflix-style poster: image dominates, title over a scrim */
+/* Netflix-style poster: artwork dominates, title over a scrim */
 function bizCard(b){
   return `<button class="poster" data-biz="${b.id}">
     <div class="pw ${b.g}">
+      ${art(b.sc)}
       ${b.free?`<span class="flag">${t("openNow")}</span>`:""}
       <div class="pt"><p class="pp">${b.p}</p><p class="pn">${esc(bn(b))}</p></div>
     </div>
     <p class="pmeta">★ ${b.r} · ${bc(b)}</p></button>`;
 }
 /* generic poster for jobs / marketplace / grocery rails */
-function poster(title,price,meta,g,flag,act){
+function poster(title,price,meta,g,sc,flag,act){
   return `<button class="poster"${act||""}>
     <div class="pw ${g}">
+      ${art(sc)}
       ${flag?`<span class="flag">${esc(flag)}</span>`:""}
       <div class="pt"><p class="pp">${esc(price)}</p><p class="pn">${esc(title)}</p></div>
     </div>
@@ -426,6 +545,7 @@ function poster(title,price,meta,g,flag,act){
 function heroCard(b){
   return `<button class="hero" data-biz="${b.id}">
     <div class="hw ${b.g}">
+      ${art(b.sc)}
       <div class="hb">
         <span class="hflag">${t("featuredNow")}</span>
         <h2>${esc(bn(b))}</h2>
@@ -434,6 +554,38 @@ function heroCard(b){
         <span class="hcue">${ic("chat","ic-s")}${t("details")}</span>
       </div>
     </div></button>`;
+}
+/* swipeable Featured rail. Manual only: no auto-advance, so nothing
+   moves under a slow reader and there is no pause control to hunt for. */
+const FEAT=BIZ.filter(b=>b.f);
+function heroRail(){
+  return `<div class="herorail" id="herorail" tabindex="0" role="group"
+      aria-roledescription="carousel" aria-label="${t("featuredNow")}">
+      ${FEAT.map(heroCard).join("")}
+    </div>
+    <div class="herodots" id="herodots" role="tablist" aria-label="${t("featuredNow")}">
+      ${FEAT.map((b,i)=>`<button class="hdot" role="tab" data-dot="${i}"
+        aria-current="${i===0}" aria-label="${esc(bn(b))}"><i></i></button>`).join("")}
+    </div>`;
+}
+function wireHeroRail(){
+  const r=$("herorail"); if(!r) return;
+  const dots=[...document.querySelectorAll("#herodots .hdot")];
+  let last=-1;
+  const sync=()=>{
+    const i=Math.round(r.scrollLeft/Math.max(1,r.clientWidth));
+    if(i===last) return; last=i;
+    dots.forEach((d,n)=>d.setAttribute("aria-current",String(n===i)));
+  };
+  /* sync straight from the scroll event: rAF is throttled in a background
+     tab, and the dots would then lie about which slide is showing. */
+  r.addEventListener("scroll",sync,{passive:true});
+  sync();
+}
+function goSlide(i){
+  const r=$("herorail"); if(!r) return;
+  r.scrollTo({left:i*r.clientWidth,
+    behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
 }
 function rowItem(title,sub,tag,cls,g){
   return `<div class="row"><div class="av ${g}">${esc(title[0])}</div>
@@ -445,24 +597,26 @@ function viewHome(){
   const free=BIZ.filter(b=>b.free);
   const gd = lang==="ko" ? "9월 2일까지" : "to Sep 2";
   $("v-home").innerHTML=`
-    ${heroCard(BIZ[0])}
+    ${heroRail()}
     <div class="rowtitle"><h3>${t("rowTrusted")}</h3><span class="ko">믿을 수 있는 업체</span></div>
-    <div class="rail">${BIZ.slice(1,5).map(bizCard).join("")}</div>
+    <div class="rail">${BIZ.map(bizCard).join("")}</div>
     <div class="rowtitle"><h3>${t("rowToday")}</h3><span class="ko">오늘 가능</span></div>
     <div class="rail">${free.map(bizCard).join("")}</div>
     <div class="rowtitle"><h3>${t("rowGrocery")}</h3><span class="ko">장보기 할인</span></div>
-    <div class="rail">${GROCERY.map(x=>poster(lang==="ko"?x.ik:x.i,x.p,`${x.s} · ${gd}`,"g4",x.s)).join("")}</div>
+    <div class="rail">${GROCERY.map(x=>poster(lang==="ko"?x.ik:x.i,x.p,`${x.s} · ${gd}`,"g4","grocer",x.s)).join("")}</div>
     <div class="rowtitle"><h3>${t("rowJobs")}</h3><span class="ko">지금 채용 중</span></div>
-    <div class="rail">${JOBS.map(j=>poster(lang==="ko"?j.nk:j.n,j.p,`${lang==="ko"?j.ck:j.c} · ${j.a}`,"g1")).join("")}</div>
+    <div class="rail">${JOBS.map(j=>poster(lang==="ko"?j.nk:j.n,j.p,`${lang==="ko"?j.ck:j.c} · ${j.a}`,j.g,j.sc)).join("")}</div>
     <div class="rowtitle"><h3>${t("rowMarket")}</h3><span class="ko">사고 팔기</span></div>
-    <div class="rail">${MARKET.map(m=>poster(lang==="ko"?m.nk:m.n,m.p,m.a,"g3",lang==="ko"?m.ck2:m.cond)).join("")}</div>
+    <div class="rail">${MARKET.map(m=>poster(lang==="ko"?m.nk:m.n,m.p,m.a,m.g,m.sc,lang==="ko"?m.ck2:m.cond)).join("")}</div>
     <div class="rowtitle"><h3>${t("rowCommunity")}</h3><span class="ko">커뮤니티</span></div>
     <div class="stack">${COMMUNITY.map(c=>rowItem(lang==="ko"?c.qk:c.q,lang==="ko"?c.tk:c.tag,`${c.r}`,"n","g6")).join("")}</div>`;
+  wireHeroRail();
 }
 function viewBrowse(){
   $("v-browse").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("browseTitle")}</h2><p>${t("browseSub")}</p></div>
     <div class="stack" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      ${CATS.map(c=>`<button class="card" data-cat="${c[0]}"><div class="pic ${c[2]}" style="height:78px"></div>
+      ${CATS.map(c=>`<button class="card" data-cat="${c[0]}">
+        <div class="pic ${c[2]}" style="height:96px;overflow:hidden">${art(c[3])}</div>
         <div class="b" style="padding:11px 12px 13px"><p class="t" style="font-size:.92rem">${lang==="ko"?c[1]:c[0]}</p></div></button>`).join("")}
     </div>
     <div class="rowtitle"><h3>${t("compare")}</h3></div>
@@ -639,6 +793,7 @@ document.addEventListener("click",e=>{
   const biz=e.target.closest("[data-biz]"); if(biz){openBiz(biz.dataset.biz);return;}
   const cat=e.target.closest("[data-cat]"); if(cat){const b=BIZ.find(x=>x.c===cat.dataset.cat);
     b?openBiz(b.id):toast(cat.dataset.cat);return;}
+  const dot=e.target.closest("[data-dot]"); if(dot){goSlide(+dot.dataset.dot);return;}
   const day=e.target.closest("[data-day]"); if(day){day.parentNode.querySelectorAll(".slot").forEach(x=>x.classList.remove("on"));day.classList.add("on");return;}
   const slot=e.target.closest("[data-slot]"); if(slot){slot.parentNode.querySelectorAll(".slot").forEach(x=>x.classList.remove("on"));slot.classList.add("on");return;}
   const sz=e.target.closest("[data-size]"); if(sz){scale=parseFloat(sz.dataset.size);
