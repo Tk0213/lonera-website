@@ -1,415 +1,631 @@
 <title>Lonera App Prototype</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap');
 
 :root{
-  --bg:#121212; --bg-deep:#0a0a0a; --surface:#1c1c1e; --surface-2:#2c2c2e;
-  --text:#ffffff; --text-2:#e0e0e0; --text-muted:#a1a1aa;
-  --accent:#e11d48; --accent-press:#be123c;
-  --border:rgba(255,255,255,0.12);
-  --r-sm:10px; --r:14px; --r-lg:20px;
-  --safe-top:44px; --safe-bottom:34px;
+  --bg:#ffffff; --surface:#f7f7f7; --surface-2:#efefef;
+  --text:#222222;            /* 15.9:1 on white */
+  --text-2:#5a5a5a;          /* 7.0:1 on white  */
+  --line:#dddddd;
+  --brand:#ff385c;           /* Rausch, fills + large glyphs only */
+  --brand-ink:#c9134a;       /* 5.4:1 on white, safe for small text */
+  --brand-btn:#e31c5f;       /* white on this = 4.6:1 */
+  --brand-tint:#fff1f4;
+  --ok:#0b7a5a; --ok-tint:#e6f5f0;
+  --warn:#8a5a00; --warn-tint:#fdf3e2;
+  --r:14px; --r-lg:22px; --r-sheet:26px;
+  --tap:52px;                /* generous: this audience skews older */
+  --safe-b:26px;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-body{margin:0;background:#0b0b0d;font-family:Inter,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
-  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px 16px;color:var(--text);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{margin:0;background:#e9eaec;font-family:Manrope,"Noto Sans KR",-apple-system,sans-serif;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;padding:22px 14px;color:var(--text);}
+button{font-family:inherit;cursor:pointer;}
 
-/* ---------- shell ---------- */
-.stage{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;}
-.stage-head{text-align:center;max-width:420px;}
-.stage-head h1{margin:0 0 4px;font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:-0.01em;}
-.stage-head p{margin:0;font-size:0.82rem;color:#71717a;line-height:1.5;}
-.phone{width:390px;max-width:100%;height:844px;max-height:82vh;background:var(--bg);border-radius:44px;
-  border:1px solid #26262b;box-shadow:0 40px 90px rgba(0,0,0,.7);overflow:hidden;position:relative;display:flex;flex-direction:column;}
-.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:118px;height:32px;background:#000;border-radius:20px;z-index:60;}
+.stage{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.stage h1{margin:0;font-size:.95rem;font-weight:800;color:#222;}
+.stage p{margin:0;font-size:.8rem;color:#6a6a6a;text-align:center;max-width:390px;line-height:1.5;}
 
-.statusbar{height:var(--safe-top);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
-  padding:0 26px 6px;font-size:0.78rem;font-weight:600;color:#fff;position:relative;z-index:55;}
-.statusbar .icons{display:flex;gap:5px;align-items:center;}
+.phone{width:390px;max-width:100%;height:844px;max-height:84vh;background:var(--bg);border-radius:42px;
+  border:1px solid #d3d5d8;box-shadow:0 30px 70px rgba(0,0,0,.22);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:112px;height:28px;background:#111;border-radius:18px;z-index:80;}
+.statusbar{height:42px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 24px 5px;font-size:.76rem;font-weight:700;position:relative;z-index:70;}
 
-.screen{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+/* ---------- scroll area ---------- */
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;}
 .screen::-webkit-scrollbar{display:none;}
-.view{display:none;padding-bottom:24px;}
+.view{display:none;padding-bottom:20px;}
 .view.on{display:block;}
 
-/* ---------- hero ---------- */
-.hero{position:relative;height:460px;display:flex;align-items:flex-end;padding:0 20px 18px;}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(150deg,#7f1d33,#e11d48 55%,#f43f5e);}
-.hero-bg::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to top,var(--bg) 2%,rgba(18,18,18,.55) 32%,rgba(18,18,18,0) 62%);}
-.hero-in{position:relative;z-index:2;width:100%;}
-.hero-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.2);color:#fff;font-size:0.66rem;font-weight:700;letter-spacing:.09em;
-  text-transform:uppercase;padding:5px 10px;border-radius:999px;margin-bottom:12px;}
-.hero h2{margin:0 0 6px;font-size:2rem;line-height:1.08;font-weight:800;letter-spacing:-0.03em;}
-.hero .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:0.78rem;color:var(--text-2);margin-bottom:6px;}
-.dot{width:3px;height:3px;border-radius:50%;background:var(--text-muted);}
-.hero p{margin:0 0 16px;font-size:0.85rem;line-height:1.5;color:var(--text-2);}
-.hero-actions{display:flex;gap:10px;}
-.btn{border:none;font-family:inherit;font-weight:700;border-radius:var(--r-sm);display:inline-flex;
-  align-items:center;justify-content:center;gap:7px;min-height:46px;font-size:0.9rem;
-  transition:transform .12s ease,background .15s ease,opacity .15s ease;cursor:pointer;}
-.btn:active{transform:scale(.96);}
-.btn-primary{background:#fff;color:#000;flex:1;}
-.btn-primary:active{background:#d4d4d8;}
-.btn-ghost{background:rgba(255,255,255,.16);color:#fff;flex:1;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);}
-.btn-ghost:active{background:rgba(255,255,255,.26);}
+.head{padding:6px 20px 2px;}
+.head h2{margin:0;font-size:1.62rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;}
+.head p{margin:6px 0 0;font-size:.9rem;color:var(--text-2);line-height:1.5;}
 
-/* ---------- rows ---------- */
-.row{margin-top:26px;}
-.row-head{display:flex;align-items:baseline;justify-content:space-between;padding:0 20px;margin-bottom:11px;gap:10px;}
-.row-head h3{margin:0;font-size:1.02rem;font-weight:700;letter-spacing:-0.01em;}
-.row-head .ko{font-size:.78rem;color:var(--accent);font-weight:600;}
-.row-head button{background:none;border:none;color:var(--text-muted);font-family:inherit;font-size:.78rem;
-  font-weight:600;padding:8px 0 8px 12px;min-height:44px;cursor:pointer;}
-.row-head button:active{color:#fff;}
-.rail{display:flex;gap:11px;overflow-x:auto;padding:2px 20px 4px;scroll-snap-type:x proximity;scrollbar-width:none;}
+/* ---------- interactive card: outline + grow ---------- */
+.card{display:block;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);
+  border-radius:var(--r-lg);padding:0;overflow:hidden;
+  transition:transform .16s cubic-bezier(.2,.8,.3,1), border-color .16s, box-shadow .16s;}
+.card:hover,.card:focus-visible{transform:scale(1.022);border-color:var(--brand);
+  box-shadow:0 10px 26px rgba(255,56,92,.14);outline:none;}
+.card:active{transform:scale(.985);}
+.card .pic{height:120px;position:relative;display:flex;align-items:flex-end;padding:10px;}
+.card .pic span.badge{background:rgba(255,255,255,.95);color:var(--text);font-size:.68rem;font-weight:800;
+  padding:5px 9px;border-radius:8px;}
+.card .b{padding:12px 14px 14px;}
+.card .t{font-size:.98rem;font-weight:800;margin:0 0 3px;line-height:1.3;}
+.card .s{font-size:.84rem;color:var(--text-2);margin:0;line-height:1.45;}
+.card .p{font-size:.94rem;font-weight:800;margin:8px 0 0;color:var(--text);}
+
+.rail{display:flex;gap:12px;overflow-x:auto;padding:12px 20px 6px;scroll-snap-type:x proximity;scrollbar-width:none;}
 .rail::-webkit-scrollbar{display:none;}
-.poster{flex:0 0 128px;scroll-snap-align:start;background:none;border:none;padding:0;font-family:inherit;
-  text-align:left;cursor:pointer;transition:transform .16s ease;}
-.poster:active{transform:scale(.95);}
-.poster-img{position:relative;width:100%;aspect-ratio:2/3;border-radius:var(--r);overflow:hidden;
-  display:flex;align-items:flex-end;padding:10px;}
-.poster-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.05) 58%);}
-.poster-txt{position:relative;z-index:2;width:100%;}
-.poster .price{font-size:.7rem;font-weight:700;color:#fda4af;margin:0 0 2px;}
-.poster .name{font-size:.8rem;font-weight:700;line-height:1.25;margin:0;color:#fff;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.poster .sub{font-size:.72rem;color:var(--text-muted);margin:7px 0 0;display:flex;align-items:center;gap:4px;}
-.tag{position:absolute;top:8px;left:8px;z-index:3;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);
-  color:#fff;font-size:.6rem;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.03em;}
-.g1{background:linear-gradient(150deg,#334155,#0f172a);} .g2{background:linear-gradient(150deg,#7c2d4a,#450a1e);}
-.g3{background:linear-gradient(150deg,#155e63,#042f2e);} .g4{background:linear-gradient(150deg,#78350f,#431407);}
-.g5{background:linear-gradient(150deg,#3730a3,#1e1b4b);} .g6{background:linear-gradient(150deg,#4c1d95,#2e1065);}
+.rail .card{flex:0 0 216px;scroll-snap-align:start;}
+.rowtitle{display:flex;align-items:baseline;gap:8px;padding:20px 20px 0;}
+.rowtitle h3{margin:0;font-size:1.12rem;font-weight:800;letter-spacing:-.01em;}
+.rowtitle .ko{font-size:.82rem;color:var(--brand-ink);font-weight:700;}
 
-/* ---------- generic screens ---------- */
-.page-head{padding:12px 20px 4px;}
-.page-head h2{margin:0;font-size:1.85rem;font-weight:800;letter-spacing:-0.03em;}
-.page-head p{margin:5px 0 0;font-size:.85rem;color:var(--text-muted);line-height:1.5;}
-.searchbar{margin:16px 20px 0;display:flex;align-items:center;gap:9px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r);padding:0 14px;min-height:48px;}
-.searchbar input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:inherit;font-size:.92rem;min-width:0;}
-.searchbar input::placeholder{color:#71717a;}
-.mic{width:36px;height:36px;border-radius:50%;background:var(--accent);border:none;display:flex;
-  align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .12s ease;}
-.mic:active{transform:scale(.9);background:var(--accent-press);}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 20px 2px;scrollbar-width:none;}
+.g1{background:linear-gradient(135deg,#ffd6c9,#ffb199);} .g2{background:linear-gradient(135deg,#ffe0ea,#ffadc6);}
+.g3{background:linear-gradient(135deg,#d4f0e6,#a7dbc8);} .g4{background:linear-gradient(135deg,#ffe9c7,#ffd08a);}
+.g5{background:linear-gradient(135deg,#d9e4ff,#adc3f5);} .g6{background:linear-gradient(135deg,#e8ddff,#c6b3f0);}
+
+.stack{padding:14px 20px 0;display:flex;flex-direction:column;gap:12px;}
+.chips{display:flex;gap:9px;overflow-x:auto;padding:14px 20px 4px;scrollbar-width:none;}
 .chips::-webkit-scrollbar{display:none;}
-.chip{flex-shrink:0;background:var(--surface);border:1px solid var(--border);color:var(--text-2);
-  font-family:inherit;font-size:.8rem;font-weight:600;padding:9px 15px;border-radius:999px;min-height:40px;cursor:pointer;transition:.15s;}
-.chip.on{background:#fff;color:#000;border-color:#fff;}
-.chip:active{transform:scale(.95);}
+.chip{flex-shrink:0;background:var(--bg);border:1.5px solid var(--line);color:var(--text);font-size:.88rem;
+  font-weight:700;padding:0 17px;height:46px;border-radius:999px;transition:transform .14s,border-color .14s,background .14s;}
+.chip:hover{transform:scale(1.04);border-color:var(--brand);}
+.chip:active{transform:scale(.96);}
+.chip.on{background:var(--text);color:#fff;border-color:var(--text);}
 
-.list{padding:8px 20px 0;display:flex;flex-direction:column;gap:9px;}
-.item{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);padding:12px;text-align:left;font-family:inherit;cursor:pointer;transition:transform .12s ease,background .15s;}
-.item:active{transform:scale(.985);background:var(--surface-2);}
-.thumb{width:52px;height:52px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;
-  justify-content:center;font-weight:800;font-size:1.05rem;color:#fff;}
-.item .body{flex:1;min-width:0;}
-.item .t{font-size:.9rem;font-weight:700;color:#fff;margin:0 0 3px;}
-.item .s{font-size:.76rem;color:var(--text-muted);margin:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-.pill{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:999px;}
-.pill.ok{background:rgba(16,185,129,.16);color:#6ee7b7;}
-.pill.wait{background:rgba(245,158,11,.16);color:#fcd34d;}
-.pill.new{background:rgba(225,29,72,.18);color:#fda4af;}
+.row{display:flex;gap:13px;align-items:center;width:100%;background:var(--bg);border:1.5px solid var(--line);
+  border-radius:var(--r);padding:13px;text-align:left;transition:transform .16s,border-color .16s,box-shadow .16s;}
+.row:hover,.row:focus-visible{transform:scale(1.02);border-color:var(--brand);box-shadow:0 8px 20px rgba(255,56,92,.12);outline:none;}
+.row:active{transform:scale(.985);}
+.av{width:50px;height:50px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:1.05rem;color:#7a3b2e;}
+.row .bd{flex:1;min-width:0;}
+.row .t{font-size:.94rem;font-weight:800;margin:0 0 3px;}
+.row .s{font-size:.82rem;color:var(--text-2);margin:0;}
+.tagp{font-size:.72rem;font-weight:800;padding:5px 10px;border-radius:999px;white-space:nowrap;}
+.tagp.ok{background:var(--ok-tint);color:var(--ok);} .tagp.w{background:var(--warn-tint);color:var(--warn);}
+.tagp.n{background:var(--brand-tint);color:var(--brand-ink);}
 
-.empty{padding:64px 34px;text-align:center;}
-.empty svg{color:#3f3f46;margin-bottom:14px;}
-.empty p{margin:0 0 6px;font-size:.92rem;font-weight:700;color:var(--text-2);}
-.empty span{font-size:.82rem;color:var(--text-muted);line-height:1.5;display:block;}
+.empty{padding:56px 34px;text-align:center;}
+.empty p{margin:14px 0 6px;font-size:1rem;font-weight:800;}
+.empty span{font-size:.88rem;color:var(--text-2);line-height:1.55;}
 
-.prof-top{display:flex;align-items:center;gap:14px;padding:16px 20px 20px;}
-.avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(140deg,#e11d48,#7f1d33);
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;}
-.prof-top .t{font-size:1.15rem;font-weight:700;margin:0;}
-.prof-top .s{font-size:.8rem;color:var(--text-muted);margin:3px 0 0;}
-.settings{padding:0 20px;display:flex;flex-direction:column;gap:1px;background:var(--border);
-  border-radius:var(--r);overflow:hidden;margin:0 20px;}
-.srow{display:flex;align-items:center;gap:12px;background:var(--surface);border:none;width:100%;
-  padding:15px 14px;font-family:inherit;font-size:.9rem;color:#fff;text-align:left;min-height:52px;cursor:pointer;transition:background .15s;}
-.srow:active{background:var(--surface-2);}
-.srow .lbl{flex:1;font-weight:500;}
-.srow .val{font-size:.82rem;color:var(--text-muted);font-weight:600;}
-.switch{width:48px;height:29px;border-radius:999px;background:#3f3f46;position:relative;transition:background .2s;flex-shrink:0;}
-.switch.on{background:var(--accent);}
-.switch i{position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;transition:transform .2s;}
-.switch.on i{transform:translateX(19px);}
+/* ---------- BOTTOM CONTROL DECK (everything tappable lives here) ---------- */
+.deck{flex-shrink:0;background:var(--bg);border-top:1.5px solid var(--line);
+  padding:10px 14px calc(var(--safe-b) + 4px);position:relative;z-index:40;}
+.searchdock{display:flex;align-items:center;gap:9px;background:var(--surface);border:1.5px solid var(--line);
+  border-radius:999px;padding:5px 6px 5px 16px;margin-bottom:9px;transition:border-color .16s,transform .16s;}
+.searchdock:focus-within{border-color:var(--brand);transform:scale(1.012);}
+.searchdock input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:1rem;
+  font-weight:600;color:var(--text);min-width:0;height:46px;}
+.searchdock input::placeholder{color:#767676;font-weight:500;}
+.voicebtn{width:52px;height:52px;border-radius:50%;background:var(--brand-btn);border:none;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .16s,box-shadow .16s;
+  box-shadow:0 4px 14px rgba(227,28,95,.36);}
+.voicebtn:hover{transform:scale(1.07);}
+.voicebtn:active{transform:scale(.93);}
+.voicebtn.live{animation:pulse 1.3s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(227,28,95,.5);}70%{box-shadow:0 0 0 16px rgba(227,28,95,0);}100%{box-shadow:0 0 0 0 rgba(227,28,95,0);}}
 
-/* ---------- tab bar ---------- */
-.tabbar{flex-shrink:0;display:flex;background:rgba(18,18,18,.92);backdrop-filter:blur(22px);
-  border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);}
-.tab{flex:1;background:none;border:none;font-family:inherit;padding:9px 2px 5px;display:flex;
-  flex-direction:column;align-items:center;gap:3px;color:#71717a;font-size:.62rem;font-weight:600;
-  min-height:52px;cursor:pointer;transition:color .15s;}
-.tab.on{color:var(--accent);}
-.tab:active{opacity:.6;}
-.tab .badge{position:absolute;transform:translate(11px,-4px);background:var(--accent);color:#fff;
-  font-size:.55rem;font-weight:700;min-width:15px;height:15px;border-radius:999px;display:flex;
-  align-items:center;justify-content:center;padding:0 3px;}
+.tabs{display:flex;gap:2px;}
+.tab{flex:1;background:none;border:none;padding:7px 2px 3px;display:flex;flex-direction:column;
+  align-items:center;gap:3px;color:#6a6a6a;font-size:.66rem;font-weight:700;min-height:var(--tap);
+  border-radius:12px;transition:transform .14s,color .14s,background .14s;position:relative;}
+.tab:hover{transform:scale(1.06);background:var(--surface);}
+.tab:active{transform:scale(.94);}
+.tab.on{color:var(--brand-ink);}
+.tab .dot{position:absolute;top:5px;right:22%;background:var(--brand-btn);color:#fff;font-size:.58rem;
+  font-weight:800;min-width:17px;height:17px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
 
-.toast{position:absolute;left:16px;right:16px;bottom:calc(var(--safe-bottom) + 68px);background:var(--surface-2);
-  border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;font-size:.85rem;font-weight:600;
-  display:flex;align-items:center;gap:9px;opacity:0;transform:translateY(10px);pointer-events:none;
-  transition:opacity .22s ease,transform .22s ease;z-index:50;box-shadow:0 12px 30px rgba(0,0,0,.5);}
-.toast.show{opacity:1;transform:translateY(0);}
+/* ---------- bottom sheet: every action opens here, in reach ---------- */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.42);opacity:0;pointer-events:none;
+  transition:opacity .24s;z-index:50;}
+.scrim.on{opacity:1;pointer-events:auto;}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:var(--r-sheet) var(--r-sheet) 0 0;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1);z-index:60;max-height:82%;
+  display:flex;flex-direction:column;box-shadow:0 -8px 34px rgba(0,0,0,.18);}
+.sheet.on{transform:translateY(0);}
+.grip{width:42px;height:5px;border-radius:99px;background:var(--line);margin:11px auto 4px;flex-shrink:0;}
+.sheet-body{overflow-y:auto;padding:8px 20px 4px;scrollbar-width:none;}
+.sheet-body::-webkit-scrollbar{display:none;}
+.sheet h3{margin:6px 0 4px;font-size:1.3rem;font-weight:800;letter-spacing:-.02em;}
+.sheet .sub{margin:0 0 14px;font-size:.9rem;color:var(--text-2);line-height:1.5;}
+.sheet-foot{padding:12px 20px calc(var(--safe-b) + 10px);border-top:1.5px solid var(--line);
+  display:flex;flex-direction:column;gap:9px;flex-shrink:0;background:var(--bg);}
 
-.icon{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
-.icon-sm{width:14px;height:14px;stroke-width:2.1;}
+.btn{border:none;border-radius:var(--r);min-height:var(--tap);font-size:1rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .14s,background .14s;width:100%;}
+.btn:hover{transform:scale(1.02);} .btn:active{transform:scale(.97);}
+.btn.pri{background:var(--brand-btn);color:#fff;}
+.btn.pri:hover{background:#c9134a;}
+.btn.sec{background:var(--bg);color:var(--text);border:1.5px solid var(--text);}
+.btn.sec:hover{background:var(--surface);}
 
-@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;}}
-@media (max-width:430px){ body{padding:0;} .phone{width:100%;height:100vh;max-height:none;border-radius:0;border:none;} .stage-head{display:none;} }
+.field{width:100%;border:1.5px solid var(--line);border-radius:var(--r);padding:13px 14px;font-family:inherit;
+  font-size:1rem;font-weight:500;color:var(--text);background:var(--bg);min-height:var(--tap);transition:border-color .16s;}
+.field:focus{outline:none;border-color:var(--brand);}
+label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
+.note{background:var(--surface);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;
+  padding:12px 14px;font-size:.92rem;line-height:1.5;margin:4px 0 0;}
+.aiflag{display:inline-flex;align-items:center;gap:5px;background:var(--brand-tint);color:var(--brand-ink);
+  font-size:.74rem;font-weight:800;padding:5px 10px;border-radius:999px;margin-bottom:8px;}
+.slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.slot{border:1.5px solid var(--line);background:var(--bg);border-radius:11px;padding:0 15px;height:46px;
+  font-size:.9rem;font-weight:700;transition:transform .14s,border-color .14s,background .14s;}
+.slot:hover{transform:scale(1.05);border-color:var(--brand);}
+.slot.on{background:var(--text);color:#fff;border-color:var(--text);}
+.opt{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;border-bottom:1.5px solid var(--line);
+  padding:15px 2px;text-align:left;font-size:1rem;font-weight:700;min-height:var(--tap);transition:background .14s,transform .14s;}
+.opt:hover{background:var(--surface);transform:scale(1.01);}
+.opt:last-child{border-bottom:none;}
+.opt .rt{margin-left:auto;font-size:.88rem;color:var(--text-2);font-weight:700;}
+.sw{width:50px;height:30px;border-radius:99px;background:#c9c9c9;position:relative;flex-shrink:0;transition:background .2s;margin-left:auto;}
+.sw.on{background:var(--brand-btn);}
+.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;
+  box-shadow:0 1px 3px rgba(0,0,0,.28);}
+.sw.on i{transform:translateX(20px);}
+
+.toast{position:absolute;left:14px;right:14px;bottom:calc(var(--safe-b) + 128px);background:var(--text);color:#fff;
+  border-radius:var(--r);padding:14px 16px;font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:9px;
+  opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .22s,transform .22s;z-index:70;}
+.toast.on{opacity:1;transform:translateY(0);}
+
+.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.ic-s{width:16px;height:16px;}
+.trust{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
+.tb{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;font-weight:800;padding:5px 9px;border-radius:999px;
+  background:var(--ok-tint);color:var(--ok);}
+.tb.b{background:#eaf1fb;color:#1a4d8f;}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+@media (max-width:430px){body{padding:0;} .phone{width:100%;height:100vh;max-height:none;border-radius:0;border:none;} .stage h1,.stage p{display:none;}}
 </style>
 
 <div class="stage">
-  <div class="stage-head">
-    <h1>Lonera — app prototype</h1>
-    <p>Tap the tabs. Prototype only — not published to any store.</p>
-  </div>
+  <h1>Lonera - app prototype</h1>
+  <p>Every control sits in the bottom third, reachable with one thumb. Tap anything.</p>
 
   <div class="phone">
     <div class="notch"></div>
-    <div class="statusbar">
-      <span id="clock">9:41</span>
-      <span class="icons">
-        <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM4.2 6.6a5.6 5.6 0 017.6 0l-1.2 1.2a3.9 3.9 0 00-5.2 0zM1.4 3.7a9.6 9.6 0 0113.2 0l-1.2 1.2a7.9 7.9 0 00-10.8 0z"/></svg>
-        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" opacity=".4"/><rect x="2.2" y="2.2" width="15" height="7.6" rx="1.6" fill="currentColor"/><path d="M22.4 4.2v3.6a2 2 0 000-3.6z" fill="currentColor" opacity=".5"/></svg>
+    <div class="statusbar"><span id="clk">9:41</span>
+      <span style="display:flex;gap:5px;align-items:center">
+        <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" width="3" height="11" rx="1"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" opacity=".4"/><rect x="2.2" y="2.2" width="15.5" height="7.6" rx="1.6" fill="currentColor"/></svg>
       </span>
     </div>
 
     <div class="screen" id="screen">
-
-      <!-- HOME -->
-      <section class="view on" id="v-home">
-        <div class="hero">
-          <div class="hero-bg"></div>
-          <div class="hero-in">
-            <span class="hero-badge" data-t="featured">Featured today</span>
-            <h2 data-t="heroName">Maple Grove Property Group</h2>
-            <div class="meta">
-              <span>★ 4.9</span><span class="dot"></span><span data-t="heroCat">Rentals &amp; Housing</span>
-              <span class="dot"></span><span data-t="heroArea">NW Calgary</span>
-            </div>
-            <p data-t="heroDesc">Furnished rooms &amp; townhouses near downtown. Bilingual leasing agent.</p>
-            <div class="hero-actions">
-              <button class="btn btn-primary" data-toast="saved">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg>
-                <span data-t="save">Save</span>
-              </button>
-              <button class="btn btn-ghost" data-toast="requested">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
-                <span data-t="choose">Choose</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="row-head"><h3><span data-t="rowNear">Trusted near you</span> <span class="ko">믿을 수 있는 업체</span></h3><button data-t="seeAll">See all</button></div>
-          <div class="rail" id="railNear"></div>
-        </div>
-        <div class="row">
-          <div class="row-head"><h3><span data-t="rowToday">Available today</span> <span class="ko">오늘 가능</span></h3><button data-t="seeAll">See all</button></div>
-          <div class="rail" id="railToday"></div>
-        </div>
-        <div class="row">
-          <div class="row-head"><h3><span data-t="rowJobs">Jobs hiring now</span> <span class="ko">지금 채용 중</span></h3><button data-t="seeAll">See all</button></div>
-          <div class="rail" id="railJobs"></div>
-        </div>
-        <div class="row">
-          <div class="row-head"><h3><span data-t="rowGrocery">Grocery deals</span> <span class="ko">장보기 할인</span></h3><button data-t="seeAll">See all</button></div>
-          <div class="rail" id="railGrocery"></div>
-        </div>
-      </section>
-
-      <!-- SEARCH -->
-      <section class="view" id="v-search">
-        <div class="page-head"><h2 data-t="navSearch">Search</h2><p data-t="searchHint">Say what you need, in your language.</p></div>
-        <div class="searchbar">
-          <svg class="icon" viewBox="0 0 24 24" style="color:#71717a"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
-          <input type="text" data-ph="searchPh" placeholder="Cleaning, tutor, dentist…" aria-label="Search">
-          <button class="mic" aria-label="Voice search" data-toast="listening">
-            <svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#fff"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
-          </button>
-        </div>
-        <div class="chips" id="chips"></div>
-        <div class="list" id="searchList"></div>
-      </section>
-
-      <!-- SAVED -->
-      <section class="view" id="v-saved">
-        <div class="page-head"><h2 data-t="navSaved">Saved</h2></div>
-        <div class="empty">
-          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg>
-          <p data-t="emptySaved">Nothing saved yet</p>
-          <span data-t="emptySavedSub">Tap Save on any business and it will show up here.</span>
-        </div>
-      </section>
-
-      <!-- REQUESTS -->
-      <section class="view" id="v-req">
-        <div class="page-head"><h2 data-t="navReq">Requests</h2><p data-t="reqHint">What you asked for, and where it stands.</p></div>
-        <div class="list" id="reqList"></div>
-      </section>
-
-      <!-- PROFILE -->
-      <section class="view" id="v-me">
-        <div class="page-head" style="padding-bottom:0"><h2 data-t="navMe">You</h2></div>
-        <div class="prof-top">
-          <div class="avatar">TK</div>
-          <div><p class="t">TK Lim</p><p class="s" data-t="memberSince">Member since 2026 · Calgary</p></div>
-        </div>
-        <div class="settings">
-          <button class="srow" id="langRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span class="lbl" data-t="language">Language</span><span class="val" id="langVal">English</span></button>
-          <button class="srow" id="contrastRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18z" fill="currentColor" stroke="none"/></svg><span class="lbl" data-t="bigText">Larger text</span><span class="switch" id="sw1"><i></i></span></button>
-          <button class="srow" id="motionRow"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></svg><span class="lbl" data-t="reduceMotion">Reduce motion</span><span class="switch" id="sw2"><i></i></span></button>
-          <button class="srow" data-toast="soon"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 012-2h3a2 2 0 012 2v1.5M3 13h18"/></svg><span class="lbl" data-t="runBiz">I run a business</span><span class="val">›</span></button>
-          <button class="srow" data-toast="soon"><svg class="icon" viewBox="0 0 24 24" style="color:var(--accent)"><path d="M3 9V6.5A1.5 1.5 0 014.5 5h15A1.5 1.5 0 0121 6.5V9a2 2 0 000 6v2.5a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 17.5V15a2 2 0 000-6z"/></svg><span class="lbl" data-t="help">Get help</span><span class="val">›</span></button>
-        </div>
-      </section>
+      <section class="view on" id="v-home"></section>
+      <section class="view" id="v-browse"></section>
+      <section class="view" id="v-saved"></section>
+      <section class="view" id="v-inbox"></section>
+      <section class="view" id="v-you"></section>
     </div>
 
-    <div class="toast" id="toast"><svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#6ee7b7"><path d="M4 12.5l5.5 5.5L20 7"/></svg><span id="toastTxt"></span></div>
+    <div class="toast" id="toast"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 7"/></svg><span id="toastT"></span></div>
 
-    <nav class="tabbar">
-      <button class="tab on" data-go="home"><svg class="icon" viewBox="0 0 24 24"><path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/></svg><span data-t="navHome">Home</span></button>
-      <button class="tab" data-go="search"><svg class="icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg><span data-t="navSearch">Search</span></button>
-      <button class="tab" data-go="saved"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/></svg><span data-t="navSaved">Saved</span></button>
-      <button class="tab" data-go="req"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M4 13.5h5l1.3 2.3h3.4L15 13.5h5"/></svg><span class="badge">2</span><span data-t="navReq">Requests</span></button>
-      <button class="tab" data-go="me"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c0-3.6 3.2-6 7.5-6s7.5 2.4 7.5 6"/></svg><span data-t="navMe">You</span></button>
-    </nav>
+    <div class="deck">
+      <div class="searchdock">
+        <svg class="ic" viewBox="0 0 24 24" style="color:#767676"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
+        <input id="q" aria-label="Search" placeholder="What do you need?">
+        <button class="voicebtn" id="voice" aria-label="Ask with your voice">
+          <svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+        </button>
+      </div>
+      <nav class="tabs" id="tabs"></nav>
+    </div>
+
+    <div class="scrim" id="scrim"></div>
+    <div class="sheet" id="sheet">
+      <div class="grip"></div>
+      <div class="sheet-body" id="sheetBody"></div>
+      <div class="sheet-foot" id="sheetFoot"></div>
+    </div>
   </div>
 </div>
 
 <script>
 (function(){
 "use strict";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const T = {
-  en:{featured:"Featured today", heroName:"Maple Grove Property Group", heroCat:"Rentals & Housing", heroArea:"NW Calgary",
-    heroDesc:"Furnished rooms & townhouses near downtown. Bilingual leasing agent.", save:"Save", choose:"Choose",
-    rowNear:"Trusted near you", rowToday:"Available today", rowJobs:"Jobs hiring now", rowGrocery:"Grocery deals",
-    seeAll:"See all", navHome:"Home", navSearch:"Search", navSaved:"Saved", navReq:"Requests", navMe:"You",
-    searchHint:"Say what you need, in your language.", searchPh:"Cleaning, tutor, dentist…",
-    emptySaved:"Nothing saved yet", emptySavedSub:"Tap Save on any business and it will show up here.",
-    reqHint:"What you asked for, and where it stands.", memberSince:"Member since 2026 · Calgary",
-    language:"Language", bigText:"Larger text", reduceMotion:"Reduce motion", runBiz:"I run a business", help:"Get help",
-    tSaved:"Saved to your list", tRequested:"Request sent", tListening:"Listening…", tSoon:"Coming in the full app"},
-  ko:{featured:"오늘의 추천", heroName:"메이플 그로브 부동산", heroCat:"렌탈 및 주거", heroArea:"NW 캘거리",
-    heroDesc:"다운타운 근처 가구 완비 방 및 타운하우스. 한/영 상담 가능.", save:"저장", choose:"선택",
-    rowNear:"믿을 수 있는 업체", rowToday:"오늘 가능", rowJobs:"지금 채용 중", rowGrocery:"장보기 할인",
-    seeAll:"전체 보기", navHome:"홈", navSearch:"검색", navSaved:"저장됨", navReq:"요청", navMe:"내 정보",
-    searchHint:"필요한 것을 말씀해 주세요.", searchPh:"청소, 과외, 치과…",
-    emptySaved:"저장한 항목이 없어요", emptySavedSub:"업체에서 저장을 누르면 여기에 표시됩니다.",
-    reqHint:"요청하신 내용과 진행 상황이에요.", memberSince:"2026년 가입 · 캘거리",
-    language:"언어", bigText:"큰 글자", reduceMotion:"모션 줄이기", runBiz:"업체를 운영해요", help:"도움 받기",
-    tSaved:"목록에 저장했어요", tRequested:"요청을 보냈어요", tListening:"듣고 있어요…", tSoon:"정식 앱에서 제공됩니다"}
+/* ================= i18n ================= */
+const T={en:{
+ tabHome:"Home",tabBrowse:"Browse",tabSaved:"Saved",tabInbox:"Inbox",tabYou:"You",
+ searchPh:"What do you need?",greet:"Good morning",greetSub:"Tell us what you need. Speak or type at the bottom.",
+ rowTrusted:"Trusted near you",rowToday:"Free today",rowJobs:"Jobs hiring now",rowMarket:"Buy and sell",rowGrocery:"Grocery deals",rowCommunity:"From the community",
+ seeAll:"See all",browseTitle:"Browse",browseSub:"Pick a category, or use the search bar below.",
+ savedTitle:"Saved",inboxTitle:"Inbox",inboxSub:"Your requests, replies and updates.",youTitle:"You",
+ emptySaved:"Nothing saved yet",emptySavedSub:"Tap the heart on any business and it lands here.",
+ details:"Details",book:"Book a time",choose:"Choose this business",save:"Save",saved:"Saved",
+ verified:"ID verified",protected:"Payment protected",openNow:"Free today",
+ askTitle:"What do you need?",askSub:"Say it however is easiest. We tidy up the wording, never the meaning.",
+ askPh:"For example: I need my kitchen cleaned before Friday",
+ aiTidied:"Tidied by Lonera",send:"Send to business",cancel:"Cancel",back:"Back",
+ pickDay:"Pick a day",pickTime:"Pick a time",confirm:"Confirm booking",
+ listening:"Listening. Speak now.",heard:"You said",
+ postJob:"Post a job",postItem:"Sell something",askCommunity:"Ask the community",getHelp:"Get help",
+ jobTitle:"Job title",company:"Business name",pay:"Pay",area:"Area",itemName:"What are you selling?",price:"Price",
+ question:"Your question",describe:"Describe it",post:"Post",submit:"Send",
+ language:"Language",textSize:"Text size",contrast:"High contrast",readAloud:"Read page aloud",
+ runBiz:"I run a business",help:"Help and support",notif:"Notifications",
+ tSaved:"Saved to your list",tSent:"Sent. The business will reply here.",tPosted:"Posted",tBooked:"Booking confirmed",
+ tAloud:"Reading the page aloud",tNoVoice:"Voice needs a microphone. Type below instead.",
+ statusNew:"New",statusWait:"Waiting",statusOk:"Accepted",statusDone:"Resolved",
+ compare:"Compare top 3",closeCmp:"Done",
+ sizeS:"Normal",sizeL:"Large",sizeXL:"Extra large"
+},ko:{
+ tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
+ searchPh:"무엇이 필요하세요?",greet:"안녕하세요",greetSub:"필요한 것을 아래에서 말하거나 입력해 주세요.",
+ rowTrusted:"믿을 수 있는 업체",rowToday:"오늘 가능",rowJobs:"지금 채용 중",rowMarket:"사고 팔기",rowGrocery:"장보기 할인",rowCommunity:"커뮤니티 소식",
+ seeAll:"전체 보기",browseTitle:"둘러보기",browseSub:"카테고리를 고르시거나 아래 검색을 이용하세요.",
+ savedTitle:"저장됨",inboxTitle:"받은함",inboxSub:"보내신 요청과 답변이에요.",youTitle:"내 정보",
+ emptySaved:"저장한 항목이 없어요",emptySavedSub:"업체의 하트를 누르면 여기에 모여요.",
+ details:"자세히",book:"시간 예약",choose:"이 업체 선택",save:"저장",saved:"저장됨",
+ verified:"실명 인증",protected:"안전 결제",openNow:"오늘 가능",
+ askTitle:"무엇이 필요하세요?",askSub:"편하신 대로 말씀하세요. 표현만 다듬고 뜻은 그대로 전해요.",
+ askPh:"예: 금요일 전에 주방 청소가 필요해요",
+ aiTidied:"로네라가 다듬었어요",send:"업체에 보내기",cancel:"취소",back:"뒤로",
+ pickDay:"날짜 선택",pickTime:"시간 선택",confirm:"예약 확정",
+ listening:"듣고 있어요. 말씀해 주세요.",heard:"이렇게 들었어요",
+ postJob:"채용 등록",postItem:"물건 팔기",askCommunity:"커뮤니티에 질문",getHelp:"도움 받기",
+ jobTitle:"채용 제목",company:"업체명",pay:"급여",area:"지역",itemName:"무엇을 파시나요?",price:"가격",
+ question:"질문 내용",describe:"설명",post:"등록",submit:"보내기",
+ language:"언어",textSize:"글자 크기",contrast:"고대비",readAloud:"페이지 읽어주기",
+ runBiz:"업체를 운영해요",help:"도움말",notif:"알림",
+ tSaved:"목록에 저장했어요",tSent:"보냈어요. 답변은 받은함에 표시돼요.",tPosted:"등록했어요",tBooked:"예약이 확정됐어요",
+ tAloud:"페이지를 읽어드릴게요",tNoVoice:"음성은 마이크가 필요해요. 아래에 입력해 주세요.",
+ statusNew:"신규",statusWait:"대기 중",statusOk:"수락됨",statusDone:"해결됨",
+ compare:"상위 3곳 비교",closeCmp:"완료",
+ sizeS:"보통",sizeL:"크게",sizeXL:"아주 크게"
+}};
+let lang="en", scale=1, contrast=false;
+const t = k => T[lang][k];
+
+/* ================= data (fictional demo) ================= */
+const BIZ=[
+ {id:"maple",n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",v:1,e:1,free:1,
+  d:"Furnished rooms and townhouses near downtown. Bilingual leasing agent.",dk:"다운타운 근처 가구 완비 방과 타운하우스. 한국어 상담 가능."},
+ {id:"sparkle",n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",v:1,e:0,free:1,
+  d:"Deep cleans and move-out cleans. Same-week booking most weeks.",dk:"딥 클리닝과 이사 청소. 대부분 당주 예약 가능."},
+ {id:"bright",n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",v:1,e:1,free:0,
+  d:"Licensed consultant. Work permits and permanent residence.",dk:"공인 컨설턴트. 취업 비자 및 영주권 상담."},
+ {id:"haneul",n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",v:1,e:0,free:1,
+  d:"Cuts, perms and colour. Korean and English spoken.",dk:"커트, 펌, 염색. 한국어와 영어 가능."},
+ {id:"north",n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",v:1,e:0,free:0,
+  d:"Math and English tutoring, grades 4 to 12.",dk:"4학년부터 12학년까지 수학과 영어 과외."},
+ {id:"truebuild",n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",v:1,e:1,free:1,
+  d:"Basement development and additions. Red Seal certified.",dk:"지하실 개발 및 증축. 레드씰 자격 보유."}
+];
+const CATS=[["Cleaning","청소","g3"],["Rentals","렌탈","g5"],["Tutoring","과외","g6"],["Hair","미용","g2"],
+ ["Immigration","이민","g1"],["Renovation","리노베이션","g4"],["Dental","치과","g5"],["Catering","케이터링","g4"]];
+const JOBS=[{n:"Kitchen prep cook",nk:"주방 프렙 쿡",c:"Home Table Catering",ck:"홈테이블 케이터링",p:"$19/hr",a:"City-wide"},
+ {n:"Front desk assistant",nk:"프론트 데스크 보조",c:"Riverbend Dental",ck:"리버벤드 치과",p:"$21/hr",a:"SW Calgary"},
+ {n:"Junior carpenter",nk:"주니어 목수",c:"TrueBuild",ck:"트루빌드",p:"$28-34/hr",a:"City-wide"}];
+const MARKET=[{n:"IKEA dining table and 4 chairs",nk:"이케아 식탁과 의자 4개",p:"$120",a:"NW Calgary",cond:"Used",ck2:"중고"},
+ {n:"32 inch monitor, barely used",nk:"32인치 모니터, 거의 새것",p:"$90",a:"SE Calgary",cond:"Like new",ck2:"거의 새것"},
+ {n:"Rice cooker, still boxed",nk:"전기밥솥, 미개봉",p:"$65",a:"SW Calgary",cond:"New",ck2:"새 상품"}];
+const GROCERY=[{s:"Safeway",i:"Ground beef",ik:"다진 소고기",p:"$6.99/lb"},{s:"No Frills",i:"Roma tomatoes",ik:"로마 토마토",p:"$0.99/lb"},
+ {s:"Walmart",i:"Seedless watermelon",ik:"씨 없는 수박",p:"$4.98"},{s:"Safeway",i:"Chicken breast",ik:"닭가슴살",p:"$6.88/lb"}];
+const COMMUNITY=[{q:"Where can I find a Korean-speaking dentist in NW?",qk:"NW에 한국어 되는 치과 있을까요?",r:6,tag:"Korean community",tk:"한인 커뮤니티"},
+ {q:"Any Tagalog tutor for kids in SE Calgary?",qk:"SE 캘거리에 아이 타갈로그어 선생님 계신가요?",r:3,tag:"Filipino community",tk:"필리핀 커뮤니티"}];
+let INBOX=[{n:"Sparkle Home Services",nk:"스파클 홈 서비스",m:"Move-out clean, 2 bedroom, before Friday.",mk:"이사 청소, 침실 2개, 금요일 전에요.",st:"ok"},
+ {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",m:"Basement quote for a 900 sq ft space.",mk:"900제곱피트 지하실 견적 문의드려요.",st:"wait"},
+ {n:"Lonera support",nk:"로네라 고객센터",m:"Ticket LNR-2091: how do I change my listing language?",mk:"티켓 LNR-2091: 리스팅 언어를 어떻게 바꾸나요?",st:"done"}];
+let SAVED=[];
+const DAYS=[["Mon","월"],["Tue","화"],["Wed","수"],["Thu","목"],["Fri","금"],["Sat","토"],["Sun","일"]];
+const SLOTS=["9:00 AM","11:30 AM","2:00 PM","4:30 PM"];
+
+const bn = b => lang==="ko"?b.nk:b.n;
+const bd = b => lang==="ko"?b.dk:b.d;
+const bc = b => lang==="ko"?b.ck:b.c;
+
+/* ================= icons ================= */
+const I={
+ home:'<path d="M4 11l8-7.5L20 11"/><path d="M6 10v10.5h5.2V15h1.6v5.5H18V10"/>',
+ grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
+ heart:'<path d="M12 20.3s-7.2-4.4-9.5-8.9C1.1 7.9 2.7 4.8 6.2 4.8c2 0 3.4 1 4.1 2.3.7-1.3 2.1-2.3 4.1-2.3 3.5 0 5.1 3.1 3.7 6.6-2.3 4.5-9.5 8.9-9.5 8.9z"/>',
+ inbox:'<path d="M4 5.5h16v13H4z"/><path d="M4 13.5h5l1.3 2.3h3.4L15 13.5h5"/>',
+ user:'<circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c0-3.6 3.2-6 7.5-6s7.5 2.4 7.5 6"/>',
+ star:'<polygon points="12,3.2 14.7,9.3 21.3,10 16.4,14.4 17.8,21 12,17.6 6.2,21 7.6,14.4 2.7,10 9.3,9.3"/>',
+ check:'<path d="M4 12.5l5.5 5.5L20 7"/>',
+ shield:'<path d="M12 3l7 3.2v5.6c0 5-3.3 7.8-7 9-3.7-1.2-7-4-7-9V6.2L12 3z"/><path d="M9 12.2l2.2 2.2L15.5 10"/>',
+ id:'<rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="11" r="2.1"/><path d="M6 16c0-2 1.5-3.1 3-3.1s3 1.1 3 3.1M14.3 9.3h4.2M14.3 13.1h4.2"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',
+ type:'<path d="M4 7V5h16v2M12 5v14M9 19h6"/>',
+ contrast:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18z" fill="currentColor" stroke="none"/>',
+ speaker:'<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.2 9a4 4 0 010 6"/>',
+ brief:'<rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 012-2h3a2 2 0 012 2v1.5M3 13h18"/>',
+ help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 015 .9c0 1.7-2.5 2.2-2.5 4M12 17.2v.2"/>',
+ bell:'<path d="M6 10a6 6 0 0112 0c0 4.5 1.5 6 2 6.5H4c.5-.5 2-2 2-6.5z"/><path d="M9.5 19.5a2.5 2.5 0 005 0"/>',
+ tag:'<path d="M3 12.3L12.3 3H20v7.7L10.7 20 3 12.3z"/><circle cx="15.2" cy="7.8" r="1.3" fill="currentColor" stroke="none"/>',
+ chat:'<path d="M4 5.5h16v11H8.5L4 20.5z"/>',
+ cart:'<path d="M4 6h2l2.2 9.5h9.1L20 8.5H7"/><circle cx="10" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ scale:'<path d="M12 3v18M5 8l-2 6h4zM19 8l-2 6h4z"/><path d="M5 8h14"/>'
 };
-let lang = "en";
+const ic=(n,c)=>`<svg class="ic ${c||''}" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
 
-const D = {
-  near:[{n:"Sparkle Home Services",nk:"스파클 홈 서비스",p:"$100–220",s:"★ 4.7 · SE Calgary",g:"g3",t:"Cleaning"},
-        {n:"Bright Path Immigration",nk:"브라이트패스 이민상담",p:"$300–2,000",s:"★ 4.8 · City-wide",g:"g1",t:"Immigration"},
-        {n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",p:"$30–120",s:"★ 4.9 · Downtown",g:"g2",t:"Hair"},
-        {n:"Northstar Learning",nk:"노스스타 학습센터",p:"$30–60/hr",s:"★ 4.8 · NW Calgary",g:"g5",t:"Tutoring"},
-        {n:"Riverbend Dental",nk:"리버벤드 치과",p:"Insurance",s:"★ 4.7 · SW Calgary",g:"g6",t:"Dental"}],
-  today:[{n:"Clean Slate Calgary",nk:"클린 슬레이트 캘거리",p:"$100–220",s:"★ 4.8 · Today 2pm",g:"g3",t:"Open"},
-        {n:"Home Table Catering",nk:"홈테이블 케이터링",p:"$300–1,000",s:"★ 4.9 · Today 5pm",g:"g4",t:"Open"},
-        {n:"Gentle Hands Care",nk:"젠틀핸즈 돌봄센터",p:"$25–35/hr",s:"★ 4.8 · Today 9am",g:"g2",t:"Open"},
-        {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",p:"$2,000+",s:"★ 4.9 · Today",g:"g1",t:"Open"}],
-  jobs:[{n:"Kitchen Prep Cook",nk:"주방 프렙 쿡",p:"$19/hr",s:"Home Table · City-wide",g:"g4",t:"Food"},
-        {n:"Front Desk Assistant",nk:"프론트 데스크 보조",p:"$21/hr",s:"Riverbend · SW",g:"g1",t:"Office"},
-        {n:"Delivery Driver",nk:"배달 기사",p:"$22/hr",s:"Sparkle · SE",g:"g5",t:"Driving"},
-        {n:"Junior Carpenter",nk:"주니어 목수",p:"$28–34/hr",s:"TrueBuild · City-wide",g:"g3",t:"Trades"}],
-  grocery:[{n:"Ground beef",nk:"다진 소고기",p:"$6.99/lb",s:"Safeway · to Sep 2",g:"g2",t:"Deal"},
-        {n:"Roma tomatoes",nk:"로마 토마토",p:"$0.99/lb",s:"No Frills · to Sep 2",g:"g3",t:"Deal"},
-        {n:"Seedless watermelon",nk:"씨 없는 수박",p:"$4.98",s:"Walmart · to Sep 2",g:"g4",t:"Deal"},
-        {n:"Air-chilled chicken",nk:"에어칠드 닭가슴살",p:"$6.88/lb",s:"Safeway · to Sep 2",g:"g1",t:"Deal"}]
+/* ================= toast ================= */
+let tid;
+function toast(msg){const el=$("toast");$("toastT").textContent=msg;el.classList.add("on");
+  clearTimeout(tid);tid=setTimeout(()=>el.classList.remove("on"),2400);}
+
+/* ================= bottom sheet ================= */
+function sheet(title,sub,body,foot){
+  $("sheetBody").innerHTML=`<h3>${title}</h3>${sub?`<p class="sub">${sub}</p>`:""}${body||""}`;
+  $("sheetFoot").innerHTML=foot||"";
+  $("sheet").classList.add("on");$("scrim").classList.add("on");
+}
+function closeSheet(){$("sheet").classList.remove("on");$("scrim").classList.remove("on");}
+$("scrim").onclick=closeSheet;
+
+/* ================= renderers ================= */
+function bizCard(b){
+  return `<button class="card" data-biz="${b.id}">
+    <div class="pic ${b.g}">${b.free?`<span class="badge">${t("openNow")}</span>`:""}</div>
+    <div class="b"><p class="t">${esc(bn(b))}</p>
+      <p class="s">${ic("star","ic-s")===""?"":"★"} ${b.r} (${b.rv}) · ${bc(b)} · ${b.a}</p>
+      <p class="p">${b.p}</p></div></button>`;
+}
+function rowItem(title,sub,tag,cls,g){
+  return `<div class="row"><div class="av ${g}">${esc(title[0])}</div>
+    <div class="bd"><p class="t">${esc(title)}</p><p class="s">${esc(sub)}</p></div>
+    ${tag?`<span class="tagp ${cls}">${esc(tag)}</span>`:""}</div>`;
+}
+
+function viewHome(){
+  const free=BIZ.filter(b=>b.free);
+  $("v-home").innerHTML=`
+    <div class="head" style="padding-top:10px">
+      <h2>${t("greet")}, TK</h2>
+      <p>${t("greetSub")}</p>
+    </div>
+    <div class="rowtitle"><h3>${t("rowTrusted")}</h3><span class="ko">믿을 수 있는 업체</span></div>
+    <div class="rail">${BIZ.slice(0,4).map(bizCard).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowToday")}</h3><span class="ko">오늘 가능</span></div>
+    <div class="rail">${free.map(bizCard).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowGrocery")}</h3><span class="ko">장보기 할인</span></div>
+    <div class="stack">${GROCERY.map(x=>rowItem(lang==="ko"?x.ik:x.i,`${x.s} · ${t("openNow")==="Free today"?"to Sep 2":"9월 2일까지"}`,x.p,"ok","g4")).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowJobs")}</h3><span class="ko">지금 채용 중</span></div>
+    <div class="stack">${JOBS.map(j=>rowItem(lang==="ko"?j.nk:j.n,`${lang==="ko"?j.ck:j.c} · ${j.a}`,j.p,"n","g1")).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowMarket")}</h3><span class="ko">사고 팔기</span></div>
+    <div class="stack">${MARKET.map(m=>rowItem(lang==="ko"?m.nk:m.n,`${lang==="ko"?m.ck2:m.cond} · ${m.a}`,m.p,"ok","g3")).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowCommunity")}</h3><span class="ko">커뮤니티</span></div>
+    <div class="stack">${COMMUNITY.map(c=>rowItem(lang==="ko"?c.qk:c.q,lang==="ko"?c.tk:c.tag,`${c.r}`,"n","g6")).join("")}</div>`;
+}
+function viewBrowse(){
+  $("v-browse").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("browseTitle")}</h2><p>${t("browseSub")}</p></div>
+    <div class="stack" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      ${CATS.map(c=>`<button class="card" data-cat="${c[0]}"><div class="pic ${c[2]}" style="height:78px"></div>
+        <div class="b" style="padding:11px 12px 13px"><p class="t" style="font-size:.92rem">${lang==="ko"?c[1]:c[0]}</p></div></button>`).join("")}
+    </div>
+    <div class="rowtitle"><h3>${t("compare")}</h3></div>
+    <div class="stack">${BIZ.slice(0,3).map(b=>rowItem(bn(b),`★ ${b.r} · ${b.a}`,b.p,"ok",b.g)).join("")}</div>`;
+}
+function viewSaved(){
+  $("v-saved").innerHTML=SAVED.length
+    ? `<div class="head" style="padding-top:10px"><h2>${t("savedTitle")}</h2></div>
+       <div class="stack">${SAVED.map(id=>{const b=BIZ.find(x=>x.id===id);
+         return `<div class="row" data-biz="${b.id}"><div class="av ${b.g}">${esc(bn(b)[0])}</div>
+         <div class="bd"><p class="t">${esc(bn(b))}</p><p class="s">★ ${b.r} · ${b.a}</p></div>
+         <span class="tagp ok">${b.p}</span></div>`;}).join("")}</div>`
+    : `<div class="head" style="padding-top:10px"><h2>${t("savedTitle")}</h2></div>
+       <div class="empty">${ic("heart")}<p>${t("emptySaved")}</p><span>${t("emptySavedSub")}</span></div>`;
+}
+function viewInbox(){
+  const map={ok:["ok","statusOk"],wait:["w","statusWait"],done:["ok","statusDone"],new:["n","statusNew"]};
+  $("v-inbox").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("inboxTitle")}</h2><p>${t("inboxSub")}</p></div>
+    <div class="stack">${INBOX.map(x=>{const m=map[x.st];
+      return `<div class="row"><div class="av g2">${esc((lang==="ko"?x.nk:x.n)[0])}</div>
+      <div class="bd"><p class="t">${esc(lang==="ko"?x.nk:x.n)}</p><p class="s">${esc(lang==="ko"?x.mk:x.m)}</p></div>
+      <span class="tagp ${m[0]}">${t(m[1])}</span></div>`;}).join("")}</div>`;
+}
+function viewYou(){
+  $("v-you").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("youTitle")}</h2></div>
+    <div class="stack">
+      <div class="row" style="pointer-events:none"><div class="av g2">TK</div>
+        <div class="bd"><p class="t">TK Lim</p><p class="s">Calgary</p></div></div>
+    </div>
+    <div class="stack" style="gap:0;margin-top:6px">
+      <button class="opt" data-act="lang">${ic("globe")}<span>${t("language")}</span><span class="rt">${lang==="ko"?"한국어":"English"}</span></button>
+      <button class="opt" data-act="size">${ic("type")}<span>${t("textSize")}</span><span class="rt">${scale===1?t("sizeS"):scale===1.15?t("sizeL"):t("sizeXL")}</span></button>
+      <button class="opt" data-act="contrast">${ic("contrast")}<span>${t("contrast")}</span><span class="sw ${contrast?"on":""}"><i></i></span></button>
+      <button class="opt" data-act="aloud">${ic("speaker")}<span>${t("readAloud")}</span></button>
+      <button class="opt" data-act="notif">${ic("bell")}<span>${t("notif")}</span><span class="rt">2</span></button>
+      <button class="opt" data-act="biz">${ic("brief")}<span>${t("runBiz")}</span><span class="rt">›</span></button>
+      <button class="opt" data-act="help">${ic("help")}<span>${t("help")}</span><span class="rt">›</span></button>
+    </div>`;
+}
+function paint(){viewHome();viewBrowse();viewSaved();viewInbox();viewYou();
+  $("q").placeholder=t("searchPh");
+  $("tabs").innerHTML=TABS.map(x=>`<button class="tab${x.k===cur?" on":""}" data-go="${x.k}">
+    ${ic(x.i)}${x.b?`<span class="dot">${x.b}</span>`:""}<span>${t(x.t)}</span></button>`).join("");
+  document.documentElement.lang=lang;
+}
+const TABS=[{k:"home",i:"home",t:"tabHome"},{k:"browse",i:"grid",t:"tabBrowse"},
+ {k:"saved",i:"heart",t:"tabSaved"},{k:"inbox",i:"inbox",t:"tabInbox",b:2},{k:"you",i:"user",t:"tabYou"}];
+let cur="home";
+
+/* ================= business sheet: details, book, choose ================= */
+function openBiz(id){
+  const b=BIZ.find(x=>x.id===id); if(!b) return;
+  const on=SAVED.includes(id);
+  sheet(esc(bn(b)),
+    `★ ${b.r} (${b.rv}) · ${bc(b)} · ${b.a}`,
+    `<div class="pic ${b.g}" style="height:110px;border-radius:14px;margin-bottom:12px"></div>
+     <p style="margin:0;font-size:.95rem;line-height:1.55">${esc(bd(b))}</p>
+     <div class="trust">
+       ${b.v?`<span class="tb">${ic("id","ic-s")}${t("verified")}</span>`:""}
+       ${b.e?`<span class="tb b">${ic("shield","ic-s")}${t("protected")}</span>`:""}
+       ${b.free?`<span class="tb">${ic("clock","ic-s")}${t("openNow")}</span>`:""}
+     </div>
+     <p style="margin:14px 0 0;font-size:1.05rem;font-weight:800">${b.p}</p>`,
+    `<button class="btn pri" data-act="ask" data-id="${id}">${ic("chat")}${t("choose")}</button>
+     <button class="btn sec" data-act="bookday" data-id="${id}">${ic("clock")}${t("book")}</button>
+     <button class="btn sec" data-act="fav" data-id="${id}">${ic("heart")}${on?t("saved"):t("save")}</button>`);
+}
+function openBookDay(id){
+  sheet(t("pickDay"),"",
+    `<div class="slots">${DAYS.map((d,i)=>`<button class="slot${i===2?" on":""}" data-day="${i}">${lang==="ko"?d[1]:d[0]}</button>`).join("")}</div>`,
+    `<button class="btn pri" data-act="booktime" data-id="${id}">${t("pickTime")}</button>
+     <button class="btn sec" data-act="biz" data-id="${id}">${t("back")}</button>`);
+}
+function openBookTime(id){
+  sheet(t("pickTime"),"",
+    `<div class="slots">${SLOTS.map((s,i)=>`<button class="slot${i===0?" on":""}" data-slot="${i}">${s}</button>`).join("")}</div>`,
+    `<button class="btn pri" data-act="bookdone">${ic("check")}${t("confirm")}</button>
+     <button class="btn sec" data-act="bookday" data-id="${id}">${t("back")}</button>`);
+}
+/* voice/text request -> tidy -> send */
+function tidy(s){
+  s=s.trim().replace(/\s+/g," "); if(!s) return "";
+  if(/[\uAC00-\uD7A3]/.test(s)) return /[.!?\u2026]$/.test(s)?s:s+".";
+  s=s.charAt(0).toUpperCase()+s.slice(1);
+  s=s.replace(/\bi\b/g,"I").replace(/\bim\b/gi,"I'm");
+  return /[.!?]$/.test(s)?s:s+".";
+}
+function openAsk(id,pre){
+  sheet(t("askTitle"),t("askSub"),
+    `<label class="lb" for="askIn">${t("describe")}</label>
+     <textarea class="field" id="askIn" rows="4" placeholder="${t("askPh")}">${pre?esc(pre):""}</textarea>
+     <div id="tidyBox"></div>`,
+    `<button class="btn pri" data-act="sendask" data-id="${id||""}">${ic("check")}${t("send")}</button>
+     <button class="btn sec" data-act="close">${t("cancel")}</button>`);
+  const ta=$("askIn");
+  const upd=()=>{const v=tidy(ta.value);
+    $("tidyBox").innerHTML=v?`<span class="aiflag">${ic("check","ic-s")}${t("aiTidied")}</span><div class="note">${esc(v)}</div>`:"";};
+  ta.oninput=upd; upd(); ta.focus();
+}
+/* posting forms */
+function openForm(kind){
+  const F={job:{ti:t("postJob"),f:[["jobTitle","text"],["company","text"],["pay","text"],["area","text"]]},
+           item:{ti:t("postItem"),f:[["itemName","text"],["price","text"],["area","text"]]},
+           ask:{ti:t("askCommunity"),f:[["question","area"]]},
+           help:{ti:t("getHelp"),f:[["describe","area"]]}}[kind];
+  sheet(F.ti,"",F.f.map(([k,ty])=>`<label class="lb" for="f_${k}">${t(k)}</label>`+
+    (ty==="area"?`<textarea class="field" id="f_${k}" rows="3"></textarea>`:`<input class="field" id="f_${k}" type="text">`)).join(""),
+    `<button class="btn pri" data-act="formdone">${ic("check")}${kind==="help"?t("submit"):t("post")}</button>
+     <button class="btn sec" data-act="close">${t("cancel")}</button>`);
+}
+function openNotif(){
+  sheet(t("notif"),"",
+    `<div style="display:flex;flex-direction:column;gap:10px">
+      ${rowItem(lang==="ko"?"스파클 홈 서비스":"Sparkle Home Services",lang==="ko"?"요청을 수락했어요":"Accepted your request",t("statusOk"),"ok","g3")}
+      ${rowItem("LNR-2091",lang==="ko"?"티켓이 해결됐어요":"Your ticket was resolved",t("statusDone"),"ok","g5")}
+     </div>`,
+    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
+}
+function openBizPortal(){
+  sheet(t("runBiz"),lang==="ko"?"업체용 화면 미리보기예요.":"A preview of the business side.",
+    `<div style="display:flex;flex-direction:column;gap:10px">
+      ${rowItem(lang==="ko"?"새 요청 2건":"2 new requests",lang==="ko"?"답변을 기다리고 있어요":"Waiting for your reply","2","n","g2")}
+      ${rowItem(lang==="ko"?"이번 주 예약 4건":"4 bookings this week",lang==="ko"?"오늘 2건":"2 today","","ok","g3")}
+      ${rowItem(lang==="ko"?"에스크로 보관 $340":"$340 held safely",lang==="ko"?"작업 완료 시 지급":"Released when the job is done","","ok","g4")}
+     </div>`,
+    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
+}
+function openSize(){
+  sheet(t("textSize"),"",
+    `<div class="slots">
+      <button class="slot${scale===1?" on":""}" data-size="1">${t("sizeS")}</button>
+      <button class="slot${scale===1.15?" on":""}" data-size="1.15">${t("sizeL")}</button>
+      <button class="slot${scale===1.3?" on":""}" data-size="1.3">${t("sizeXL")}</button>
+     </div>`,
+    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
+}
+
+/* ================= voice ================= */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,listening=false;
+if(SR){rec=new SR();rec.interimResults=false;rec.maxAlternatives=1;
+  rec.onstart=()=>{listening=true;$("voice").classList.add("live");toast(t("listening"));};
+  rec.onend=()=>{listening=false;$("voice").classList.remove("live");};
+  rec.onerror=()=>{listening=false;$("voice").classList.remove("live");toast(t("tNoVoice"));};
+  rec.onresult=e=>{const said=e.results[0][0].transcript;toast(`${t("heard")}: "${said}"`);route(said);};
+}
+$("voice").onclick=()=>{
+  if(!rec){toast(t("tNoVoice"));$("q").focus();return;}
+  if(listening){rec.stop();return;}
+  rec.lang=lang==="ko"?"ko-KR":"en-CA";
+  try{rec.start();}catch(e){toast(t("tNoVoice"));}
 };
-const CHIPS = [["All","전체"],["Cleaning","청소"],["Tutoring","과외"],["Hair","미용"],["Dental","치과"],["Moving","이사"]];
-const REQS = [
-  {n:"Sparkle Home Services",nk:"스파클 홈 서비스",m:"Move-out clean, 2 bed",mk:"이사 청소, 방 2개",st:"ok",g:"g3"},
-  {n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",m:"Basement quote",mk:"지하실 견적",st:"wait",g:"g1"},
-  {n:"Northstar Learning",nk:"노스스타 학습센터",m:"Grade 9 math, weekly",mk:"9학년 수학, 주 1회",st:"new",g:"g5"}];
-const ST = {ok:{en:"Accepted",ko:"수락됨"}, wait:{en:"Waiting",ko:"대기 중"}, new:{en:"New",ko:"신규"}};
+$("q").addEventListener("keydown",e=>{if(e.key==="Enter"&&$("q").value.trim())route($("q").value.trim());});
 
-const nm = o => lang==="ko" ? o.nk : o.n;
-
-function poster(o){
-  return `<button class="poster"><div class="poster-img ${o.g}"><span class="tag">${o.t}</span>
-    <div class="poster-txt"><p class="price">${o.p}</p><p class="name">${nm(o)}</p></div></div>
-    <p class="sub">${o.s}</p></button>`;
-}
-function paint(){
-  document.getElementById("railNear").innerHTML = D.near.map(poster).join("");
-  document.getElementById("railToday").innerHTML = D.today.map(poster).join("");
-  document.getElementById("railJobs").innerHTML = D.jobs.map(poster).join("");
-  document.getElementById("railGrocery").innerHTML = D.grocery.map(poster).join("");
-  document.getElementById("chips").innerHTML = CHIPS.map((c,i)=>
-    `<button class="chip${i===0?" on":""}">${lang==="ko"?c[1]:c[0]}</button>`).join("");
-  document.getElementById("searchList").innerHTML = D.near.map(o=>
-    `<button class="item"><div class="thumb ${o.g}">${nm(o)[0]}</div>
-     <div class="body"><p class="t">${nm(o)}</p><p class="s">${o.s} <span class="pill ok">${o.p}</span></p></div>
-     <svg class="icon icon-sm" viewBox="0 0 24 24" style="color:#52525b"><path d="M9 6l6 6-6 6"/></svg></button>`).join("");
-  document.getElementById("reqList").innerHTML = REQS.map(o=>
-    `<button class="item"><div class="thumb ${o.g}">${nm(o)[0]}</div>
-     <div class="body"><p class="t">${nm(o)}</p><p class="s">${lang==="ko"?o.mk:o.m}</p></div>
-     <span class="pill ${o.st}">${ST[o.st][lang]}</span></button>`).join("");
-  wire();
-}
-function wire(){
-  document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
-    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on")); c.classList.add("on");
-  });
-  document.querySelectorAll(".poster,.item").forEach(el=>{
-    if(el.dataset.wired) return; el.dataset.wired="1";
-    el.onclick=()=>toast(T[lang].tSoon);
-  });
-}
-function applyLang(){
-  document.querySelectorAll("[data-t]").forEach(el=>{
-    const k = el.getAttribute("data-t"); if(T[lang][k]!==undefined) el.textContent = T[lang][k];
-  });
-  document.querySelectorAll("[data-ph]").forEach(el=>{
-    const k = el.getAttribute("data-ph"); if(T[lang][k]!==undefined) el.placeholder = T[lang][k];
-  });
-  document.getElementById("langVal").textContent = lang==="ko" ? "한국어" : "English";
-  document.documentElement.lang = lang;
-  paint();
+/* voice/text intent routing */
+function route(said){
+  const s=said.toLowerCase();
+  const wantsCommunity=/ask the community|\ucee4\ubba4\ub2c8\ud2f0\uc5d0|community/.test(s);
+  const wantsHelp=/support|platform|\uace0\uac1d\uc13c\ud130|\ubb38\uc758/.test(s);
+  const wantsJob=/job|hiring|\ucc44\uc6a9|\uad6c\uc778/.test(s);
+  const wantsBuy=/buy|sell|\uc911\uace0|\ud314/.test(s);
+  if(wantsCommunity){go("home");openForm("ask");return;}
+  if(wantsHelp){go("you");openForm("help");return;}
+  if(wantsJob){go("home");toast(t("rowJobs"));return;}
+  if(wantsBuy){go("home");toast(t("rowMarket"));return;}
+  const hit=BIZ.find(b=>s.includes(b.c.toLowerCase())||s.includes(b.ck));
+  if(hit){openBiz(hit.id);return;}
+  openAsk("",said);
 }
 
-let tt;
-function toast(msg){
-  const t = document.getElementById("toast");
-  document.getElementById("toastTxt").textContent = msg;
-  t.classList.add("show"); clearTimeout(tt); tt = setTimeout(()=>t.classList.remove("show"), 2100);
-}
-const TOASTS = {saved:"tSaved", requested:"tRequested", listening:"tListening", soon:"tSoon"};
-document.querySelectorAll("[data-toast]").forEach(b=> b.onclick = ()=> toast(T[lang][TOASTS[b.dataset.toast]]));
-
-document.querySelectorAll(".tab").forEach(b=> b.onclick = ()=>{
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); b.classList.add("on");
-  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
-  document.getElementById("v-"+b.dataset.go).classList.add("on");
-  document.getElementById("screen").scrollTop = 0;
+/* ================= events ================= */
+document.addEventListener("click",e=>{
+  const tab=e.target.closest("[data-go]"); if(tab){go(tab.dataset.go);return;}
+  const biz=e.target.closest("[data-biz]"); if(biz){openBiz(biz.dataset.biz);return;}
+  const cat=e.target.closest("[data-cat]"); if(cat){const b=BIZ.find(x=>x.c===cat.dataset.cat);
+    b?openBiz(b.id):toast(cat.dataset.cat);return;}
+  const day=e.target.closest("[data-day]"); if(day){day.parentNode.querySelectorAll(".slot").forEach(x=>x.classList.remove("on"));day.classList.add("on");return;}
+  const slot=e.target.closest("[data-slot]"); if(slot){slot.parentNode.querySelectorAll(".slot").forEach(x=>x.classList.remove("on"));slot.classList.add("on");return;}
+  const sz=e.target.closest("[data-size]"); if(sz){scale=parseFloat(sz.dataset.size);
+    $("screen").style.fontSize=(scale*100)+"%";closeSheet();paint();return;}
+  const a=e.target.closest("[data-act]"); if(!a) return;
+  const id=a.dataset.id||"";
+  switch(a.dataset.act){
+    case "biz": id?openBiz(id):openBizPortal(); break;
+    case "bookday": openBookDay(id); break;
+    case "booktime": openBookTime(id); break;
+    case "bookdone": closeSheet(); toast(t("tBooked")); break;
+    case "ask": openAsk(id); break;
+    case "sendask": {
+      const v=tidy(($("askIn")||{value:""}).value);
+      if(v){const b=BIZ.find(x=>x.id===id);
+        INBOX.unshift({n:b?b.n:"Lonera",nk:b?b.nk:"로네라",m:v,mk:v,st:"new"});
+        viewInbox();}
+      closeSheet(); toast(t("tSent")); break;
+    }
+    case "fav": {
+      SAVED.includes(id)?SAVED=SAVED.filter(x=>x!==id):SAVED.push(id);
+      viewSaved(); closeSheet(); toast(t("tSaved")); break;
+    }
+    case "lang": lang=lang==="en"?"ko":"en"; paint(); closeSheet(); break;
+    case "size": openSize(); break;
+    case "contrast": contrast=!contrast;
+      document.querySelector(".phone").style.filter=contrast?"contrast(1.28)":"";
+      viewYou(); break;
+    case "aloud": toast(t("tAloud"));
+      if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(
+        document.querySelector(".view.on").innerText.slice(0,320));
+        u.lang=lang==="ko"?"ko-KR":"en-CA";speechSynthesis.cancel();speechSynthesis.speak(u);} break;
+    case "notif": openNotif(); break;
+    case "help": openForm("help"); break;
+    case "formdone": closeSheet(); toast(t("tPosted")); break;
+    case "close": closeSheet(); break;
+  }
 });
+function go(k){cur=k;document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  $("v-"+k).classList.add("on");
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.go===k));
+  $("screen").scrollTop=0;}
 
-document.getElementById("langRow").onclick = ()=>{ lang = lang==="en" ? "ko" : "en"; applyLang(); };
-[["sw1","contrastRow"],["sw2","motionRow"]].forEach(([sw,row])=>{
-  document.getElementById(row).onclick = ()=>{
-    const s = document.getElementById(sw); s.classList.toggle("on");
-    if(sw==="sw1") document.querySelector(".phone").style.fontSize = s.classList.contains("on") ? "112%" : "";
-  };
-});
+(function clock(){const el=$("clk");const f=()=>{const d=new Date();
+  el.textContent=(d.getHours()%12||12)+":"+String(d.getMinutes()).padStart(2,"0");};f();setInterval(f,20000);})();
 
-(function clock(){
-  const el = document.getElementById("clock");
-  const tick = ()=>{ const d=new Date(); let h=d.getHours()%12||12;
-    el.textContent = h+":"+String(d.getMinutes()).padStart(2,"0"); };
-  tick(); setInterval(tick, 20000);
-})();
-
-applyLang();
+paint();
 })();
 </script>
