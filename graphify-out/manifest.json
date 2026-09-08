@@ -1,0 +1,38 @@
+{
+  ".claude/launch.json": {
+    "mtime": 1787288360.9223733,
+    "seen": 1788859942.697116,
+    "ast_hash": "2631f1d9444aa7c686abf32c28fe1a7e",
+    "semantic_hash": "2631f1d9444aa7c686abf32c28fe1a7e"
+  },
+  "package.json": {
+    "mtime": 1787288350.6491823,
+    "seen": 1788859942.697119,
+    "ast_hash": "7c15911e07d19b80b8b0b44342ec577e",
+    "semantic_hash": "7c15911e07d19b80b8b0b44342ec577e"
+  },
+  "server.js": {
+    "mtime": 1787288353.795135,
+    "seen": 1788859942.69712,
+    "ast_hash": "968eb403e88c776b9788085b7f541ee7",
+    "semantic_hash": "968eb403e88c776b9788085b7f541ee7"
+  },
+  "dashboard.html": {
+    "mtime": 1788331546.6533852,
+    "seen": 1788859942.697121,
+    "ast_hash": "6c6a8d18d937268f8cce75b3488eda9b",
+    "semantic_hash": "6c6a8d18d937268f8cce75b3488eda9b"
+  },
+  "index.html": {
+    "mtime": 1788342476.4069304,
+    "seen": 1788859942.697122,
+    "ast_hash": "75916e2dca17304db69c8273769503a0",
+    "semantic_hash": "75916e2dca17304db69c8273769503a0"
+  },
+  "thumbnail.png": {
+    "mtime": 1786949520.4088771,
+    "seen": 1788859942.697122,
+    "ast_hash": "92f9acf67683d635ccba713237a05fae",
+    "semantic_hash": "92f9acf67683d635ccba713237a05fae"
+  }
+}
