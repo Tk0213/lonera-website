@@ -9,3 +9,6 @@ graphify-out/.graphify_*
 
 # temporary local preview of the design-system bundle
 _dspreview/
+
+# generated-image staging
+_gen/
