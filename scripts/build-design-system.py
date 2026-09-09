@@ -275,11 +275,13 @@ def build(css, imgs):
         "Navigation", "Island toolbar",
         "The whole control deck floats: inset from the edges, 28px corners, "
         "translucent with a backdrop blur, and content scrolls underneath it. "
-        "Search, voice and all six tabs sit inside one island.",
+        "Search, the language control and all six tabs sit inside one island. Language "
+        "is a primary control for this audience, not a setting buried in a profile screen.",
         '<div class="deck" style="position:relative;left:auto;right:auto;bottom:auto;'
         'width:360px;max-width:100%">'
         '<div class="searchdock">' + ic("search") +
         '<input placeholder="What do you need?">'
+        '<button class="langbtn">EN</button>'
         '<button class="voicebtn">' + ic("mic") + "</button></div>"
         '<nav class="tabs">'
         + "".join('<button class="tab%s">%s<span>%s</span></button>'
@@ -288,7 +290,7 @@ def build(css, imgs):
                                  ("Community", "group"), ("Saved", "heart"),
                                  ("Inbox", "inbox"), ("You", "user")])
         + "</nav></div>",
-        T + "\n" + R(".deck", ".searchdock", ".voicebtn", ".tabs", ".tab", ".vicon", ".vmic", ".vstop"),
+        T + "\n" + R(".deck", ".searchdock", ".langbtn", ".voicebtn", ".tabs", ".tab", ".vicon", ".vmic", ".vstop"),
         "body{background:#e9eaec}")
 
     # -- Messaging ---------------------------------------------------------

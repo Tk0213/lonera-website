@@ -266,8 +266,12 @@ button{font-family:inherit;cursor:pointer;}
   resize:none;overflow:hidden;min-height:96px;}
 .vs-input::placeholder{color:#a6a6a6;}
 .vs-chips{padding:2px 22px 0;display:flex;flex-wrap:wrap;gap:6px;}
-.vs-go{margin:16px 22px 0;}
-.vs-res{flex:1;overflow-y:auto;padding-top:6px;scrollbar-width:none;}
+/* the action lives at the bottom like every other control in this app, and
+   carries no label: the arrow and its aria-label do the work */
+.vs-go{flex-shrink:0;padding:10px 22px calc(var(--safe-b) + 10px);
+  border-top:1px solid var(--line);background:var(--bg);}
+.vs-res{flex:1;min-height:0;overflow-y:auto;padding-top:6px;scrollbar-width:none;
+  overscroll-behavior-y:contain;}
 .vs-res::-webkit-scrollbar{display:none;}
 
 /* ---------- bottom sheet: every action opens here, in reach ---------- */
@@ -277,6 +281,14 @@ button{font-family:inherit;cursor:pointer;}
 .searchdock input{flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:1rem;
   font-weight:600;color:var(--text);min-width:0;height:46px;}
 .searchdock input::placeholder{color:#767676;font-weight:500;}
+/* language sits in the deck, not buried in a settings screen: for this
+   audience it is a primary control, not a preference */
+.langbtn{height:46px;min-width:46px;padding:0 13px;border-radius:999px;flex-shrink:0;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--text);
+  font-family:inherit;font-size:.88rem;font-weight:800;letter-spacing:-.01em;
+  transition:transform .14s ease-out,border-color .14s ease-out,background .14s ease-out;}
+.langbtn:hover{border-color:var(--brand);}
+.langbtn:active{transform:scale(.96);}
 .voicebtn{width:52px;height:52px;border-radius:50%;background:var(--brand-btn);border:none;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .16s ease-out,box-shadow .16s ease-out,background .16s ease-out;
   box-shadow:0 4px 14px rgba(227,28,95,.36);}
@@ -510,6 +522,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <section class="view" id="v-saved"></section>
       <section class="view" id="v-inbox"></section>
       <section class="view" id="v-community"></section>
+      <section class="view" id="v-list"></section>
       <section class="view" id="v-biz"></section>
       <section class="view" id="v-you"></section>
      </div>
@@ -528,9 +541,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <div class="searchdock">
         <svg class="ic" viewBox="0 0 24 24" style="color:#767676"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg>
         <input id="q" aria-label="Search" placeholder="What do you need?" autocomplete="off">
-        <button class="voicebtn" id="qgo" aria-label="Search" hidden>
-          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h13M12 5l7 7-7 7"/></svg>
-        </button>
+        <button class="langbtn" id="qlang"><span id="qlangT">EN</span></button>
         <button class="voicebtn" id="voice" aria-label="Ask with your voice">
           <span class="vicon">
             <svg class="ic vmic" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
@@ -566,8 +577,8 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
         <textarea class="vs-input" id="vsInput" rows="2" enterkeyhint="search"></textarea>
       </div>
       <div class="vs-chips" id="vsChips"></div>
-      <div class="vs-go"><button class="btn pri" id="vsGo"></button></div>
       <div class="vs-res" id="vsRes"></div>
+      <div class="vs-go"><button class="btn pri" id="vsGo"></button></div>
     </div>
     <div class="scrim" id="scrim"></div>
     <div class="sheet" id="sheet">
@@ -685,6 +696,9 @@ const T={en:{
  tDeclined:"Declined.",newInvoice:"Create an invoice",
  stPaid:"Paid",stSent:"Sent",stOverdue:"Overdue",stDraft:"Draft",
  visits:"visits",
+ catAll:"listings",catOne:"listing",catNone:"Nothing listed here yet",
+ catNoneSub:"Try another category, or ask the community.",
+ catGrocery:"Grocery deals",backBrowse:"All categories",
  vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
  vsNone:"Nothing matched. Try different words."
@@ -750,6 +764,9 @@ const T={en:{
  tDeclined:"거절했어요.",newInvoice:"청구서 만들기",
  stPaid:"결제 완료",stSent:"발송됨",stOverdue:"연체",stDraft:"임시 저장",
  visits:"방문",
+ catAll:"곳",catOne:"곳",catNone:"아직 등록된 곳이 없어요",
+ catNoneSub:"다른 카테고리를 보시거나 커뮤니티에 물어보세요.",
+ catGrocery:"장보기 할인",backBrowse:"전체 카테고리",
  vsListening:"듣고 있어요. 말씀해 주세요.",vsPaused:"입력 후 엔터를 눌러 주세요",
  vsPh:"필요한 것을 말씀하세요",vsGo:"결과 보기",vsResults:"가장 알맞은 곳",
  vsNone:"맞는 결과가 없어요. 다르게 말해 보세요."
@@ -958,6 +975,7 @@ const I={
  cart:'<path d="M4 6h2l2.2 9.5h9.1L20 8.5H7"/><circle cx="10" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>',
  plus:'<path d="M12 5v14M5 12h14"/>',
  scale:'<path d="M12 3v18M5 8l-2 6h4zM19 8l-2 6h4z"/><path d="M5 8h14"/>',
+ arrow:'<path d="M5 12h13M12 5l7 7-7 7"/>',
  group:'<circle cx="9" cy="8.4" r="3.3"/><path d="M2.6 19.6c0-3.3 2.9-5.5 6.4-5.5s6.4 2.2 6.4 5.5"/><path d="M16.2 5.6a3.3 3.3 0 010 6.4M17.6 14.6c2.4.6 3.9 2.4 3.9 5"/>',
  mic:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',
  stopsq:'<rect x="6.5" y="6.5" width="11" height="11" rx="3"/>'
@@ -1086,9 +1104,17 @@ function viewHome(){
 function viewBrowse(){
   $("v-browse").innerHTML=`<div class="head" style="padding-top:10px"><h2>${t("browseTitle")}</h2><p>${t("browseSub")}</p></div>
     <div class="stack" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      ${CATS.map(c=>`<button class="card" data-cat="${c[0]}">
+      ${CATS.map(c=>{const n=BIZ.filter(b=>b.c===c[0]).length;
+        return `<button class="card" data-cat="${c[0]}">
         <div class="pic ${c[2]}" style="height:96px;overflow:hidden">${art(c[3])}</div>
-        <div class="b" style="padding:11px 12px 13px"><p class="t" style="font-size:.92rem">${lang==="ko"?c[1]:c[0]}</p></div></button>`).join("")}
+        <div class="b" style="padding:11px 12px 13px">
+          <p class="t" style="font-size:.92rem">${lang==="ko"?c[1]:c[0]}</p>
+          <p class="s" style="font-size:.78rem">${nList(n)}</p></div></button>`;}).join("")}
+      <button class="card" data-cat="__grocery__">
+        <div class="pic g4" style="height:96px;overflow:hidden">${art("beef")}</div>
+        <div class="b" style="padding:11px 12px 13px">
+          <p class="t" style="font-size:.92rem">${t("catGrocery")}</p>
+          <p class="s" style="font-size:.78rem">${nList(GROCERY.length)}</p></div></button>
     </div>
     <div class="rowtitle"><h3>${t("rowGrocery")}</h3></div>
     <div class="rail">${GROCERY.map(x=>poster(lang==="ko"?x.ik:x.i,x.p,`${x.s} · ${gd()}`,"g4",x.sc,x.s)).join("")}</div>
@@ -1188,6 +1214,27 @@ function visitsChart(){
         fill="var(--text)">${max}</text>
     </svg>`;
 }
+let listCat=null;
+const nList = n => `${n} ${n===1?t("catOne"):t("catAll")}`;
+function viewList(){
+  const el=$("v-list"); if(!el) return;
+  const grocery = listCat==="__grocery__";
+  const cat = CATS.find(c=>c[0]===listCat);
+  const title = grocery ? t("catGrocery") : (cat ? (lang==="ko"?cat[1]:cat[0]) : listCat||"");
+  const items = grocery
+    ? GROCERY.map(x=>poster(lang==="ko"?x.ik:x.i,x.p,`${x.s} · ${gd()}`,"g4",x.sc,x.s))
+    : BIZ.filter(b=>b.c===listCat)
+         .sort((a,b)=>(b.free-a.free)||(b.r-a.r))
+         .map(bizCard);
+  el.innerHTML=`
+    <div class="backbar"><button data-go="browse">${ic("grid","ic-s")}${t("backBrowse")}</button></div>
+    <div class="head" style="padding-top:2px"><h2>${esc(title)}</h2>
+      <p>${nList(items.length)}</p></div>
+    ${items.length
+      ? `<div class="stack" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">${items.join("")}</div>`
+      : `<div class="empty">${ic("help")}<p>${t("catNone")}</p><span>${t("catNoneSub")}</span></div>`}`;
+}
+function openCat(name){ listCat=name; viewList(); go("list"); }
 function viewBiz(){
   const total=BIZDASH.visits.reduce((a,b)=>a+b,0);
   const delta=Math.round((total-BIZDASH.prevTotal)/BIZDASH.prevTotal*100);
@@ -1267,7 +1314,7 @@ function viewYou(){
       <button class="opt" data-act="help">${ic("help")}<span>${t("help")}</span><span class="rt">›</span></button>
     </div>`;
 }
-function paint(){viewHome();viewBrowse();viewSaved();viewInbox();viewCommunity();viewBiz();viewYou();
+function paint(){viewHome();viewBrowse();viewSaved();viewInbox();viewCommunity();viewList();viewBiz();viewYou();
   $("q").placeholder=t("searchPh");
   $("tabs").innerHTML=TABS.map(x=>`<button class="tab${x.k===cur?" on":""}" data-go="${x.k}">
     ${ic(x.i)}${x.b?`<span class="dot">${NOTIFS.filter(n=>!n.read).length}</span>`:""}<span>${t(x.t)}</span></button>`).join("");
@@ -1469,6 +1516,25 @@ function sendChat(){
   },500);
 }
 
+const LANGS=[["en","English","English"],["ko","한국어","Korean"]];
+function paintLang(){
+  const b=$("qlangT"); if(b) b.textContent = lang==="ko" ? "한" : "EN";
+  const btn=$("qlang"); if(btn) btn.setAttribute("aria-label",t("language"));
+}
+function openLang(){
+  sheet(t("language"),"",
+    `<div style="display:flex;flex-direction:column">
+      ${LANGS.map(([code,native,en])=>`<button class="opt" data-lang="${code}">
+        ${ic("globe")}<span>${native}</span>
+        <span class="rt">${code===lang?`<span style="color:var(--ok)">&#10003;</span>`:en}</span>
+      </button>`).join("")}
+     </div>`,
+    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
+}
+function setLang(code){
+  if(code===lang){closeSheet();return;}
+  lang=code; paint(); paintBadge(); paintLang(); closeSheet();
+}
 function openNotif(){
   sheet(t("notif"),"",
     `<div style="display:flex;flex-direction:column;gap:10px">
@@ -1635,7 +1701,8 @@ function vsOpen(){
   vHeard="";
   const i=$("vsInput");
   i.value=""; i.placeholder=t("vsPh");
-  $("vsGo").innerHTML=`${ic("check")}${t("vsGo")}`;
+  $("vsGo").innerHTML=ic("arrow");
+  $("vsGo").setAttribute("aria-label",t("vsGo"));
   $("vsRes").innerHTML=""; $("vsChips").innerHTML="";
   $("vs").classList.add("on");
   vsState();
@@ -1706,27 +1773,22 @@ function runSearch(){
   hideSugg();
   runIntent(parseIntent(v));      // the query stays in the field, ready to refine
 }
-$("q").addEventListener("input",()=>{
-  const has=!!$("q").value.trim();
-  $("qgo").hidden=!has;
-  $("voice").hidden=has;          // one control slot: mic when empty, submit when typing
-  paintSugg();
-});
+$("q").addEventListener("input",paintSugg);
+$("qlang").onclick=openLang;
 $("q").addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();runSearch();} });
 $("q").addEventListener("blur",()=>setTimeout(hideSugg,160));
-$("qgo").onclick=runSearch;
+paintLang();
 
 /* ================= events ================= */
 document.addEventListener("click",e=>{
   const tab=e.target.closest("[data-go]"); if(tab){go(tab.dataset.go);return;}
   const biz=e.target.closest("[data-biz]");
   if(biz){ if($("vs").classList.contains("on")) vsClose(); openBiz(biz.dataset.biz); return; }
-  const cat=e.target.closest("[data-cat]"); if(cat){const b=BIZ.find(x=>x.c===cat.dataset.cat);
-    b?openBiz(b.id):toast(cat.dataset.cat);return;}
+  const cat=e.target.closest("[data-cat]"); if(cat){openCat(cat.dataset.cat);return;}
+  const lg=e.target.closest("[data-lang]"); if(lg){setLang(lg.dataset.lang);return;}
   const sug=e.target.closest("[data-sugg]");
   if(sug){
     $("q").value=sug.dataset.sugg; hideSugg();
-    $("qgo").hidden=false; $("voice").hidden=true;
     if(sug.dataset.sid) openBiz(sug.dataset.sid); else runSearch();
     return;
   }
@@ -1762,7 +1824,7 @@ document.addEventListener("click",e=>{
       SAVED.includes(id)?SAVED=SAVED.filter(x=>x!==id):SAVED.push(id);
       viewSaved(); closeSheet(); toast(t("tSaved")); break;
     }
-    case "lang": lang=lang==="en"?"ko":"en"; paint(); closeSheet(); break;
+    case "lang": openLang(); break;
     case "size": openSize(); break;
     case "notif": openNotif(); break;
     case "help": openForm("help"); break;
@@ -1789,7 +1851,7 @@ document.addEventListener("click",e=>{
 });
 function go(k){cur=k;document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
   $("v-"+k).classList.add("on");
-  const lit = k==="biz" ? "you" : k;      // the dashboard is reached from You
+  const lit = k==="biz" ? "you" : k==="list" ? "browse" : k;   // reached from their parent tab
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.go===lit));
   $("screen").scrollTop=0;}
 function paintBadge(){
