@@ -6,3 +6,6 @@ app-harness.html
 # graphify build cache (generated; .graphify_root embeds a local path)
 graphify-out/cache/
 graphify-out/.graphify_*
+
+# temporary local preview of the design-system bundle
+_dspreview/
