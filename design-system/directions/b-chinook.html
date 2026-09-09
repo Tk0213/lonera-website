@@ -1,0 +1,87 @@
+<!-- @dsCard group="Directions" -->
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Direction B - Chinook</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;padding:20px;background:#e8e8e6;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.wrap{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.plan{flex:1 1 260px;max-width:340px;font-size:.82rem;line-height:1.6;color:#2a2a2a}
+.plan h4{margin:0 0 8px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#71717a}
+.plan p{margin:0 0 12px}
+.sw{display:flex;gap:5px;margin:0 0 14px}
+.sw i{width:26px;height:26px;border-radius:5px;display:block;border:1px solid rgba(0,0,0,.12)}
+.phone{width:360px;flex:0 0 360px;height:720px;overflow:hidden;position:relative;border-radius:30px;box-shadow:0 20px 50px rgba(0,0,0,.24)}
+
+.ck{position:absolute;inset:0;background:#fff;overflow:hidden;
+  font-family:'Bricolage Grotesque',system-ui,sans-serif;color:#0B2A3A}
+.ck-sky{height:132px;background:linear-gradient(#0B2A3A,#0B4F6C);
+  display:flex;align-items:flex-start;justify-content:space-between;padding:22px 22px 0;color:#fff}
+.ck-brand{font-size:1.34rem;font-weight:800;letter-spacing:-.02em}
+.ck-place{font-size:.74rem;font-weight:600;opacity:.72;padding-top:6px}
+.ck-arch{background:linear-gradient(#0B4F6C,#E4A11B);padding:22px 22px 26px;color:#fff}
+.ck-q{font-size:1.72rem;font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:16px}
+.ck-ask{border:none;background:#0B2A3A;color:#fff;font-family:inherit;font-size:.98rem;
+  font-weight:600;padding:14px 20px;border-radius:2px;width:100%;text-align:left;cursor:pointer}
+.ck-land{background:#fff;padding:20px 0 0;height:100%;overflow-y:auto}
+.ck-land::-webkit-scrollbar{display:none}
+.ck-lbl{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#0B4F6C;padding:0 22px 10px}
+.ck-lbl2{padding-top:22px}
+.ck-item{display:flex;align-items:center;gap:12px;padding:13px 22px;text-decoration:none;color:inherit}
+.ck-item span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ck-item b{font-size:1rem;font-weight:600;letter-spacing:-.01em}
+.ck-item i{font-style:normal;font-size:.75rem;color:#5E7688}
+.ck-dot{width:9px;height:9px;border-radius:50%;background:#E4A11B;flex-shrink:0}
+.ck-p{font-size:.82rem;font-weight:700;white-space:nowrap}
+.ck-off{opacity:.42}
+.ck-off .ck-dot{background:#9FBACB}
+.ck-nav{position:absolute;left:0;right:0;bottom:0;display:flex;background:#0B2A3A}
+.ck-nav a{flex:1;text-align:center;padding:18px 0 22px;font-size:.74rem;font-weight:600;
+  color:rgba(255,255,255,.55);text-decoration:none}
+.ck-nav a.on{color:#E4A11B}
+
+</style></head><body>
+<div class="wrap">
+<div class="plan"><h4>Direction B &middot; Chinook</h4>
+<p><b>Thesis.</b> Rooted in Calgary rather than in software. The chinook arch &mdash; that
+band of clear sky over the foothills when the warm wind comes through &mdash; is the
+structure, not a decorative gradient behind a hero.</p>
+<div class="sw"><i style="background:#0B2A3A"></i><i style="background:#0B4F6C"></i>
+<i style="background:#E4A11B"></i><i style="background:#9FBACB"></i><i style="background:#fff"></i></div>
+<p><b>Type.</b> One family, Bricolage Grotesque, worked hard across its optical sizes.
+A second face would be a third voice this screen does not need.</p>
+<p><b>Structure.</b> The screen is stratified: sky, arch, land. Content lives in the land
+band; the arch carries the one thing you are meant to act on.</p>
+<p><b>Restraint.</b> Gold is the light in the arch and marks availability &mdash; a business
+free today. It never becomes a general accent.</p></div>
+<div class="phone"><div class="ck">
+  <div class="ck-sky">
+    <div class="ck-brand">Lonera</div>
+    <div class="ck-place">Calgary &middot; NW</div>
+  </div>
+  <div class="ck-arch">
+    <div class="ck-q">Who do you need<br>to find today?</div>
+    <button class="ck-ask">Say it or type it</button>
+  </div>
+  <div class="ck-land">
+    <div class="ck-lbl">Free today</div>
+    <a class="ck-item"><span class="ck-dot"></span>
+      <span><b>Sparkle Home Services</b><i>Cleaning &middot; SE &middot; Tagalog</i></span>
+      <span class="ck-p">$100&ndash;220</span></a>
+    <a class="ck-item"><span class="ck-dot"></span>
+      <span><b>Bow River Family Clinic</b><i>Clinic &middot; NW &middot; Korean</i></span>
+      <span class="ck-p">AHCIP</span></a>
+    <a class="ck-item"><span class="ck-dot"></span>
+      <span><b>Studio Haneul Hair</b><i>Hair &middot; Downtown &middot; Korean</i></span>
+      <span class="ck-p">$30&ndash;120</span></a>
+    <div class="ck-lbl ck-lbl2">Booked out this week</div>
+    <a class="ck-item ck-off"><span class="ck-dot"></span>
+      <span><b>Bright Path Immigration</b><i>Immigration &middot; City-wide</i></span>
+      <span class="ck-p">$300+</span></a>
+  </div>
+  <nav class="ck-nav"><a class="on">Find</a><a>Groups</a><a>Messages</a><a>You</a></nav>
+</div></div>
+</div>
+</body></html>

@@ -36,6 +36,34 @@ group, a title, a note explaining *why* the component is the way it is (not just
 what it looks like), the demo markup, and `R(".selector", ...)` listing the class
 names whose real CSS the card should carry. Do not paste CSS into the card.
 
+## Propose a design direction, don't just document the current one
+
+Claude Design is the design surface, not a mirror of the code. Two groups live there
+and they do different jobs:
+
+- **Foundations / Components** - generated from `app-preview.html`, documents what the
+  app does today. Never hand-edited.
+- **Directions** - proposals. A more modern, more particular take on what is being
+  built, for the client to choose from before it is implemented.
+
+When building anything substantial, put a direction in front of the client rather than
+only shipping the obvious version. Load the `frontend-design` skill first and follow its
+two-pass process: a written plan (palette, type, layout, principles) reviewed for
+genericness *before* any code.
+
+Each Directions card carries the plan beside the mockup, because a direction the client
+cannot reason about is just a picture. Say what the thesis is, where the restraint is,
+and what you deliberately did not do.
+
+**The bar.** The current build takes Airbnb's palette and Netflix's layout. That is two
+references, not a point of view. A direction has to come from the subject: newcomers to
+Calgary, trust as the actual currency, four languages that must sit as equals. If a
+proposal would look the same for a food-delivery app, it is not a direction yet.
+
+Avoid the house style of generated design: cream backgrounds with a terracotta accent,
+near-black with one acid accent, everything chopped into identical rounded cards, an
+ALL-CAPS eyebrow above every heading, meta strings joined with middle dots.
+
 ## Things that will bite you
 
 - `app-preview.html` is written as an artifact **body** - no `<!doctype>`,

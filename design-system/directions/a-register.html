@@ -1,0 +1,98 @@
+<!-- @dsCard group="Directions" -->
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Direction A - Register</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;padding:20px;background:#e8e8e6;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.wrap{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}
+.plan{flex:1 1 260px;max-width:340px;font-size:.82rem;line-height:1.6;color:#2a2a2a}
+.plan h4{margin:0 0 8px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#71717a}
+.plan p{margin:0 0 12px}
+.sw{display:flex;gap:5px;margin:0 0 14px}
+.sw i{width:26px;height:26px;border-radius:5px;display:block;border:1px solid rgba(0,0,0,.12)}
+.phone{width:360px;flex:0 0 360px;height:720px;overflow:hidden;position:relative;border-radius:30px;box-shadow:0 20px 50px rgba(0,0,0,.24)}
+
+.rg{position:absolute;inset:0;background:#fff;color:#101418;overflow-y:auto;
+  font-family:'Public Sans',system-ui,sans-serif;padding-bottom:74px}
+.rg::-webkit-scrollbar{display:none}
+.rg-h{padding:26px 22px 18px;border-bottom:2px solid #101418}
+.rg-mark{font-family:Newsreader,Georgia,serif;font-size:2rem;font-weight:500;letter-spacing:-.01em;line-height:1}
+.rg-sub{font-size:.72rem;color:#5C636E;margin-top:6px;max-width:26ch;line-height:1.45}
+.rg-find{padding:16px 22px;border-bottom:1px solid #D8DBDF}
+.rg-find label{display:block;font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;
+  color:#5C636E;margin-bottom:6px}
+.rg-find input{width:100%;border:none;border-bottom:1.5px solid #101418;background:none;
+  font-family:Newsreader,Georgia,serif;font-size:1.12rem;padding:5px 0 8px;outline:none;color:#101418}
+.rg-find input::placeholder{color:#A6ABB2}
+.rg-secn{font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:#5C636E;
+  padding:20px 22px 9px;border-bottom:1px solid #D8DBDF}
+.rg-row{display:flex;align-items:flex-start;gap:14px;padding:15px 22px;
+  border-bottom:1px solid #D8DBDF;text-decoration:none;color:inherit}
+.rg-seal{flex:0 0 46px;height:46px;border-radius:50%;border:1.5px solid #B3121A;color:#B3121A;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:1.05rem;font-weight:700;line-height:1;transform:rotate(-7deg)}
+.rg-seal small{font-size:.44rem;letter-spacing:.09em;text-transform:uppercase;margin-top:2px;font-weight:600}
+.rg-bd{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rg-nm{font-family:Newsreader,Georgia,serif;font-size:1.14rem;font-weight:500;line-height:1.2}
+.rg-mt{font-size:.74rem;color:#5C636E}
+.rg-lg{font-size:.74rem;color:#1B3A6B;font-weight:600}
+.rg-pr{font-size:.76rem;font-weight:600;white-space:nowrap;padding-top:3px}
+.rg-key{padding:4px 22px 20px}
+.rg-key div{font-size:.78rem;line-height:1.55;color:#3A4049;padding:9px 0;border-bottom:1px solid #ECEEF0}
+.rg-key em{font-style:normal;font-weight:700;color:#101418;display:inline-block;min-width:74px}
+.rg-nav{position:absolute;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:2px solid #101418}
+.rg-nav a{flex:1;text-align:center;padding:17px 0 20px;font-size:.7rem;letter-spacing:.06em;
+  text-transform:uppercase;color:#5C636E;text-decoration:none;font-weight:600}
+.rg-nav a.on{color:#101418;box-shadow:inset 0 3px 0 #B3121A}
+
+</style></head><body>
+<div class="wrap">
+<div class="plan"><h4>Direction A &middot; Register</h4>
+<p><b>Thesis.</b> Trust is the product. Not a badge bolted onto a listing card, but the
+whole visual language: this is a register of vouched-for people, kept properly.</p>
+<div class="sw"><i style="background:#101418"></i><i style="background:#1B3A6B"></i>
+<i style="background:#B3121A"></i><i style="background:#8A9099"></i><i style="background:#fff"></i></div>
+<p><b>Type.</b> Newsreader for the names of people and businesses &mdash; a serif gives a
+person dignity that a grotesk does not. Public Sans for everything procedural.</p>
+<p><b>Structure.</b> Ruled rows, not cards. The seal is the only circular thing on the
+screen, so verification is the first thing the eye finds.</p>
+<p><b>Restraint.</b> Stamp red appears on seals and nowhere else &mdash; never on a button.
+Spending it on a CTA would make verification decorative.</p></div>
+<div class="phone"><div class="rg">
+  <header class="rg-h">
+    <div class="rg-mark">Lonera</div>
+    <div class="rg-sub">Calgary register of vouched-for trades and services</div>
+  </header>
+  <div class="rg-find">
+    <label for="rga">What do you need?</label>
+    <input id="rga" placeholder="a cleaner who speaks Korean">
+  </div>
+  <div class="rg-secn">Entered this week</div>
+  <a class="rg-row"><span class="rg-seal">4<small>seals</small></span>
+    <span class="rg-bd"><span class="rg-nm">Bow River Family Clinic</span>
+    <span class="rg-mt">Clinic &nbsp;&middot;&nbsp; NW Calgary</span>
+    <span class="rg-lg">Korean, English</span></span>
+    <span class="rg-pr">AHCIP</span></a>
+  <a class="rg-row"><span class="rg-seal">5<small>seals</small></span>
+    <span class="rg-bd"><span class="rg-nm">TrueBuild Renovations</span>
+    <span class="rg-mt">Renovation &nbsp;&middot;&nbsp; City-wide</span>
+    <span class="rg-lg">English, Punjabi</span></span>
+    <span class="rg-pr">$2,000+</span></a>
+  <a class="rg-row"><span class="rg-seal">3<small>seals</small></span>
+    <span class="rg-bd"><span class="rg-nm">Sparkle Home Services</span>
+    <span class="rg-mt">Cleaning &nbsp;&middot;&nbsp; SE Calgary</span>
+    <span class="rg-lg">English, Tagalog</span></span>
+    <span class="rg-pr">$100&ndash;220</span></a>
+  <div class="rg-secn">What a seal means</div>
+  <div class="rg-key">
+    <div><em>Identity</em> Government photo ID checked against a live selfie.</div>
+    <div><em>Business</em> Registered in Alberta, licence number on file.</div>
+    <div><em>Trade</em> Red Seal, RCIC or provincial licence, verified at source.</div>
+    <div><em>Insured</em> Liability cover confirmed with the insurer directly.</div>
+  </div>
+  <nav class="rg-nav"><a class="on">Register</a><a>Trades</a><a>Requests</a><a>You</a></nav>
+</div></div>
+</div>
+</body></html>
