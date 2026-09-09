@@ -4,14 +4,23 @@
     {
       "name": "lonera-static",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8934", "--bind", "127.0.0.1"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8934",
+        "--bind",
+        "127.0.0.1"
+      ],
       "port": 8934
     },
     {
       "name": "lonera-server",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
-      "port": 3000
+      "runtimeArgs": [
+        "start"
+      ],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }
