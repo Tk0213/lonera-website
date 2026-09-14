@@ -12,3 +12,7 @@ export * as ranking from './ranking.js';
 export * as i18n from './i18n.js';
 export * as businesses from './businesses.js';
 export { createWaitlist, waitlist, MAX_PER_USER, HOLD_MS } from './waitlist.js';
+export * as tutoring from './tutoring.js';
+export * as matching from './matching.js';
+export * as booking from './booking.js';
+export * as calendar from './calendar.js';
