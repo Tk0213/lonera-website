@@ -16,12 +16,19 @@ const crypto = require('crypto');
 const availability = require('./lib/availability');
 const aiIntent = require('./lib/ai/intent');
 const businesses = require('./lib/businesses');
+const waitlist = require('./lib/waitlist');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const PROD = process.env.NODE_ENV === 'production';
 
 app.disable('x-powered-by'); // do not advertise the stack
+app.disable('etag');         // API answers are no-store; an ETag only invites cache probing
+
+/* Express does not trust proxy headers by default and this depends on that:
+   rateLimit() keys on req.ip, so if `trust proxy` were switched on without a
+   matching proxy in front, anyone could reset their own limit by sending an
+   X-Forwarded-For header. Verified: spoofing it does not lift the limit. */
 
 /* ------------------------------------------------------------------ security */
 
@@ -64,6 +71,19 @@ app.use((req, res, next) => {
 
 /** Body cap: these endpoints take a sentence, not a payload. */
 app.use(express.json({ limit: '16kb' }));
+
+/* A body that is malformed or too big is the client's mistake, not ours.
+   Without this the parser's error reached the generic handler and came back
+   as 500 - which reads as "the server broke", logs a stack for something
+   entirely routine, and tells an attacker probing limits nothing useful
+   apart from how to make the logs noisy. */
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  if (!err || !err.type) return next(err);
+  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'body too large' });
+  if (err.type === 'entity.parse.failed') return res.status(400).json({ error: 'invalid json' });
+  return next(err);
+});
 
 /**
  * Fixed-window rate limit, in memory.
@@ -122,6 +142,7 @@ app.get('/api/health', (req, res) => {
       openai: Boolean(process.env.OPENAI_API_KEY),
     },
     places: Boolean(process.env.GOOGLE_PLACES_API_KEY),
+    standby: Boolean(process.env.STANDBY_SECRET),
   });
 });
 
@@ -183,6 +204,101 @@ app.post('/api/ai/intent',
     }
   });
 
+/* ------------------------------------------------------------------ standby */
+
+/**
+ * Standby queue endpoints.
+ *
+ * These are gated shut unless STANDBY_SECRET is set, and that is the whole
+ * point rather than an inconvenience. The queue's value is that the order is
+ * honest, and the order can only be honest if we know who is in it. With a
+ * client-supplied user id and no signature, the first person to read the
+ * network tab can:
+ *
+ *   - join as a hundred invented identities and occupy every place in a line,
+ *     which is exactly the flooding the queue exists to prevent;
+ *   - call leave with somebody else's id and take their place away.
+ *
+ * Neither is a clever exploit, they are just what an unauthenticated endpoint
+ * means. So identity comes from an HMAC-signed token the server issued, and
+ * with no secret configured the routes answer 503 instead of pretending to be
+ * fair. Failing closed is the only correct default here: a queue that can be
+ * stuffed is worse than no queue, because people rearrange their day around
+ * a promise it cannot keep.
+ */
+const STANDBY_SECRET = process.env.STANDBY_SECRET || null;
+
+/** Verify `userId.signature`, returning the id only if we really signed it. */
+function identify(token) {
+  if (!STANDBY_SECRET || typeof token !== 'string') return null;
+  const dot = token.lastIndexOf('.');
+  if (dot < 1) return null;
+  const id = token.slice(0, dot);
+  const sig = token.slice(dot + 1);
+  if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) return null;
+  const want = crypto.createHmac('sha256', STANDBY_SECRET).update(id).digest('base64url');
+  // timingSafeEqual throws on a length mismatch, so compare lengths first
+  if (sig.length !== want.length) return null;
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(want)) ? id : null;
+}
+
+function standbyGate(req, res, next) {
+  if (!STANDBY_SECRET) {
+    return res.status(503).json({ error: 'standby queue is not configured' });
+  }
+  const who = identify(req.get('X-Lonera-Token') || (req.body && req.body.token));
+  if (!who) return res.status(401).json({ error: 'a signed identity is required' });
+  req.who = who;
+  return next();
+}
+
+const standbyLimit = rateLimit({ windowMs: 60_000, max: 30, key: 'standby' });
+
+function readSlotArgs(req, res) {
+  const bizId = String(req.params.bizId || '');
+  if (!/^[a-z0-9_-]{1,40}$/i.test(bizId)) { res.status(400).json({ error: 'bad id' }); return null; }
+  if (!businesses.get(bizId)) { res.status(404).json({ error: 'unknown business' }); return null; }
+  const day = Number(req.body && req.body.day);
+  if (!Number.isInteger(day) || day < 0 || day > 30) { res.status(400).json({ error: 'bad day' }); return null; }
+  const slot = req.body && req.body.slot;
+  if (typeof slot !== 'string' || !slot.trim() || slot.length > 24) {
+    res.status(400).json({ error: 'bad slot' }); return null;
+  }
+  return { bizId, day, slot: slot.trim() };
+}
+
+app.post('/api/standby/:bizId/join', standbyLimit, standbyGate, (req, res) => {
+  const a = readSlotArgs(req, res);
+  if (!a) return undefined;
+  const biz = businesses.get(a.bizId);
+  // The tier rule again: only a business with a real calendar can have a slot
+  // taken on their behalf. Everyone else can be asked, never auto-booked.
+  const autoBook = req.body.autoBook !== false && Boolean(biz.icsUrl);
+  const out = waitlist.join(a.bizId, a.day, a.slot, req.who, { autoBook });
+  if (!out.ok) return res.status(429).json({ error: out.error, max: out.max });
+  res.setHeader('Cache-Control', 'no-store');
+  return res.json({ ok: true, position: out.position, autoBook, already: Boolean(out.already) });
+});
+
+app.post('/api/standby/:bizId/leave', standbyLimit, standbyGate, (req, res) => {
+  const a = readSlotArgs(req, res);
+  if (!a) return undefined;
+  const left = waitlist.leave(a.bizId, a.day, a.slot, req.who);
+  res.setHeader('Cache-Control', 'no-store');
+  return res.json({ ok: true, left });
+});
+
+app.get('/api/standby/mine', standbyLimit, standbyGate, (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({ ok: true, lines: waitlist.forUser(req.who) });
+});
+
+/* Note there is deliberately no HTTP route that releases a slot. A release
+   decides who gets an appointment, so it belongs to the calendar poller that
+   noticed the cancellation - never to a caller who can simply ask for one.
+   Exposed, it would let anyone drain a queue by claiming slots that never
+   freed. */
+
 /* ---------------------------------------------------------------- fallthrough */
 
 app.use((req, res) => res.status(404).json({ error: 'not found' }));
@@ -201,3 +317,5 @@ if (require.main === module) {
 }
 
 module.exports = app;
+/* exported for tests: the signature check is the whole of the queue's integrity */
+module.exports.identify = identify;

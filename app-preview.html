@@ -194,8 +194,9 @@ button{font-family:inherit;cursor:pointer;}
 
 /* ---------- conversation ---------- */
 .chat{position:absolute;inset:0;background:var(--bg);z-index:66;display:flex;flex-direction:column;
-  transform:translateX(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);}
-.chat.on{transform:none;}
+  transform:translateX(100%);visibility:hidden;
+  transition:transform .32s cubic-bezier(.22,1,.36,1),visibility .32s;}
+.chat.on{transform:none;visibility:visible;}
 .chat-nav{display:flex;align-items:center;gap:8px;padding:12px 14px 10px;flex-shrink:0;
   border-bottom:1px solid var(--line);background:rgba(255,255,255,.9);
   -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);}
@@ -237,9 +238,9 @@ button{font-family:inherit;cursor:pointer;}
 
 /* ---------- full-screen voice search ---------- */
 .vs{position:absolute;inset:0;background:var(--bg);z-index:65;display:flex;flex-direction:column;
-  opacity:0;pointer-events:none;transform:scale(1.03);
-  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1);}
-.vs.on{opacity:1;pointer-events:auto;transform:none;}
+  opacity:0;pointer-events:none;visibility:hidden;transform:scale(1.03);
+  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1),visibility .28s;}
+.vs.on{opacity:1;pointer-events:auto;visibility:visible;transform:none;}
 .vs-top{display:flex;align-items:center;justify-content:flex-end;padding:14px 14px 0;}
 .vs-x{width:44px;height:44px;border-radius:50%;border:none;background:var(--surface);color:var(--text);
   display:flex;align-items:center;justify-content:center;transition:background .16s ease-out,transform .14s ease-out;}
@@ -430,9 +431,10 @@ button{font-family:inherit;cursor:pointer;}
   transition:opacity .24s ease-out;z-index:50;}
 .scrim.on{opacity:1;pointer-events:auto;}
 .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:var(--r-sheet) var(--r-sheet) 0 0;
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1);z-index:60;max-height:82%;
+  transform:translateY(100%);visibility:hidden;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1),visibility .3s;z-index:60;max-height:82%;
   display:flex;flex-direction:column;box-shadow:0 -8px 34px rgba(0,0,0,.18);}
-.sheet.on{transform:translateY(0);}
+.sheet.on{transform:translateY(0);visibility:visible;}
 .grip{width:42px;height:5px;border-radius:99px;background:var(--line);margin:11px auto 4px;flex-shrink:0;}
 .sheet-body{overflow-y:auto;padding:8px 20px 4px;scrollbar-width:none;}
 .sheet-body::-webkit-scrollbar{display:none;}
@@ -481,9 +483,9 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 
 /* ---------- multi-service plan: one errand, several visits ---------- */
 .pl{position:absolute;inset:0;background:var(--bg);z-index:67;display:flex;flex-direction:column;
-  opacity:0;pointer-events:none;transform:translateY(14px);
-  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1);}
-.pl.on{opacity:1;pointer-events:auto;transform:none;}
+  opacity:0;pointer-events:none;visibility:hidden;transform:translateY(14px);
+  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1),visibility .28s;}
+.pl.on{opacity:1;pointer-events:auto;visibility:visible;transform:none;}
 .pl-top{display:flex;align-items:center;justify-content:flex-end;padding:14px 14px 0;}
 .pl-head{padding:2px 22px 0;}
 .pl-head h2{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.025em;line-height:1.15;}
@@ -517,7 +519,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .plr-t{font-size:.92rem;font-weight:800;font-variant-numeric:tabular-nums;}
 .plr-t.off{font-weight:700;color:var(--text-2);}
 .plr-swap{margin-left:auto;border:1.5px solid var(--line);background:var(--bg);color:var(--text);
-  font-family:inherit;font-size:.82rem;font-weight:800;height:38px;padding:0 15px;border-radius:999px;
+  font-family:inherit;font-size:.82rem;font-weight:800;min-height:44px;padding:0 16px;border-radius:999px;
   transition:transform .14s ease-out,border-color .14s ease-out;}
 .plr-swap:hover{border-color:var(--brand);} .plr-swap:active{transform:scale(.96);}
 .plr-none{margin:0;font-size:.88rem;color:var(--text-2);line-height:1.5;}
@@ -528,8 +530,53 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .pl-mic{display:flex;align-items:center;justify-content:center;gap:8px;}
 .pl-mic.live{background:var(--text);color:#fff;border-color:var(--text);}
 .pl-mic.live .ic{color:#fff;}
+/* A day is part of a time. These read as a week strip so "Thu" is one tap,
+   which matters most for the users who find a date picker hard. */
+/* Standby control sits under the slot it belongs to, so the queue reads as
+   part of that time rather than a separate feature. */
+.wlwrap{display:flex;flex-direction:column;gap:5px;align-items:stretch;}
+.wlbtn{border:1.5px dashed var(--line);background:none;color:var(--text-2);
+  font-family:inherit;font-size:.74rem;font-weight:800;min-height:36px;padding:5px 11px;
+  border-radius:11px;transition:border-color .14s ease-out,color .14s ease-out,transform .14s ease-out;}
+.wlbtn:hover{border-color:var(--brand);color:var(--brand-ink);}
+.wlbtn:active{transform:scale(.96);}
+.wlbtn.in{border-style:solid;border-color:var(--brand-btn);background:var(--brand-tint);color:var(--brand-ink);}
+/* A slot the queue actually won. It has to look different from both an open
+   slot and a taken one, or the moment the feature exists for is invisible. */
+.slot.won{background:var(--ok-tint);border-color:var(--ok);color:var(--ok);
+  display:inline-flex;align-items:center;gap:6px;font-weight:800;
+  animation:tookit .35s ease-out;}
+.slot.won i{font-style:normal;font-size:.66rem;font-weight:800;letter-spacing:.03em;
+  text-transform:uppercase;}
+.prev-strip{display:flex;align-items:flex-start;gap:9px;margin:10px 20px 4px;padding:11px 12px;
+  background:var(--warn-tint);border-radius:14px;color:var(--warn);}
+.prev-strip .ic{flex-shrink:0;margin-top:2px;}
+.prev-strip p{margin:0;flex:1;font-size:.82rem;line-height:1.45;font-weight:700;}
+.prev-strip button{border:none;background:none;color:var(--warn);flex-shrink:0;
+  width:44px;height:44px;margin:-11px -8px -11px 0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;transition:background .14s ease-out;}
+.prev-strip button:hover{background:rgba(138,90,0,.12);}
+.avdays{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none;
+  scroll-snap-type:x proximity;overscroll-behavior-x:contain;}
+.avdays::-webkit-scrollbar{display:none;}
+.avday{flex:0 0 auto;scroll-snap-align:start;display:flex;flex-direction:column;gap:3px;
+  align-items:flex-start;border:1.5px solid var(--line);background:var(--bg);color:var(--text);
+  border-radius:13px;padding:8px 12px;min-height:52px;font-family:inherit;
+  transition:transform .14s ease-out,border-color .14s ease-out,background .14s ease-out;}
+.avday i{font-style:normal;font-size:.84rem;font-weight:800;letter-spacing:-.01em;}
+.avday b{font-size:.72rem;font-weight:700;color:var(--text-2);}
+.avday:hover:not(:disabled){border-color:var(--brand);}
+.avday:active:not(:disabled){transform:scale(.96);}
+.avday.on{background:var(--text);border-color:var(--text);color:#fff;}
+.avday.on b{color:#d8d8d8;}
+.avday:disabled{opacity:.45;}
+/* Sample data says so, in the same place the real thing would speak. */
+.avsample{display:flex;align-items:flex-start;gap:6px;margin:0 0 10px;
+  font-size:.8rem;line-height:1.45;font-weight:700;color:var(--warn);
+  background:var(--warn-tint);border-radius:11px;padding:8px 10px;}
+.avsample .ic{flex-shrink:0;margin-top:1px;}
 .whybtn{margin-left:auto;border:none;background:none;font-family:inherit;font-size:.8rem;
-  font-weight:800;color:var(--brand-ink);padding:6px 2px;min-height:32px;border-radius:9px;
+  font-weight:800;color:var(--brand-ink);padding:6px 8px;min-height:44px;border-radius:9px;
   text-decoration:underline;text-underline-offset:3px;transition:background .14s ease-out;}
 .whybtn:hover{background:var(--brand-tint);}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
@@ -620,7 +667,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
           <svg class="ic" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
       </div>
     </div>
-    <div class="vs" id="vs">
+    <div class="vs" id="vs" role="dialog" aria-modal="true" aria-label="Voice search" aria-hidden="true">
       <div class="vs-top">
         <button class="vs-x" id="vsX" aria-label="Close">
           <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -634,7 +681,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <div class="vs-res" id="vsRes"></div>
       <div class="vs-go"><button class="btn pri" id="vsGo"></button></div>
     </div>
-    <div class="pl" id="pl">
+    <div class="pl" id="pl" role="dialog" aria-modal="true" aria-labelledby="plTitle" aria-hidden="true">
       <div class="pl-top">
         <button class="vs-x" id="plX" aria-label="Close">
           <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
@@ -643,6 +690,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
         <h2 id="plTitle"></h2>
         <p class="pl-sub" id="plSub"></p>
         <div class="pl-tally" id="plTally"></div>
+        <div id="plSample"></div>
       </div>
       <div class="pl-rows" id="plRows"></div>
       <div class="pl-go">
@@ -653,7 +701,7 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       </div>
     </div>
     <div class="scrim" id="scrim"></div>
-    <div class="sheet" id="sheet">
+    <div class="sheet" id="sheet" role="dialog" aria-modal="true">
       <div class="grip"></div>
       <div class="sheet-body" id="sheetBody"></div>
       <div class="sheet-foot" id="sheetFoot"></div>
@@ -707,6 +755,9 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 
 /* ================= i18n ================= */
 const T={en:{
+ wlJoin:"Join the line",wlAhead:"{n} ahead",wlYoureNth:"You are {n} in line",wlLeave:"leave",wlLeft:"Left the line",wlJoined:"You are {n} in line. We will take it if it frees up.",wlMax:"You can stand in {n} lines at once. Leave one first.",wlGotIt:"yours",wlOrdSuffix:"",wlClaimedTitle:"A time opened up",wlClaimedMsg:"{time} at {biz} was cancelled. It is yours.",
+ previewNote:"Preview build. The businesses, ratings, reviews and times here are examples, not real Calgary listings.",
+ avToday:"Today",avTomorrow:"Tomorrow",avNOpen:"{n} open",avNoneShort:"none",avSample:"Preview: these times are examples, not this business's real calendar.",avSampleWhy:"This business has not connected a calendar yet, so these times are examples.",
  whyOrder:"Why this order?",whyTitle:"Why you see this order",whySub:"Lonera puts things you have opened before nearer the front.",whyNone:"Nothing yet. Open a few listings and this rail starts matching what you look for.",whyHousing:"Rentals are never ordered by language. Housing has to be offered on the same terms to everyone.",whyLocal:"This is counted on your phone only. It is never sent to us and never sold.",whyReset:"Clear what Lonera remembers",whyCleared:"Cleared",done:"Done",
  plTitle:"Your errand",plSub:"{n} visits · {when} · {lang}",plAnyLang:"any language",plThisWeek:"this week",plSoon:"next opening",plLive:"live",plReqN:"to request",plAskN:"to ask",plSwap:"Swap",plWillAsk:"We will ask them for times",plNoMatch:"No {svc} on Lonera yet. We will still pass on your request.",plGoBook:"Book these times",plGoRequest:"Send all requests",plGoAsk:"Ask them all for times",plGoMixed:"Book the live times, request the rest",plAdjust:"Change something",plAdjustPh:"Say or type a change — \"drop the electrician\", \"make it Friday\"",plNone:"Name two or more services and I will line them up.",plUpdated:"Errand updated",plSwapped:"Switched to {n}",plSent:"Sent. You will hear back in this app.",plSentBooked:"All booked.",
  tabHome:"Home",tabBrowse:"Browse",tabSaved:"Saved",tabInbox:"Inbox",tabYou:"You",
@@ -775,6 +826,9 @@ const T={en:{
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
  vsNone:"Nothing matched. Try different words."
 },ko:{
+ wlJoin:"대기 신청",wlAhead:"{n}명 대기",wlYoureNth:"대기 {n}번",wlLeave:"취소",wlLeft:"대기를 취소했습니다",wlJoined:"대기 {n}번입니다. 자리가 나면 잡아드립니다.",wlMax:"동시에 {n}개까지 대기할 수 있습니다. 하나를 취소해 주세요.",wlGotIt:"확정",wlOrdSuffix:"번째",wlClaimedTitle:"자리가 났습니다",wlClaimedMsg:"{biz} {time} 예약이 취소되어 회원님께 배정되었습니다.",
+ previewNote:"미리보기 버전입니다. 여기 나오는 업체, 평점, 후기, 시간은 실제가 아닌 예시입니다.",
+ avToday:"오늘",avTomorrow:"내일",avNOpen:"{n}개 가능",avNoneShort:"없음",avSample:"미리보기: 실제 캘린더가 아닌 예시 시간입니다.",avSampleWhy:"아직 캘린더가 연결되지 않아 예시 시간을 보여드립니다.",
  whyOrder:"이 순서의 이유",whyTitle:"이 순서로 보이는 이유",whySub:"이전에 열어 본 항목을 앞쪽에 보여 드립니다.",whyNone:"아직 기록이 없습니다. 몇 개를 열어 보시면 관심사에 맞춰 정렬됩니다.",whyHousing:"렌탈은 언어로 정렬하지 않습니다. 주거는 모두에게 동일한 조건으로 제공되어야 합니다.",whyLocal:"이 정보는 휴대폰에만 저장됩니다. 저희에게 전송되거나 판매되지 않습니다.",whyReset:"저장된 관심사 삭제",whyCleared:"삭제되었습니다",done:"완료",
  plTitle:"한 번에 처리",plSub:"방문 {n}건 · {when} · {lang}",plAnyLang:"언어 무관",plThisWeek:"이번 주",plSoon:"가장 빠른 시간",plLive:"실시간",plReqN:"요청 필요",plAskN:"문의 필요",plSwap:"변경",plWillAsk:"가능한 시간을 문의해 드립니다",plNoMatch:"아직 로네라에 {svc} 업체가 없습니다. 요청은 전달해 드립니다.",plGoBook:"이 시간으로 예약",plGoRequest:"전체 요청 보내기",plGoAsk:"전체 시간 문의하기",plGoMixed:"실시간은 예약, 나머지는 요청",plAdjust:"내용 변경",plAdjustPh:"변경 사항을 말하거나 입력하세요 — \"전기 빼줘\", \"금요일로\"",plNone:"서비스를 두 개 이상 말씀해 주세요.",plUpdated:"일정이 변경되었습니다",plSwapped:"{n}(으)로 변경했습니다",plSent:"전송되었습니다. 앱에서 답변을 받으실 수 있습니다.",plSentBooked:"모두 예약되었습니다.",
  tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
@@ -1175,6 +1229,7 @@ const gd = () => {
 function viewHome(){
   const free=BIZ.filter(b=>b.free);
   $("v-home").innerHTML=`
+    ${previewStrip()}
     ${heroRail()}
     ${RECENT.length?`<div class="rowtitle"><h3>${t("recentTitle")}</h3></div>
       <div class="rail">${RECENT.map(id=>BIZ.find(b=>b.id===id)).filter(Boolean).map(bizCard).join("")}</div>`:""}
@@ -1319,8 +1374,20 @@ function visitsChart(){
 const AV_SLOT_LABELS=["9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
   "1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM"];
 const avState={};          // bizId -> {tier, slots:[label], taken:[label], at}
-let avTimer=null, avLive=null;
+let avTimer=null, avLive=null, avViewDay=0, avCurrent=null;
 
+/* A slot label is the canonical key for a time - the taken list and the
+   standby queue are both keyed on it - so it stays in one form and only the
+   display is localised. Rewriting the labels per language would silently
+   change every queue key the moment somebody switched language, and quietly
+   drop people out of lines they were standing in. */
+function avTimeLabel(label){
+  if(lang!=="ko") return label;
+  const m=/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(String(label));
+  if(!m) return label;
+  let h=(+m[1])%12; if(/pm/i.test(m[3])) h+=12;
+  return (h<12?"오전 ":"오후 ")+((h%12)||12)+":"+m[2];
+}
 function avTier(b){ return (b&&b.av) || "unknown"; }
 /* "Free today" is a claim about capacity, so only a connected calendar can
    make it. A declared or unknown business showing it contradicted its own
@@ -1334,15 +1401,37 @@ function avMeta(tier){
 }
 /* A deterministic starting set per business, so reopening a sheet does not
    reshuffle the times under the user. */
-function avSeed(id){
-  let h=0; for(let i=0;i<id.length;i++) h=(h*31+id.charCodeAt(i))>>>0;
+const AV_HORIZON=7;
+/* Slots carry a day, not just a clock time. Without one, "9:00 AM" and
+   "10:30 AM" on two different businesses could be on different days while the
+   planner treated them as a schedule - a plan that reads as one afternoon and
+   is not. The server already returns real timestamps; this is the app's model
+   catching up to it. */
+function avDate(off){ const d=new Date(); d.setDate(d.getDate()+(off|0)); d.setHours(0,0,0,0); return d; }
+function avDayLabel(off){
+  off=off|0;
+  if(off===0) return t("avToday");
+  if(off===1) return t("avTomorrow");
+  return avDate(off).toLocaleDateString(lang==="ko"?"ko-KR":"en-CA",
+    {weekday:"short",month:"short",day:"numeric"});
+}
+function avSeed(id,day){
+  let h=0; const k=id+"|"+(day|0);
+  for(let i=0;i<k.length;i++) h=(h*31+k.charCodeAt(i))>>>0;
   return AV_SLOT_LABELS.filter((_,i)=>((h>>(i%16))&1)===0);
 }
-function avGet(b){
+function avGet(b,day){
+  day=day|0;
   const id=b.id, tier=avTier(b);
-  if(!avState[id]) avState[id]={tier,slots:tier==="unknown"?[]:avSeed(id),taken:[],at:Date.now()};
-  return avState[id];
+  let st=avState[id];
+  if(!st) st=avState[id]={tier,at:Date.now(),server:false,byDay:{}};
+  if(!st.byDay[day]) st.byDay[day]={slots:tier==="unknown"?[]:avSeed(id,day),taken:[]};
+  return st;
 }
+function avDay(b,day){ return avGet(b,day).byDay[day|0]; }
+/* Did these times come from a real calendar, or are they this preview's
+   stand-in? Everything the user is told about them hangs off this. */
+function avIsReal(b){ const st=avState[b.id]; return Boolean(st&&st.server); }
 /* Try the real endpoint first. Only a `connected` answer from the server is
    allowed to mark slots live - a declared answer stays declared. */
 async function avRefresh(b){
@@ -1351,11 +1440,22 @@ async function avRefresh(b){
     if(!r.ok) return false;
     const d=await r.json();
     if(!d||typeof d.tier!=="string") return false;
-    const st=avGet(b);
+    const st=avGet(b,0);
     st.tier=d.tier; st.at=Date.now(); st.server=true;
     if(Array.isArray(d.slots)&&d.slots.length){
-      st.slots=d.slots.slice(0,14).map(ms=>new Date(ms)
-        .toLocaleTimeString(lang==="ko"?"ko-KR":"en-CA",{hour:"numeric",minute:"2-digit"}));
+      /* The server sends real timestamps, so file each one under its own day
+         instead of flattening them all into one list of clock times. */
+      const fresh={};
+      const today=avDate(0).getTime();
+      d.slots.forEach(ms=>{
+        const when=new Date(ms); if(isNaN(when)) return;
+        const at=new Date(when); at.setHours(0,0,0,0);
+        const off=Math.round((at.getTime()-today)/86400000);
+        if(off<0||off>=AV_HORIZON) return;
+        (fresh[off]=fresh[off]||[]).push(when
+          .toLocaleTimeString(lang==="ko"?"ko-KR":"en-CA",{hour:"numeric",minute:"2-digit"}));
+      });
+      Object.keys(fresh).forEach(off=>{ st.byDay[off]={slots:fresh[off].slice(0,14),taken:[]}; });
     }
     return true;
   }catch(e){ return false; }   // artifact CSP blocks this; simulation covers it
@@ -1366,23 +1466,57 @@ function avStartLive(bizId){
   avStopLive();
   avLive=bizId;
   avTimer=setInterval(()=>{
-    const st=avState[bizId];
-    if(!st||st.tier!=="connected"||!st.slots.length){ avStopLive(); return; }
-    const i=Math.floor(Math.random()*st.slots.length);
-    const gone=st.slots.splice(i,1)[0];
-    st.taken.unshift(gone); st.taken=st.taken.slice(0,3); st.at=Date.now();
-    const host=$("avGrid");
-    if(host&&avLive===bizId) avPaintGrid(bizId);
+    const st=avState[bizId], d=st&&st.byDay[avViewDay];
+    if(!st||st.tier!=="connected"||!d||!d.slots.length){ avStopLive(); return; }
+    /* Half the time somebody cancels instead of booking. Without cancellations
+       the standby queue would never fire, and a queue that never moves is a
+       promise the app cannot keep. */
+    if(d.taken.length && Math.random()<0.45){
+      const back=d.taken.shift();
+      const won=wlRelease(bizId,avViewDay,back);
+      if(won && won.user===WL_ME){
+        d.booked=(d.booked||[]).concat(back);
+        notifyClaim(bizId,back);
+      } else {
+        d.slots.push(back);
+        d.slots.sort((x,y)=>AV_SLOT_LABELS.indexOf(x)-AV_SLOT_LABELS.indexOf(y));
+      }
+    } else {
+      const i=Math.floor(Math.random()*d.slots.length);
+      const gone=d.slots.splice(i,1)[0];
+      d.taken.unshift(gone); d.taken=d.taken.slice(0,3);
+    }
+    st.at=Date.now();
+    if($("avGrid")&&avLive===bizId) avPaintGrid(bizId);
   }, 9000);
 }
 function avStopLive(){ if(avTimer){clearInterval(avTimer);avTimer=null;} avLive=null; }
 
+/* A taken slot is not a dead end: it is the front of a queue. */
+function wlSlot(bizId,day,label){
+  wlSeedOthers(bizId,day,label);
+  const pos=wlPos(bizId,day,label), len=wlLine(bizId,day,label).length;
+  const line=`<span class="slot gone">${esc(avTimeLabel(label))}<i>${t("avTaken")}</i></span>`;
+  const ctl = pos
+    ? `<button class="wlbtn in" data-wl-leave="${esc(label)}">
+         ${t("wlYoureNth").replace("{n}",wlOrdinal(pos))} · ${t("wlLeave")}</button>`
+    : `<button class="wlbtn" data-wl-join="${esc(label)}">
+         ${t("wlJoin")}${len?` · ${t("wlAhead").replace("{n}",len)}`:""}</button>`;
+  return `<span class="wlwrap">${line}${ctl}</span>`;
+}
+function wlOrdinal(n){
+  if(lang==="ko") return n+t("wlOrdSuffix");
+  const s=["th","st","nd","rd"], v=n%100;
+  return n+(s[(v-20)%10]||s[v]||s[0]);
+}
 function avPaintGrid(bizId){
   const st=avState[bizId], host=$("avGrid"); if(!host||!st) return;
-  host.innerHTML = st.slots.length
-    ? st.slots.map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(x)}</button>`).join("")
-      + st.taken.map(x=>`<span class="slot gone">${esc(x)}<i>${t("avTaken")}</i></span>`).join("")
-    : `<p class="ds-empty">${t("avNoneLeft")}</p>`;
+  const d=st.byDay[avViewDay]||{slots:[],taken:[]};
+  const mine=(d.booked||[]).map(x=>`<span class="slot won">${esc(avTimeLabel(x))}<i>${t("wlGotIt")}</i></span>`).join("");
+  host.innerHTML = mine + (d.slots.length
+    ? d.slots.map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(avTimeLabel(x))}</button>`).join("")
+      + d.taken.map(x=>wlSlot(bizId,avViewDay,x)).join("")
+    : (mine?"":`<p class="ds-empty">${t("avNoneLeft")}</p>`));
   const stamp=$("avStamp");
   if(stamp) stamp.textContent=`${t("avUpdated")} ${t("avJustNow")}`;
 }
@@ -1535,20 +1669,36 @@ function openBiz(id){
 /* Availability, stated at the tier it actually is. The button underneath
    changes with the tier: only a live feed offers "pick a time". */
 function avBlock(b){
-  const tier=avTier(b), m=avMeta(tier), st=avGet(b);
+  const tier=avTier(b), m=avMeta(tier);
+  avViewDay=0; avCurrent=b.id;
+  const st=avGet(b,0), d=st.byDay[0];
   const badge=`<span class="vb ${m.cls}">${ic(tier==="connected"?"clock":tier==="declared"?"id":"help","ic-s")}${t(m.k)}</span>`;
-  const body = tier==="unknown"
-    ? ""
-    : `<div class="avgrid" id="avGrid">${
-        st.slots.length
-          ? st.slots.slice(0,8).map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(x)}</button>`).join("")
-          : `<p class="ds-empty">${t("avNoneLeft")}</p>`}</div>`;
-  const stamp = tier==="connected"
+  /* Only claim a real calendar when one actually answered. Until a business
+     connects a feed these times are this preview's stand-in, and saying
+     "straight from their calendar" over invented times is the same lie the
+     tiers were built to stop. */
+  const why = (tier==="connected"&&!avIsReal(b)) ? t("avSampleWhy") : t(m.why);
+  const note = (tier!=="unknown"&&!avIsReal(b))
+    ? `<p class="avsample">${ic("help","ic-s")}${t("avSample")}</p>` : "";
+  /* Days, so a time is a time on a date rather than a floating clock face. */
+  const days = tier==="unknown" ? "" : `<div class="avdays" id="avDays" role="tablist">${
+    Array.from({length:AV_HORIZON},(_,o)=>{
+      const n=avDay(b,o).slots.length;
+      return `<button class="avday${o===0?" on":""}" role="tab" aria-selected="${o===0}"
+        data-avday="${o}"${n?"":" disabled"}>
+        <i>${esc(avDayLabel(o))}</i><b>${n?t("avNOpen").replace("{n}",n):t("avNoneShort")}</b></button>`;
+    }).join("")}</div>`;
+  const body = tier==="unknown" ? "" :
+    `<div class="avgrid" id="avGrid">${
+      d.slots.length
+        ? d.slots.map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(avTimeLabel(x))}</button>`).join("")
+        : `<p class="ds-empty">${t("avNoneLeft")}</p>`}</div>`;
+  const stamp = (tier==="connected"&&avIsReal(b))
     ? `<p class="avstamp" id="avStamp">${t("avUpdated")} ${t("avJustNow")}</p>` : "";
   return `<p class="lb" style="margin-top:20px">${t("book")}</p>
     <div class="trust" style="margin:0 0 8px">${badge}</div>
-    <p class="avwhy">${t(m.why)}</p>
-    ${body}${stamp}`;
+    <p class="avwhy">${why}</p>
+    ${note}${days}${body}${stamp}`;
 }
 function reviewBlock(b){
   const rs=REVIEWS[b.id]||[];
@@ -1810,6 +1960,66 @@ function parseIntent(raw){
   if((when!==null||week) && service) action="book";  // a day named = they want a slot
   return {raw:raw||"",service,services,language,when,week,action};
 }
+/* Every business, rating, review and dashboard figure in this build is
+   invented. Some of the names are plausible enough to be mistaken for real
+   Calgary businesses, and showing a made-up 4.7 next to a real company's name
+   is not a harmless placeholder. So the app says so, once, until dismissed. */
+const PREVIEW_KEY="lonera.previewAck";
+let previewAck=(function(){ try{ return localStorage.getItem(PREVIEW_KEY)==="1"; }catch(e){ return false; } })();
+function previewStrip(){
+  if(previewAck) return "";
+  return `<div class="prev-strip" role="note">
+    ${ic("help","ic-s")}
+    <p>${t("previewNote")}</p>
+    <button data-act="previewok" aria-label="${t("done")}">
+      <svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button></div>`;
+}
+
+/* ================= overlay focus =================
+   One helper for every full-screen layer. Without it a keyboard or screen
+   reader user opens the plan and is still standing in the home feed behind
+   it - reading listings that are no longer on screen, with no way out but
+   the mouse. Escape closes, Tab cycles inside, and focus returns to whatever
+   opened the layer. This matters most for the users this app is actually
+   for: older people, and anyone driving a phone by voice control. */
+const overlays=[];
+function focusables(el){
+  return [...el.querySelectorAll('button,input,textarea,select,a[href],[tabindex]:not([tabindex="-1"])')]
+    .filter(x=>!x.disabled&&x.offsetParent!==null);
+}
+function overlayOpen(el,closer){
+  if(overlays.some(o=>o.el===el)) return;
+  overlays.push({el,closer,prev:document.activeElement});
+  el.setAttribute("aria-hidden","false");
+  const head=el.querySelector("h2,h3")||el;
+  if(!head.hasAttribute("tabindex")) head.setAttribute("tabindex","-1");
+  setTimeout(()=>{ try{head.focus({preventScroll:true});}catch(e){} },70);
+}
+function overlayClose(el){
+  const i=overlays.findIndex(o=>o.el===el);
+  if(i<0) return;
+  const rec=overlays.splice(i,1)[0];
+  el.setAttribute("aria-hidden","true");
+  setTimeout(()=>{
+    const back=(rec.prev&&rec.prev.isConnected&&rec.prev!==document.body)?rec.prev:$("q");
+    try{ back&&back.focus({preventScroll:true}); }catch(e){}
+  },40);
+}
+document.addEventListener("keydown",e=>{
+  const top=overlays[overlays.length-1];
+  if(e.key==="Escape"){
+    if(top){ e.preventDefault(); top.closer(); return; }
+    if($("sheet").classList.contains("on")){ e.preventDefault(); closeSheet(); }
+    return;
+  }
+  if(e.key!=="Tab"||!top) return;
+  const items=focusables(top.el); if(!items.length) return;
+  const first=items[0], last=items[items.length-1];
+  if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+});
+
 /* ================= on-device interest ranking =================
    Personalised ordering, built so that the legal shape is the architecture
    rather than a policy document bolted on afterwards.
@@ -1877,6 +2087,52 @@ function openWhy(){
      <button class="btn pri" data-act="close">${t("done")}</button>`);
 }
 
+/* ================= standby queue =================
+   "Tell me if someone cancels, and take it for me."
+
+   The order is decided when you join and never re-derived from timing, so a
+   cancelled slot cannot go to whoever's phone polled fastest - which in this
+   app would quietly favour the newest handset and the best connection. A
+   sequence number, not a clock: two people joining in the same second still
+   have a definite order.
+
+   lib/waitlist.js is the authoritative implementation and carries the tests;
+   this is the same rules running in the page so the preview can show them. */
+const WL_MAX=3, WL_ME="me";
+let wlSeq=0;
+const wlLines={};                       // "biz|day|slot" -> [{seq,user,auto}]
+const wlKey=(b,d,s)=>`${b}|${d|0}|${s}`;
+function wlLine(b,d,s){ const k=wlKey(b,d,s); return wlLines[k]||(wlLines[k]=[]); }
+function wlMine(){ return Object.values(wlLines).reduce((n,l)=>n+l.filter(e=>e.user===WL_ME).length,0); }
+function wlPos(b,d,s){ return wlLine(b,d,s).findIndex(e=>e.user===WL_ME)+1; }
+function wlJoin(b,d,s){
+  const line=wlLine(b,d,s);
+  if(line.some(e=>e.user===WL_ME)) return {ok:true,position:wlPos(b,d,s)};
+  if(wlMine()>=WL_MAX) return {ok:false,error:"max"};
+  line.push({seq:++wlSeq,user:WL_ME,auto:true});
+  line.sort((x,y)=>x.seq-y.seq);
+  return {ok:true,position:wlPos(b,d,s)};
+}
+function wlLeave(b,d,s){
+  const line=wlLine(b,d,s), i=line.findIndex(e=>e.user===WL_ME);
+  if(i<0) return false; line.splice(i,1); return true;
+}
+/* Somebody cancelled. Hand it to the head of the line, removing them first so
+   one slot can never be claimed twice. */
+function wlRelease(b,d,s){
+  const line=wlLine(b,d,s);
+  return line.length ? line.shift() : null;
+}
+/* Other people are in these lines too, otherwise "3rd in line" is theatre. */
+function wlSeedOthers(b,d,s){
+  const line=wlLine(b,d,s);
+  if(line.length) return;
+  let h=0; const k=wlKey(b,d,s);
+  for(let i=0;i<k.length;i++) h=(h*31+k.charCodeAt(i))>>>0;
+  const n=h%3;                                   // 0-2 people already waiting
+  for(let i=0;i<n;i++) line.push({seq:++wlSeq,user:"other"+i,auto:true});
+}
+
 /* ================= multi-service planner =================
    "I need a plumber, a cleaner and an electrician this week who speaks
    Korean" is one errand, not three searches. The planner picks one business
@@ -1905,10 +2161,27 @@ function planCandidates(svc,want){
   }
   return pool.slice().sort((a,b)=>planScore(b,want)-planScore(a,want));
 }
-function planOpen(b){
+function planOpen(b,day){
   if(!b) return [];
-  const st=avGet(b);
-  return (st.slots||[]).filter(x=>!(st.taken||[]).includes(x));
+  const d=avDay(b,day|0);
+  return (d.slots||[]).filter(x=>!(d.taken||[]).includes(x));
+}
+/* Which day should the whole errand happen on?
+   A named weekday wins outright. Otherwise take the soonest day on which the
+   most of the errand can actually happen - one afternoon off work beats three
+   separate half-days, and that is the entire reason to bundle. */
+function planPickDay(rows,p){
+  if(p.when!==null&&p.when!==undefined){
+    for(let o=0;o<AV_HORIZON;o++) if(((avDate(o).getDay()+6)%7)===p.when) return o;
+  }
+  let best=0,bestN=-1;
+  for(let o=0;o<AV_HORIZON;o++){
+    let n=0;
+    rows.forEach(r=>{ if(r.b&&planOpen(r.b,o).length) n++; });
+    if(n>bestN){ bestN=n; best=o; }
+    if(n===rows.length) break;
+  }
+  return best;
 }
 function buildPlan(p,keep){
   const wanted=(p.services&&p.services.length?p.services:(p.service?[p.service]:[])).slice(0,PLAN_MAX);
@@ -1917,9 +2190,10 @@ function buildPlan(p,keep){
     const list=planCandidates(svc,p.language);
     /* a swap the user already made survives a re-plan */
     const held=keep&&keep[svc]&&list.find(b=>b.id===keep[svc]);
-    const b=held||list[0]||null;
-    return {svc,b,list,open:planOpen(b),slot:null};
+    return {svc,b:held||list[0]||null,list,open:[],slot:null};
   });
+  const day=planPickDay(rows,p);
+  rows.forEach(r=>{ r.open=planOpen(r.b,day); });
   /* Most constrained first. A business with two open times has to choose
      before one with ten, or the flexible one takes the slot they both wanted
      and the tight one is left with nothing. */
@@ -1930,17 +2204,17 @@ function buildPlan(p,keep){
   });
   const at=x=>x.slot?AV_SLOT_LABELS.indexOf(x.slot):99;   // unscheduled last
   rows.sort((x,y)=>at(x)-at(y));
-  return {rows,language:p.language,when:p.when,week:!!p.week,raw:p.raw};
+  return {rows,day,language:p.language,when:p.when,week:!!p.week,raw:p.raw};
 }
 /* The language the user asked to be served in, named in the language they are
    reading. "언어 Korean" was half-translated, which is exactly the seam this
    app is supposed to hide. */
 const LANG_KO={Korean:"한국어",Tagalog:"타갈로그어",Mandarin:"중국어",Punjabi:"펀자브어",English:"영어"};
 function planLangLabel(x){ return !x ? t("plAnyLang") : (lang==="ko" ? (LANG_KO[x]||x) : x); }
-function planDayLabel(pl){
-  if(pl.when!==null&&pl.when!==undefined) return lang==="ko"?DAYS[pl.when][1]:DAYS[pl.when][0];
-  return t(pl.week?"plThisWeek":"plSoon");
-}
+/* The plan names the actual day it found, not the vague phrase the person
+   used. "this week · 9:00 AM" was three clock times with no date between
+   them, which reads as one afternoon and was not one. */
+function planDayLabel(pl){ return avDayLabel(pl.day); }
 function planTally(pl){
   const n={connected:0,declared:0,unknown:0};
   pl.rows.forEach(r=>{ if(r.b) n[r.slot?avTier(r.b):"unknown"]++; });
@@ -1953,6 +2227,8 @@ function paintPlan(){
   $("plSub").textContent=t("plSub")
     .replace("{n}",pl.rows.length).replace("{when}",day)
     .replace("{lang}",planLangLabel(pl.language));
+  const anySample=pl.rows.some(r=>r.b&&avTier(r.b)!=="unknown"&&!avIsReal(r.b));
+  $("plSample").innerHTML=anySample?`<p class="avsample">${ic("help","ic-s")}${t("avSample")}</p>`:"";
   const bit=(c,k,v)=>v?`<span class="pltag ${c}">${v} ${t(k)}</span>`:"";
   $("plTally").innerHTML=bit("ok","plLive",n.connected)+bit("b","plReqN",n.declared)+bit("off","plAskN",n.unknown);
 
@@ -1962,7 +2238,7 @@ function paintPlan(){
       <p class="plr-none">${t("plNoMatch").replace("{svc}",svcLabel)}</p></div>`;
     const tier=avTier(r.b), meta=avMeta(tier);
     const time=r.slot
-      ? `<span class="plr-t">${day} · ${esc(r.slot)}</span>`
+      ? `<span class="plr-t">${day} · ${esc(avTimeLabel(r.slot))}</span>`
       : `<span class="plr-t off">${t("plWillAsk")}</span>`;
     const swap=r.list.length>1
       ? `<button class="plr-swap" data-swap="${esc(r.svc)}">${t("plSwap")}</button>` : "";
@@ -1991,8 +2267,9 @@ function openPlan(p,keep){
   plan=built; closeSheet(); if($("vs").classList.contains("on")) vsClose();
   paintPlan();
   $("pl").classList.add("on");
+  overlayOpen($("pl"),closePlan);
 }
-function closePlan(){ $("pl").classList.remove("on"); }
+function closePlan(){ $("pl").classList.remove("on"); overlayClose($("pl")); }
 
 /* ---- voice adjustment: the errand changes while you are looking at it ----
    This reuses the voice-search screen rather than running a second recognizer:
@@ -2126,6 +2403,7 @@ function vsOpen(adjust){
   $("vsGo").setAttribute("aria-label",t("vsGo"));
   $("vsRes").innerHTML=""; $("vsChips").innerHTML="";
   $("vs").classList.add("on");
+  overlayOpen($("vs"),vsClose);
   vsState();
   toggleMic();                     // listening starts on open, nothing to tap
   setTimeout(()=>{try{i.focus();}catch(e){}},90);
@@ -2134,6 +2412,7 @@ function vsClose(){
   if(listening&&rec){try{rec.stop();}catch(e){}}
   vsAdjust=false;
   $("vs").classList.remove("on");
+  overlayClose($("vs"));
 }
 function vsRun(){
   const q=($("vsInput").value||"").trim();
@@ -2151,6 +2430,47 @@ function vsRun(){
     : `<div class="empty">${ic("help")}<p>${t("vsNone")}</p></div>`;
 }
 /* ---- plan screen wiring ---- */
+/* The claim arrives while you are looking at something else, so it uses the
+   notification island rather than a toast that scrolls away. */
+function notifyClaim(bizId,label){
+  const b=BIZ.find(x=>x.id===bizId);
+  const name=b?bn(b):bizId;
+  const msg=k=>T[k].wlClaimedMsg.replace("{biz}",name).replace("{time}",label);
+  /* showIsland takes a notification record, and it also lands in the inbox -
+     so the claim survives the island timing out while the phone is in a
+     pocket. A slot won and never mentioned again is worse than no queue. */
+  const n={id:"wl"+(++wlSeq),t:T.en.wlClaimedTitle,tk:T.ko.wlClaimedTitle,
+    m:msg("en"),mk:msg("ko"),sc:b?b.sc:"clean",read:false,w:t("avJustNow")};
+  NOTIFS.unshift(n);
+  showIsland(n); paintBadge(); viewInbox();
+}
+document.addEventListener("click",e=>{
+  const j=e.target.closest("[data-wl-join]");
+  if(j){
+    e.stopPropagation();
+    const r=wlJoin(avCurrent,avViewDay,j.dataset.wlJoin);
+    if(!r.ok){ toast(t("wlMax").replace("{n}",WL_MAX)); return; }
+    avPaintGrid(avCurrent);
+    toast(t("wlJoined").replace("{n}",wlOrdinal(r.position)));
+    return;
+  }
+  const lv=e.target.closest("[data-wl-leave]");
+  if(lv){
+    e.stopPropagation();
+    wlLeave(avCurrent,avViewDay,lv.dataset.wlLeave);
+    avPaintGrid(avCurrent);
+    toast(t("wlLeft"));
+    return;
+  }
+  const dayBtn=e.target.closest("[data-avday]");
+  if(!dayBtn) return;
+  e.stopPropagation();
+  avViewDay=+dayBtn.dataset.avday;
+  const host=$("avDays");
+  if(host) host.querySelectorAll(".avday").forEach(x=>{
+    const on=x===dayBtn; x.classList.toggle("on",on); x.setAttribute("aria-selected",on?"true":"false");});
+  if(avCurrent) avPaintGrid(avCurrent);
+});
 $("plX").onclick=closePlan;
 $("plRows").addEventListener("click",e=>{
   const sw=e.target.closest("[data-swap]");
@@ -2298,6 +2618,9 @@ document.addEventListener("click",e=>{
       JOINED.includes(id)?JOINED=JOINED.filter(x=>x!==id):JOINED.push(id);
       viewCommunity(); closeSheet(); toast(t("tJoined")); break;
     }
+    case "previewok":
+      previewAck=true; try{localStorage.setItem(PREVIEW_KEY,"1");}catch(e){}
+      viewHome(); break;
     case "why": openWhy(); break;
     case "whyclear": clearInterests(); closeSheet(); paint(); toast(t("whyCleared")); break;
     case "close": closeSheet(); break;

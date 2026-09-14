@@ -35,6 +35,13 @@
 .slot:hover{transform:scale(1.05);border-color:var(--brand);}
 .slot:active{transform:scale(.96);}
 .slot.on{background:var(--text);color:#fff;border-color:var(--text);}
+/* A slot the queue actually won. It has to look different from both an open
+   slot and a taken one, or the moment the feature exists for is invisible. */
+.slot.won{background:var(--ok-tint);border-color:var(--ok);color:var(--ok);
+  display:inline-flex;align-items:center;gap:6px;font-weight:800;
+  animation:tookit .35s ease-out;}
+.slot.won i{font-style:normal;font-size:.66rem;font-weight:800;letter-spacing:.03em;
+  text-transform:uppercase;}
 
 *{box-sizing:border-box}
 body{margin:0;padding:22px;background:var(--bg);color:var(--text);
