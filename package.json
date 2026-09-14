@@ -2,13 +2,18 @@
   "name": "lonera-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Lonera — Calgary's marketplace for newcomer communities",
+  "description": "Lonera \u2014 Calgary's marketplace for newcomer communities",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "audit": "npm audit --omit=dev"
   },
   "dependencies": {
     "express": "^4.19.2"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
   }
 }

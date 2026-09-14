@@ -66,6 +66,7 @@ def rules_for(css, wanted):
     `.poster:hover .pw`, but never `.pwx`.
     """
     keep = []
+    seen = set()
     for sel, body in top_level_rules(css):
         parts = [p.strip() for p in sel.split(",")]
         hit = False
@@ -78,6 +79,17 @@ def rules_for(css, wanted):
                 break
         if hit:
             keep.append(sel + "{" + body + "}")
+            for w in wanted:
+                if re.search(r"(?<![\w-])" + re.escape(w) + r"(?![\w-])", sel):
+                    seen.add(w)
+    missing = [w for w in wanted if w not in seen]
+    if missing:
+        # A card that asks for CSS the app no longer has renders unstyled and
+        # says nothing about it. Removing dead CSS must break the build here
+        # rather than quietly hollow out a card.
+        raise SystemExit(
+            "no CSS in app-preview.html for: %s - update the card's R(...) list"
+            % ", ".join(missing))
     return "\n".join(keep)
 
 
@@ -432,7 +444,7 @@ def build(css, imgs):
 
     # -- Actions -----------------------------------------------------------
     C["components/buttons.html"] = card(
-        "Actions", "Buttons and chips",
+        "Actions", "Buttons and time slots",
         "Every pressable scales to 0.96 on press - one value across the whole app. "
         "Primary clears 4.6:1 for white text; secondary carries a full-weight "
         "border rather than a tint.",
@@ -440,12 +452,15 @@ def build(css, imgs):
         '<button class="btn pri">Choose this business</button>'
         '<button class="btn sec">Book a time</button>'
         '<button class="btn sec">Save</button></div>'
-        '<p class="ds-note" style="margin-top:20px">Chips and slots</p>'
-        '<div class="ds-row"><button class="chip on">Cleaning</button>'
-        '<button class="chip">Rentals</button><button class="chip">Tutoring</button></div>'
-        '<div class="ds-row" style="margin-top:10px"><button class="slot on">Wed</button>'
-        '<button class="slot">Thu</button><button class="slot">11:30 AM</button></div>',
-        T + "\n" + R(".btn", ".chip", ".slot"))
+        '<p class="ds-note" style="margin-top:20px">Time slots</p>'
+        '<div class="ds-row"><button class="slot on">Wed</button>'
+        '<button class="slot">Thu</button><button class="slot">11:30 AM</button></div>'
+        '<p class="ds-note" style="margin-top:14px">A slot taken while you are '
+        'looking at it is struck through and labelled, never silently removed - '
+        'the disappearance is the thing the user has to believe.</p>'
+        '<div class="ds-row"><button class="slot gone">2:30 PM<i>just taken</i></button>'
+        '<button class="slot">3:00 PM</button></div>',
+        T + "\n" + R(".btn", ".slot"))
 
     return C
 

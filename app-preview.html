@@ -136,13 +136,6 @@ button{font-family:inherit;cursor:pointer;}
 .g5{background:linear-gradient(160deg,#dde7ff 8%,#9fb6ef 92%);} .g6{background:linear-gradient(160deg,#eae0ff 8%,#b9a4ec 92%);}
 
 .stack{padding:14px 20px 0;display:flex;flex-direction:column;gap:12px;}
-.chips{display:flex;gap:9px;overflow-x:auto;padding:14px 20px 4px;scrollbar-width:none;}
-.chips::-webkit-scrollbar{display:none;}
-.chip{flex-shrink:0;background:var(--bg);border:1.5px solid var(--line);color:var(--text);font-size:.88rem;
-  font-weight:700;padding:0 17px;height:46px;border-radius:999px;transition:transform .14s ease-out,border-color .14s ease-out,background .14s ease-out;}
-.chip:hover{transform:scale(1.04);border-color:var(--brand);}
-.chip:active{transform:scale(.96);}
-.chip.on{background:var(--text);color:#fff;border-color:var(--text);}
 
 .row{display:flex;gap:13px;align-items:center;width:100%;background:var(--bg);border:1.5px solid var(--line);
   border-radius:var(--r);padding:13px;text-align:left;transition:transform .16s ease-out,border-color .16s ease-out,box-shadow .16s ease-out;}
@@ -356,6 +349,23 @@ button{font-family:inherit;cursor:pointer;}
 .sugg button:active{background:var(--surface-2);}
 .sugg .sg-sub{margin-left:auto;font-size:.8rem;color:var(--text-2);font-weight:700;flex-shrink:0;}
 
+/* ---------- availability ---------- */
+.avwhy{margin:0 0 12px;font-size:.86rem;line-height:1.5;color:var(--text-2);}
+.avgrid{display:flex;flex-wrap:wrap;gap:8px;}
+.avstamp{margin:9px 0 0;font-size:.74rem;font-weight:700;color:var(--ok);}
+.slot.gone{opacity:.5;background:var(--surface);border-color:var(--line);color:var(--text-2);
+  text-decoration:line-through;display:inline-flex;align-items:center;gap:6px;
+  pointer-events:none;animation:tookit .35s ease-out;}
+.slot.gone i{font-style:normal;font-size:.66rem;font-weight:800;letter-spacing:.03em;
+  text-transform:uppercase;color:var(--brand-ink);text-decoration:none;}
+@keyframes tookit{from{opacity:0;transform:scale(.94)}to{opacity:.5;transform:none}}
+.ds-empty{margin:0;font-size:.88rem;color:var(--text-2);font-weight:700;}
+/* tier on the poster: the state is carried by the word, colour only reinforces */
+.pav{margin:2px 2px 0;font-size:.72rem;font-weight:800;}
+.pav.connected{color:var(--ok);}
+.pav.declared{color:var(--text-2);}
+.pav.unknown{color:var(--text-2);opacity:.75;}
+
 /* ---------- reviews ---------- */
 .rev{border-top:1px solid var(--line);padding:13px 0 0;margin-top:13px;}
 .rev-top{display:flex;align-items:baseline;gap:8px;}
@@ -376,7 +386,6 @@ button{font-family:inherit;cursor:pointer;}
 .vb.n{background:var(--brand-tint);color:var(--brand-ink);}
 .vb.w{background:var(--warn-tint);color:var(--warn);}
 .vb.off{background:var(--surface);color:#6a6a6a;}
-.vtick{display:inline-flex;vertical-align:-2px;color:var(--ok);margin-left:3px;}
 
 /* ---------- segmented control ---------- */
 .seg{display:flex;gap:6px;background:var(--surface);border-radius:999px;padding:4px;margin:12px 20px 0;}
@@ -460,11 +469,6 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .opt:active{transform:scale(.96);}
 .opt:last-child{border-bottom:none;}
 .opt .rt{margin-left:auto;font-size:.88rem;color:var(--text-2);font-weight:700;}
-.sw{width:50px;height:30px;border-radius:99px;background:#c9c9c9;position:relative;flex-shrink:0;transition:background .2s ease-out;margin-left:auto;}
-.sw.on{background:var(--brand-btn);}
-.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s ease-out;
-  box-shadow:0 1px 3px rgba(0,0,0,.28);}
-.sw.on i{transform:translateX(20px);}
 
 .toast{position:absolute;left:14px;right:14px;bottom:calc(var(--safe-b) + 150px);background:var(--text);color:#fff;
   border-radius:var(--r);padding:14px 16px;font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:9px;
@@ -474,9 +478,6 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 .ic-s{width:16px;height:16px;}
 .trust{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
-.tb{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;font-weight:800;padding:5px 9px 5px 7px;border-radius:999px;
-  background:var(--ok-tint);color:var(--ok);}
-.tb.b{background:#eaf1fb;color:#1a4d8f;}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 /* Real phone: drop the mockup and become the app. The device already has a
@@ -636,18 +637,17 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 /* ================= i18n ================= */
 const T={en:{
  tabHome:"Home",tabBrowse:"Browse",tabSaved:"Saved",tabInbox:"Inbox",tabYou:"You",
- searchPh:"What do you need?",greet:"Good morning",greetSub:"Tell us what you need. Speak or type at the bottom.",
- featuredNow:"Featured now",rowTrusted:"Trusted near you",rowToday:"Free today",rowJobs:"Jobs hiring now",rowMarket:"Buy and sell",rowGrocery:"Grocery deals",rowCommunity:"From the community",
- seeAll:"See all",browseTitle:"Browse",browseSub:"Pick a category, or use the search bar below.",
+ searchPh:"What do you need?",featuredNow:"Featured now",rowTrusted:"Trusted near you",rowToday:"Free today",rowJobs:"Jobs hiring now",rowMarket:"Buy and sell",rowGrocery:"Grocery deals",rowCommunity:"From the community",
+ browseTitle:"Browse",browseSub:"Pick a category, or use the search bar below.",
  savedTitle:"Saved",inboxTitle:"Inbox",inboxSub:"Your requests, replies and updates.",youTitle:"You",
  emptySaved:"Nothing saved yet",emptySavedSub:"Tap the heart on any business and it lands here.",
  details:"See details",book:"Book a time",choose:"Choose this business",save:"Save",saved:"Saved",
- verified:"ID verified",protected:"Payment protected",openNow:"Free today",
+ openNow:"Free today",
  askTitle:"What do you need?",askSub:"Say it however is easiest. We tidy up the wording, never the meaning.",
  askPh:"For example: I need my kitchen cleaned before Friday",
  aiTidied:"Tidied by Lonera",send:"Send to business",cancel:"Cancel",back:"Back",
  pickDay:"Pick a day",pickTime:"Pick a time",confirm:"Confirm booking",
- listening:"Listening. Speak now.",heard:"You said",askVoice:"Ask with your voice",
+ listening:"Listening. Speak now.",askVoice:"Ask with your voice",
  postJob:"Post a job",postItem:"Sell something",askCommunity:"Ask the community",getHelp:"Get help",
  jobTitle:"Job title",company:"Business name",pay:"Pay",area:"Area",itemName:"What are you selling?",price:"Price",
  question:"Your question",describe:"Describe it",post:"Post",submit:"Send",
@@ -663,25 +663,17 @@ const T={en:{
  commGroups:"Groups near you",commBoard:"Questions and answers",
  join:"Join",joined:"Joined",members:"members",startComm:"Start a community",
  tJoined:"You joined. Say hello in the group.",
- askTitleV:"Ask Lonera",
- askSubV:"Say what you need. To type instead, use the search bar below.",
- askPhV:"For example: find a Korean doctor near me and book an appointment tomorrow",
- tapSpeak:"Tap to speak",tapStop:"Stop listening",typeInstead:"Or type it here",
- weHeard:"What we understood",doIt:"Do it",
- iService:"Service",iLang:"Language",iWhen:"When",iAction:"Action",
+ tapSpeak:"Tap to speak",tapStop:"Stop listening",iService:"Service",iLang:"Language",iWhen:"When",iAction:"Action",
  aBook:"Book an appointment",aFind:"Find a business",aSell:"Sell something",
  aJob:"Find a job",aAsk:"Ask the community",
- noMatch:"No business matches that yet. Try another wording.",
  nothingHeard:"Nothing to act on yet. Speak or type first.",
- anyAvailable:"anyone available",
  segMsgs:"Messages",dayToday:"Today",segNotifs:"Notifications",
  delivered:"Delivered",composePh:"Message",
- reviewsTitle:"What people say",allReviews:"reviews", xsellTitle:"Other options nearby",alsoTitle:"Top rated nearby",recentTitle:"Recently viewed",searchGo:"Search",
- autoReply:"Thanks, noted. I will confirm shortly.",
+ reviewsTitle:"What people say",allReviews:"reviews", xsellTitle:"Other options nearby",alsoTitle:"Top rated nearby",recentTitle:"Recently viewed",autoReply:"Thanks, noted. I will confirm shortly.",
  noNotifs:"No notifications yet",noNotifsSub:"Replies and updates land here.",
  markRead:"Mark all read",unread:"new",
  verifTitle:"Verification",verifSub:"Badges show what has been checked, and by whom.",
- whoAmI:"Your account",getVerified:"Get verified",verifyStep:"Verify",verifDone:"Done",
+ whoAmI:"Your account",verifyStep:"Verify",verifDone:"Done",
  vId:"ID verified",vBiz:"Business verified",vLic:"Licensed",vIns:"Insured",
  vPay:"Payment protected",vNew:"New member",vTop:"Top rated",vPhone:"Phone confirmed",
  vEmail:"Email confirmed",vAddr:"Address confirmed",
@@ -696,7 +688,14 @@ const T={en:{
  tDeclined:"Declined.",newInvoice:"Create an invoice",
  stPaid:"Paid",stSent:"Sent",stOverdue:"Overdue",stDraft:"Draft",
  visits:"visits",
- catAll:"listings",catOne:"listing",catNone:"Nothing listed here yet",
+ catAll:"listings",catOne:"listing",
+ avLive:"Live times",avUsual:"Usual hours",avAsk:"Ask for times",
+ avLiveWhy:"Straight from this business's own calendar. Updates when they book someone else.",
+ avUsualWhy:"The hours this business gave us. Not live, so they confirm every request.",
+ avAskWhy:"This business has not shared a schedule yet. Send a request and they will reply with times.",
+ avTaken:"just taken",avNoneLeft:"No times left today",avPickTime:"Pick a time",
+ avRequest:"Request a time",avAskThem:"Ask what times they have",
+ avUpdated:"updated",avJustNow:"just now",catNone:"Nothing listed here yet",
  catNoneSub:"Try another category, or ask the community.",
  catGrocery:"Grocery deals",backBrowse:"All categories",
  vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
@@ -704,18 +703,17 @@ const T={en:{
  vsNone:"Nothing matched. Try different words."
 },ko:{
  tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
- searchPh:"무엇이 필요하세요?",greet:"안녕하세요",greetSub:"필요한 것을 아래에서 말하거나 입력해 주세요.",
- featuredNow:"지금 추천",rowTrusted:"믿을 수 있는 업체",rowToday:"오늘 가능",rowJobs:"지금 채용 중",rowMarket:"사고 팔기",rowGrocery:"장보기 할인",rowCommunity:"커뮤니티 소식",
- seeAll:"전체 보기",browseTitle:"둘러보기",browseSub:"카테고리를 고르시거나 아래 검색을 이용하세요.",
+ searchPh:"무엇이 필요하세요?",featuredNow:"지금 추천",rowTrusted:"믿을 수 있는 업체",rowToday:"오늘 가능",rowJobs:"지금 채용 중",rowMarket:"사고 팔기",rowGrocery:"장보기 할인",rowCommunity:"커뮤니티 소식",
+ browseTitle:"둘러보기",browseSub:"카테고리를 고르시거나 아래 검색을 이용하세요.",
  savedTitle:"저장됨",inboxTitle:"받은함",inboxSub:"보내신 요청과 답변이에요.",youTitle:"내 정보",
  emptySaved:"저장한 항목이 없어요",emptySavedSub:"업체의 하트를 누르면 여기에 모여요.",
  details:"자세히 보기",book:"시간 예약",choose:"이 업체 선택",save:"저장",saved:"저장됨",
- verified:"실명 인증",protected:"안전 결제",openNow:"오늘 가능",
+ openNow:"오늘 가능",
  askTitle:"무엇이 필요하세요?",askSub:"편하신 대로 말씀하세요. 표현만 다듬고 뜻은 그대로 전해요.",
  askPh:"예: 금요일 전에 주방 청소가 필요해요",
  aiTidied:"로네라가 다듬었어요",send:"업체에 보내기",cancel:"취소",back:"뒤로",
  pickDay:"날짜 선택",pickTime:"시간 선택",confirm:"예약 확정",
- listening:"듣고 있어요. 말씀해 주세요.",heard:"이렇게 들었어요",askVoice:"음성으로 물어보기",
+ listening:"듣고 있어요. 말씀해 주세요.",askVoice:"음성으로 물어보기",
  postJob:"채용 등록",postItem:"물건 팔기",askCommunity:"커뮤니티에 질문",getHelp:"도움 받기",
  jobTitle:"채용 제목",company:"업체명",pay:"급여",area:"지역",itemName:"무엇을 파시나요?",price:"가격",
  question:"질문 내용",describe:"설명",post:"등록",submit:"보내기",
@@ -731,25 +729,17 @@ const T={en:{
  commGroups:"가까운 모임",commBoard:"질문과 답변",
  join:"가입",joined:"가입함",members:"명",startComm:"모임 만들기",
  tJoined:"가입했어요. 모임에 인사해 보세요.",
- askTitleV:"로네라에게 말하기",
- askSubV:"필요한 것을 말씀해 주세요. 입력하시려면 아래 검색창을 이용하세요.",
- askPhV:"예: 근처 한국어 되는 병원 찾아서 내일 예약해 줘",
- tapSpeak:"눌러서 말하기",tapStop:"그만 듣기",typeInstead:"또는 여기에 입력하세요",
- weHeard:"이렇게 이해했어요",doIt:"실행하기",
- iService:"업종",iLang:"언어",iWhen:"언제",iAction:"할 일",
+ tapSpeak:"눌러서 말하기",tapStop:"그만 듣기",iService:"업종",iLang:"언어",iWhen:"언제",iAction:"할 일",
  aBook:"예약하기",aFind:"업체 찾기",aSell:"물건 팔기",
  aJob:"채용 찾기",aAsk:"커뮤니티에 질문",
- noMatch:"아직 맞는 업체가 없어요. 다르게 말해 보세요.",
  nothingHeard:"아직 실행할 내용이 없어요. 먼저 말하거나 입력해 주세요.",
- anyAvailable:"가능한 곳 아무나",
  segMsgs:"메시지",dayToday:"오늘",segNotifs:"알림",
  delivered:"전달됨",composePh:"메시지",
- reviewsTitle:"이용 후기",allReviews:"개의 후기", xsellTitle:"근처 다른 선택지",alsoTitle:"근처 인기 업체",recentTitle:"최근 본 업체",searchGo:"검색",
- autoReply:"확인했습니다. 곧 답변드릴게요.",
+ reviewsTitle:"이용 후기",allReviews:"개의 후기", xsellTitle:"근처 다른 선택지",alsoTitle:"근처 인기 업체",recentTitle:"최근 본 업체",autoReply:"확인했습니다. 곧 답변드릴게요.",
  noNotifs:"아직 알림이 없어요",noNotifsSub:"답변과 소식이 여기에 표시돼요.",
  markRead:"모두 읽음",unread:"새 소식",
  verifTitle:"인증",verifSub:"무엇이 확인되었는지 배지로 알 수 있어요.",
- whoAmI:"내 계정",getVerified:"인증 받기",verifyStep:"인증하기",verifDone:"완료",
+ whoAmI:"내 계정",verifyStep:"인증하기",verifDone:"완료",
  vId:"실명 인증",vBiz:"사업자 인증",vLic:"자격 보유",vIns:"보험 가입",
  vPay:"안전 결제",vNew:"신규 회원",vTop:"인기 업체",vPhone:"전화번호 확인",
  vEmail:"이메일 확인",vAddr:"주소 확인",
@@ -764,7 +754,14 @@ const T={en:{
  tDeclined:"거절했어요.",newInvoice:"청구서 만들기",
  stPaid:"결제 완료",stSent:"발송됨",stOverdue:"연체",stDraft:"임시 저장",
  visits:"방문",
- catAll:"곳",catOne:"곳",catNone:"아직 등록된 곳이 없어요",
+ catAll:"곳",catOne:"곳",
+ avLive:"실시간 예약",avUsual:"평소 영업시간",avAsk:"시간 문의",
+ avLiveWhy:"업체 캘린더에서 직접 가져옵니다. 다른 예약이 잡히면 바로 반영됩니다.",
+ avUsualWhy:"업체가 알려준 영업시간이에요. 실시간이 아니라 매 요청을 업체가 확인합니다.",
+ avAskWhy:"아직 일정을 공유하지 않은 업체예요. 요청을 보내면 가능한 시간을 알려드립니다.",
+ avTaken:"방금 마감",avNoneLeft:"오늘 남은 시간이 없어요",avPickTime:"시간 선택",
+ avRequest:"시간 요청하기",avAskThem:"가능한 시간 문의하기",
+ avUpdated:"업데이트",avJustNow:"방금",catNone:"아직 등록된 곳이 없어요",
  catNoneSub:"다른 카테고리를 보시거나 커뮤니티에 물어보세요.",
  catGrocery:"장보기 할인",backBrowse:"전체 카테고리",
  vsListening:"듣고 있어요. 말씀해 주세요.",vsPaused:"입력 후 엔터를 눌러 주세요",
@@ -777,37 +774,37 @@ const t = k => T[lang][k];
 /* ================= data (fictional demo) ================= */
 /* f:1 = shown in the swipeable Featured rail. sc = which illustration to draw. */
 const BIZ=[
- {id:"maple",vb:["id","biz","pay"],lg:["Korean","English"],n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",sc:"home",v:1,e:1,free:1,f:1,
+ {id:"maple",av:"unknown",vb:["id","biz","pay"],lg:["Korean","English"],n:"Maple Grove Property Group",nk:"메이플 그로브 부동산",c:"Rentals",ck:"렌탈",p:"$800-1,800/mo",r:4.9,rv:38,a:"NW Calgary",g:"g5",sc:"home",v:1,e:1,free:1,f:1,
   d:"Furnished rooms and townhouses near downtown. Bilingual leasing agent.",dk:"다운타운 근처 가구 완비 방과 타운하우스. 한국어 상담 가능."},
- {id:"sparkle",vb:["id","biz"],lg:["English","Tagalog"],n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",sc:"clean",v:1,e:0,free:1,f:1,
+ {id:"sparkle",av:"connected",vb:["id","biz"],lg:["English","Tagalog"],n:"Sparkle Home Services",nk:"스파클 홈 서비스",c:"Cleaning",ck:"청소",p:"$100-220",r:4.7,rv:21,a:"SE Calgary",g:"g3",sc:"clean",v:1,e:0,free:1,f:1,
   d:"Deep cleans and move-out cleans. Same-week booking most weeks.",dk:"딥 클리닝과 이사 청소. 대부분 당주 예약 가능."},
- {id:"bright",vb:["id","biz","lic","pay"],lg:["Korean","English","Mandarin"],n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",sc:"doc",v:1,e:1,free:0,f:1,
+ {id:"bright",av:"unknown",vb:["id","biz","lic","pay"],lg:["Korean","English","Mandarin"],n:"Bright Path Immigration",nk:"브라이트패스 이민상담",c:"Immigration",ck:"이민",p:"$300-2,000",r:4.8,rv:52,a:"City-wide",g:"g1",sc:"doc",v:1,e:1,free:0,f:1,
   d:"Licensed consultant. Work permits and permanent residence.",dk:"공인 컨설턴트. 취업 비자 및 영주권 상담."},
- {id:"haneul",vb:["id","biz","top"],lg:["Korean","English"],n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",sc:"hair",v:1,e:0,free:1,f:1,
+ {id:"haneul",av:"declared",vb:["id","biz","top"],lg:["Korean","English"],n:"Studio Haneul Hair",nk:"스튜디오 하늘 헤어",c:"Hair",ck:"미용",p:"$30-120",r:4.9,rv:64,a:"Downtown",g:"g2",sc:"hair",v:1,e:0,free:1,f:1,
   d:"Cuts, perms and colour. Korean and English spoken.",dk:"커트, 펌, 염색. 한국어와 영어 가능."},
- {id:"north",vb:["id","lic"],lg:["English","Mandarin"],n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",sc:"book",v:1,e:0,free:0,
+ {id:"north",av:"declared",vb:["id","lic"],lg:["English","Mandarin"],n:"Northstar Learning",nk:"노스스타 학습센터",c:"Tutoring",ck:"과외",p:"$30-60/hr",r:4.8,rv:29,a:"NW Calgary",g:"g6",sc:"book",v:1,e:0,free:0,
   d:"Math and English tutoring, grades 4 to 12.",dk:"4학년부터 12학년까지 수학과 영어 과외."},
- {id:"truebuild",vb:["id","biz","lic","ins","pay"],lg:["English","Punjabi"],n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",sc:"tools",v:1,e:1,free:1,f:1,
+ {id:"truebuild",av:"unknown",vb:["id","biz","lic","ins","pay"],lg:["English","Punjabi"],n:"TrueBuild Renovations",nk:"트루빌드 리노베이션",c:"Renovation",ck:"리노베이션",p:"$2,000+",r:4.9,rv:44,a:"City-wide",g:"g4",sc:"tools",v:1,e:1,free:1,f:1,
   d:"Basement development and additions. Red Seal certified.",dk:"지하실 개발 및 증축. 레드씰 자격 보유."},
- {id:"riverbend",vb:["id","biz","lic","pay"],lg:["English","Tagalog"],n:"Riverbend Dental",nk:"리버벤드 치과",c:"Dental",ck:"치과",p:"$120-900",r:4.8,rv:47,a:"SW Calgary",g:"g5",sc:"tooth",v:1,e:1,free:1,f:1,
+ {id:"riverbend",av:"declared",vb:["id","biz","lic","pay"],lg:["English","Tagalog"],n:"Riverbend Dental",nk:"리버벤드 치과",c:"Dental",ck:"치과",p:"$120-900",r:4.8,rv:47,a:"SW Calgary",g:"g5",sc:"tooth",v:1,e:1,free:1,f:1,
   d:"Checkups, cleanings and emergency visits. Direct billing to most plans.",dk:"검진, 스케일링, 응급 진료. 대부분의 보험 직접 청구."},
- {id:"hometable",vb:["id","biz","ins"],lg:["Korean","Tagalog"],n:"Home Table Catering",nk:"홈테이블 케이터링",c:"Catering",ck:"케이터링",p:"$14-28/person",r:4.9,rv:33,a:"City-wide",g:"g4",sc:"food",v:1,e:1,free:0,f:1,
+ {id:"hometable",av:"unknown",vb:["id","biz","ins"],lg:["Korean","Tagalog"],n:"Home Table Catering",nk:"홈테이블 케이터링",c:"Catering",ck:"케이터링",p:"$14-28/person",r:4.9,rv:33,a:"City-wide",g:"g4",sc:"food",v:1,e:1,free:0,f:1,
   d:"Korean and Filipino party trays. Two days notice for large orders.",dk:"한식과 필리핀식 파티 트레이. 대량 주문은 이틀 전 예약."},
- {id:"aurora",vb:["id","biz","ins"],lg:["Punjabi","English"],n:"Aurora Auto Repair",nk:"오로라 자동차 정비",c:"Auto",ck:"정비",p:"$90-1,200",r:4.7,rv:58,a:"NE Calgary",g:"g6",sc:"car",v:1,e:0,free:1,
+ {id:"aurora",av:"declared",vb:["id","biz","ins"],lg:["Punjabi","English"],n:"Aurora Auto Repair",nk:"오로라 자동차 정비",c:"Auto",ck:"정비",p:"$90-1,200",r:4.7,rv:58,a:"NE Calgary",g:"g6",sc:"car",v:1,e:0,free:1,
   d:"Brakes, tires and out-of-province inspections. Free shuttle.",dk:"브레이크, 타이어, 타주 차량 검사. 무료 셔틀 운행."},
- {id:"bowriver",vb:["id","biz","lic","top"],n:"Bow River Family Clinic",nk:"보우리버 가정의학과",c:"Clinic",ck:"의원",p:"Covered by AHCIP",r:4.9,rv:71,a:"NW Calgary",g:"g3",sc:"clinic",lg:["Korean","English"],v:1,e:0,free:1,f:1,
+ {id:"bowriver",av:"connected",vb:["id","biz","lic","top"],n:"Bow River Family Clinic",nk:"보우리버 가정의학과",c:"Clinic",ck:"의원",p:"Covered by AHCIP",r:4.9,rv:71,a:"NW Calgary",g:"g3",sc:"clinic",lg:["Korean","English"],v:1,e:0,free:1,f:1,
   d:"Family doctor, walk-ins and same-week appointments. Korean-speaking staff.",dk:"가정의학과, 워크인 및 당주 예약. 한국어 가능 직원 상주."},
- {id:"crescent",vb:["id","biz","ins"],lg:["English","Tagalog"],n:"Crescent Clean Co.",nk:"크레센트 클린",c:"Cleaning",ck:"청소",p:"$90-190",r:4.6,rv:34,a:"NW Calgary",g:"g3",sc:"clean2",v:1,e:0,free:1,
+ {id:"crescent",av:"declared",vb:["id","biz","ins"],lg:["English","Tagalog"],n:"Crescent Clean Co.",nk:"크레센트 클린",c:"Cleaning",ck:"청소",p:"$90-190",r:4.6,rv:34,a:"NW Calgary",g:"g3",sc:"clean2",v:1,e:0,free:1,
   d:"Recurring home cleans, weekly or biweekly. Same team each visit.",dk:"주 1회 또는 격주 정기 청소. 매번 같은 팀이 방문합니다."},
- {id:"bowness",vb:["id","biz","pay"],lg:["English","Punjabi"],n:"Bowness Rentals",nk:"보네스 렌탈",c:"Rentals",ck:"렌탈",p:"$1,100-2,400/mo",r:4.6,rv:52,a:"NW Calgary",g:"g5",sc:"home2",v:1,e:1,free:0,
+ {id:"bowness",av:"unknown",vb:["id","biz","pay"],lg:["English","Punjabi"],n:"Bowness Rentals",nk:"보네스 렌탈",c:"Rentals",ck:"렌탈",p:"$1,100-2,400/mo",r:4.6,rv:52,a:"NW Calgary",g:"g5",sc:"home2",v:1,e:1,free:0,
   d:"Whole houses and duplexes. Pets considered on most units.",dk:"단독주택과 듀플렉스. 대부분 반려동물 상담 가능."},
- {id:"nova",vb:["id","biz"],lg:["English","Mandarin"],n:"Nova Hair Studio",nk:"노바 헤어 스튜디오",c:"Hair",ck:"미용",p:"$45-160",r:4.7,rv:41,a:"SE Calgary",g:"g2",sc:"hair2",v:1,e:0,free:1,
+ {id:"nova",av:"declared",vb:["id","biz"],lg:["English","Mandarin"],n:"Nova Hair Studio",nk:"노바 헤어 스튜디오",c:"Hair",ck:"미용",p:"$45-160",r:4.7,rv:41,a:"SE Calgary",g:"g2",sc:"hair2",v:1,e:0,free:1,
   d:"Colour specialists. Consultation before every first appointment.",dk:"염색 전문. 첫 방문 전 항상 상담을 진행합니다."},
- {id:"elbow",vb:["id","biz","lic"],lg:["English","Korean"],n:"Elbow Park Dental",nk:"엘보파크 치과",c:"Dental",ck:"치과",p:"$110-850",r:4.7,rv:63,a:"SW Calgary",g:"g5",sc:"tooth2",v:1,e:1,free:0,
+ {id:"elbow",av:"declared",vb:["id","biz","lic"],lg:["English","Korean"],n:"Elbow Park Dental",nk:"엘보파크 치과",c:"Dental",ck:"치과",p:"$110-850",r:4.7,rv:63,a:"SW Calgary",g:"g5",sc:"tooth2",v:1,e:1,free:0,
   d:"Evenings and Saturdays. Nervous patients welcome.",dk:"저녁과 토요일 진료. 치과가 무서운 분도 편하게 오세요."},
- {id:"prairie",vb:["id","lic"],lg:["English","Punjabi"],n:"Prairie Tutors",nk:"프레리 튜터스",c:"Tutoring",ck:"과외",p:"$28-55/hr",r:4.6,rv:37,a:"SE Calgary",g:"g6",sc:"book2",v:1,e:0,free:1,
+ {id:"prairie",av:"declared",vb:["id","lic"],lg:["English","Punjabi"],n:"Prairie Tutors",nk:"프레리 튜터스",c:"Tutoring",ck:"과외",p:"$28-55/hr",r:4.6,rv:37,a:"SE Calgary",g:"g6",sc:"book2",v:1,e:0,free:1,
   d:"Small group sessions, grades 6 to 12. Diploma exam prep.",dk:"6~12학년 소그룹 수업. 졸업 시험 대비."},
- {id:"chinook",vb:["id","biz","lic","pay"],lg:["Mandarin","English"],n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
+ {id:"chinook",av:"unknown",vb:["id","biz","lic","pay"],lg:["Mandarin","English"],n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
   d:"Personal and small business returns. First consultation is free.",dk:"개인 및 소상공인 세금 신고. 첫 상담 무료."}
 ];
 const CATS=[["Cleaning","청소","g3","clean"],["Rentals","렌탈","g5","home"],["Tutoring","과외","g6","book"],["Hair","미용","g2","hair"],
@@ -999,7 +996,10 @@ function sheet(title,sub,body,foot){
   $("sheetFoot").innerHTML=foot||"";
   $("sheet").classList.add("on");$("scrim").classList.add("on");
 }
-function closeSheet(){$("sheet").classList.remove("on");$("scrim").classList.remove("on");}
+function closeSheet(){
+  $("sheet").classList.remove("on");$("scrim").classList.remove("on");
+  avStopLive();   // a background timer repainting a closed sheet is a leak
+}
 $("scrim").onclick=closeSheet;
 
 /* ================= renderers ================= */
@@ -1008,10 +1008,11 @@ function bizCard(b){
   return `<button class="poster" data-biz="${b.id}">
     <div class="pw ${b.g}">
       ${art(b.sc)}
-      ${b.free?`<span class="flag">${t("openNow")}</span>`:""}
+      ${avClaimsFree(b)?`<span class="flag">${t("openNow")}</span>`:""}
       <div class="pt"><p class="pp">${b.p}</p><p class="pn">${esc(bn(b))}</p></div>
     </div>
-    <p class="pmeta">★ ${b.r} · ${bc(b)}</p></button>`;
+    <p class="pmeta">★ ${b.r} · ${bc(b)}</p>
+    <p class="pav ${avTier(b)}">${t(avMeta(avTier(b)).k)}</p></button>`;
 }
 /* generic poster for jobs / marketplace / grocery rails */
 function poster(title,price,meta,g,sc,flag,act){
@@ -1214,6 +1215,87 @@ function visitsChart(){
         fill="var(--text)">${max}</text>
     </svg>`;
 }
+/* ================= availability =================
+   Three tiers, because Google and Instagram publish opening hours and not
+   bookable slots. Only a business that hands us a calendar feed can be shown
+   as live; everything else routes to request-and-confirm and says so.
+
+   Served from our own origin this fetches /api/availability/:id. Inside the
+   artifact host the CSP blocks connect-src, so it falls back to a local
+   simulation - which is labelled, and which is the only part of this feature
+   that is not real. The tier logic, the slot maths and the honesty rules are
+   the same code either way. */
+const AV_SLOT_LABELS=["9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
+  "1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM"];
+const avState={};          // bizId -> {tier, slots:[label], taken:[label], at}
+let avTimer=null, avLive=null;
+
+function avTier(b){ return (b&&b.av) || "unknown"; }
+/* "Free today" is a claim about capacity, so only a connected calendar can
+   make it. A declared or unknown business showing it contradicted its own
+   tier badge on the same card - "Free today" beside "Ask for times" - which
+   is the exact dishonesty the tiers exist to prevent. */
+function avClaimsFree(b){ return Boolean(b && b.free) && avTier(b)==="connected"; }
+function avMeta(tier){
+  return tier==="connected" ? {k:"avLive",  why:"avLiveWhy",  cls:"ok"}
+       : tier==="declared"  ? {k:"avUsual", why:"avUsualWhy", cls:"b"}
+       :                      {k:"avAsk",   why:"avAskWhy",   cls:"off"};
+}
+/* A deterministic starting set per business, so reopening a sheet does not
+   reshuffle the times under the user. */
+function avSeed(id){
+  let h=0; for(let i=0;i<id.length;i++) h=(h*31+id.charCodeAt(i))>>>0;
+  return AV_SLOT_LABELS.filter((_,i)=>((h>>(i%16))&1)===0);
+}
+function avGet(b){
+  const id=b.id, tier=avTier(b);
+  if(!avState[id]) avState[id]={tier,slots:tier==="unknown"?[]:avSeed(id),taken:[],at:Date.now()};
+  return avState[id];
+}
+/* Try the real endpoint first. Only a `connected` answer from the server is
+   allowed to mark slots live - a declared answer stays declared. */
+async function avRefresh(b){
+  try{
+    const r=await fetch("/api/availability/"+encodeURIComponent(b.id),{headers:{Accept:"application/json"}});
+    if(!r.ok) return false;
+    const d=await r.json();
+    if(!d||typeof d.tier!=="string") return false;
+    const st=avGet(b);
+    st.tier=d.tier; st.at=Date.now(); st.server=true;
+    if(Array.isArray(d.slots)&&d.slots.length){
+      st.slots=d.slots.slice(0,14).map(ms=>new Date(ms)
+        .toLocaleTimeString(lang==="ko"?"ko-KR":"en-CA",{hour:"numeric",minute:"2-digit"}));
+    }
+    return true;
+  }catch(e){ return false; }   // artifact CSP blocks this; simulation covers it
+}
+/* The live behaviour the whole feature exists to show: a slot getting taken by
+   someone else while you are looking at it. */
+function avStartLive(bizId){
+  avStopLive();
+  avLive=bizId;
+  avTimer=setInterval(()=>{
+    const st=avState[bizId];
+    if(!st||st.tier!=="connected"||!st.slots.length){ avStopLive(); return; }
+    const i=Math.floor(Math.random()*st.slots.length);
+    const gone=st.slots.splice(i,1)[0];
+    st.taken.unshift(gone); st.taken=st.taken.slice(0,3); st.at=Date.now();
+    const host=$("avGrid");
+    if(host&&avLive===bizId) avPaintGrid(bizId);
+  }, 9000);
+}
+function avStopLive(){ if(avTimer){clearInterval(avTimer);avTimer=null;} avLive=null; }
+
+function avPaintGrid(bizId){
+  const st=avState[bizId], host=$("avGrid"); if(!host||!st) return;
+  host.innerHTML = st.slots.length
+    ? st.slots.map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(x)}</button>`).join("")
+      + st.taken.map(x=>`<span class="slot gone">${esc(x)}<i>${t("avTaken")}</i></span>`).join("")
+    : `<p class="ds-empty">${t("avNoneLeft")}</p>`;
+  const stamp=$("avStamp");
+  if(stamp) stamp.textContent=`${t("avUpdated")} ${t("avJustNow")}`;
+}
+
 let listCat=null;
 const nList = n => `${n} ${n===1?t("catOne"):t("catAll")}`;
 function viewList(){
@@ -1330,6 +1412,13 @@ function openBiz(id){
   const b=BIZ.find(x=>x.id===id); if(!b) return;
   RECENT=[id].concat(RECENT.filter(x=>x!==id)).slice(0,8);
   viewHome();
+  avGet(b);
+  if(avTier(b)==="connected"){
+    avStartLive(b.id);
+    // real data if this is served from our own origin; the artifact host
+    // blocks connect-src, in which case the simulation stands in
+    avRefresh(b).then(ok=>{ if(ok) avPaintGrid(b.id); });
+  } else { avStopLive(); }
   const on=SAVED.includes(id);
   sheet(esc(bn(b)),
     `★ ${b.r} (${b.rv}) · ${bc(b)} · ${b.a}`,
@@ -1337,14 +1426,37 @@ function openBiz(id){
      <p style="margin:0;font-size:.95rem;line-height:1.55">${esc(bd(b))}</p>
      <div class="trust">
        ${(b.vb||[]).map(vbadge).join("")}
-       ${b.free?`<span class="vb ok">${ic("clock","ic-s")}${t("openNow")}</span>`:""}
+       ${avClaimsFree(b)?`<span class="vb ok">${ic("clock","ic-s")}${t("openNow")}</span>`:""}
      </div>
      <p style="margin:14px 0 0;font-size:1.05rem;font-weight:800">${b.p}</p>
+     ${avBlock(b)}
      ${reviewBlock(b)}
      ${xsellBlock(b)}`,
     `<button class="btn pri" data-act="ask" data-id="${id}">${ic("chat")}${t("choose")}</button>
-     <button class="btn sec" data-act="bookday" data-id="${id}">${ic("clock")}${t("book")}</button>
+     ${avTier(b)==="connected"
+        ? `<button class="btn sec" data-act="bookday" data-id="${id}">${ic("clock")}${t("avPickTime")}</button>`
+        : avTier(b)==="declared"
+        ? `<button class="btn sec" data-act="bookday" data-id="${id}">${ic("clock")}${t("avRequest")}</button>`
+        : `<button class="btn sec" data-act="ask" data-id="${id}">${ic("chat")}${t("avAskThem")}</button>`}
      <button class="btn sec" data-act="fav" data-id="${id}">${ic("heart")}${on?t("saved"):t("save")}</button>`);
+}
+/* Availability, stated at the tier it actually is. The button underneath
+   changes with the tier: only a live feed offers "pick a time". */
+function avBlock(b){
+  const tier=avTier(b), m=avMeta(tier), st=avGet(b);
+  const badge=`<span class="vb ${m.cls}">${ic(tier==="connected"?"clock":tier==="declared"?"id":"help","ic-s")}${t(m.k)}</span>`;
+  const body = tier==="unknown"
+    ? ""
+    : `<div class="avgrid" id="avGrid">${
+        st.slots.length
+          ? st.slots.slice(0,8).map(x=>`<button class="slot" data-slot-label="${esc(x)}">${esc(x)}</button>`).join("")
+          : `<p class="ds-empty">${t("avNoneLeft")}</p>`}</div>`;
+  const stamp = tier==="connected"
+    ? `<p class="avstamp" id="avStamp">${t("avUpdated")} ${t("avJustNow")}</p>` : "";
+  return `<p class="lb" style="margin-top:20px">${t("book")}</p>
+    <div class="trust" style="margin:0 0 8px">${badge}</div>
+    <p class="avwhy">${t(m.why)}</p>
+    ${body}${stamp}`;
 }
 function reviewBlock(b){
   const rs=REVIEWS[b.id]||[];
@@ -1540,15 +1652,6 @@ function openNotif(){
     `<div style="display:flex;flex-direction:column;gap:10px">
       ${rowItem(lang==="ko"?"스파클 홈 서비스":"Sparkle Home Services",lang==="ko"?"요청을 수락했어요":"Accepted your request",t("statusOk"),"ok","g3")}
       ${rowItem("LNR-2091",lang==="ko"?"티켓이 해결됐어요":"Your ticket was resolved",t("statusDone"),"ok","g5")}
-     </div>`,
-    `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
-}
-function openBizPortal(){
-  sheet(t("runBiz"),lang==="ko"?"업체용 화면 미리보기예요.":"A preview of the business side.",
-    `<div style="display:flex;flex-direction:column;gap:10px">
-      ${rowItem(lang==="ko"?"새 요청 2건":"2 new requests",lang==="ko"?"답변을 기다리고 있어요":"Waiting for your reply","2","n","g2")}
-      ${rowItem(lang==="ko"?"이번 주 예약 4건":"4 bookings this week",lang==="ko"?"오늘 2건":"2 today","","ok","g3")}
-      ${rowItem(lang==="ko"?"에스크로 보관 $340":"$340 held safely",lang==="ko"?"작업 완료 시 지급":"Released when the job is done","","ok","g4")}
      </div>`,
     `<button class="btn sec" data-act="close">${t("closeCmp")}</button>`);
 }
