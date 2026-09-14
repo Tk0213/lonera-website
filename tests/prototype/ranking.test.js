@@ -15,7 +15,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'app-preview.html'), 'utf8');
+const APP = fs.readFileSync(path.join(__dirname, '..', '..', 'apps', 'prototype', 'app-preview.html'), 'utf8');
 
 /** Lift a top-level declaration out of the app source by name. */
 function lift(kind, name, end) {

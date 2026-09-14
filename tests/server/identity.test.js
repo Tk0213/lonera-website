@@ -16,7 +16,7 @@ const crypto = require('node:crypto');
 const SECRET = 'secret-for-tests';
 process.env.STANDBY_SECRET = SECRET;
 // required after the env var is set, since the secret is read at load time
-const { identify } = require('../server');
+const { identify } = require('../../apps/server/server');
 
 const sign = (id, secret = SECRET) =>
   `${id}.${crypto.createHmac('sha256', secret).update(id).digest('base64url')}`;

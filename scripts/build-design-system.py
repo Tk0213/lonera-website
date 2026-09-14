@@ -16,7 +16,7 @@ generated, which is what the hook uses to decide whether a re-push is owed.
 import argparse, base64, io, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-APP = os.path.join(ROOT, "app-preview.html")
+APP = os.path.join(ROOT, "apps", "prototype", "app-preview.html")
 
 
 # ---------------------------------------------------------------- css parsing

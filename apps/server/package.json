@@ -1,0 +1,17 @@
+{
+  "name": "@lonera/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lonera API: availability, AI intent parsing, standby queue, and the static site and prototype pages.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {
+    "@lonera/core": "*",
+    "express": "^4.19.2"
+  }
+}

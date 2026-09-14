@@ -14,10 +14,13 @@ const path = require('path');
 const fs = require('node:fs');
 const crypto = require('crypto');
 
-const availability = require('./lib/availability');
-const aiIntent = require('./lib/ai/intent');
-const businesses = require('./lib/businesses');
-const waitlist = require('./lib/waitlist');
+/** Repository root. Served pages live in apps/site and apps/prototype. */
+const ROOT = path.resolve(__dirname, '..', '..');
+
+const availability = require('./src/availability');
+const aiIntent = require('./src/ai/intent');
+const businesses = require('./src/businesses');
+const waitlist = require('./src/waitlist');
 
 /* ------------------------------------------------------------- page assembly
  *
@@ -81,7 +84,7 @@ function cspHash(text) {
 
 /** Read one page, assemble it if it is a bare body, and hash its inline blocks. */
 function preparePage(file) {
-  const raw = fs.readFileSync(path.join(__dirname, file), 'utf8');
+  const raw = fs.readFileSync(path.join(ROOT, file), 'utf8');
   const isBody = !/^\s*<!doctype/i.test(raw) && !/<html[\s>]/i.test(raw);
   const html = isBody ? `${HEAD}\n${raw}\n</body>\n</html>\n` : raw;
   const scripts = [];
@@ -212,13 +215,13 @@ function rateLimit({ windowMs, max, key = 'global' }) {
 // express.static(__dirname) exposed package.json, server.js, .git and the
 // design-system bundle to the open internet.
 const PUBLIC_FILES = {
-  '/': 'index.html',
-  '/index.html': 'index.html',
-  '/dashboard': 'dashboard.html',
-  '/dashboard.html': 'dashboard.html',
-  '/app': 'app-preview.html',
-  '/app-preview.html': 'app-preview.html',
-  '/thumbnail.png': 'thumbnail.png',
+  '/': 'apps/site/index.html',
+  '/index.html': 'apps/site/index.html',
+  '/dashboard': 'apps/site/dashboard.html',
+  '/dashboard.html': 'apps/site/dashboard.html',
+  '/app': 'apps/prototype/app-preview.html',
+  '/app-preview.html': 'apps/prototype/app-preview.html',
+  '/thumbnail.png': 'apps/site/thumbnail.png',
 };
 
 /* Prepared once at startup: assembling a 2MB document per request would be
@@ -231,7 +234,7 @@ for (const file of new Set(Object.values(PUBLIC_FILES))) {
 for (const [route, file] of Object.entries(PUBLIC_FILES)) {
   app.get(route, (req, res) => {
     res.setHeader('Cache-Control', PROD ? 'public, max-age=300' : 'no-store');
-    if (!PAGES.has(file)) return res.sendFile(path.join(__dirname, file));
+    if (!PAGES.has(file)) return res.sendFile(path.join(ROOT, file));
     /* Outside production, re-read on each request. Preparing the page once is
        right for a served deployment - assembling 2MB per request would be the
        slowest thing here - but in development it silently serves the file as

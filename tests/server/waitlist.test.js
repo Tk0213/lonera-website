@@ -11,7 +11,7 @@
 
 const { test, beforeEach } = require('node:test');
 const assert = require('node:assert/strict');
-const wl = require('../lib/waitlist');
+const wl = require('../../apps/server/src/waitlist');
 
 beforeEach(() => wl.reset());
 

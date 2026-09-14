@@ -15,10 +15,10 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { parseTutoringRequest, refine } = require('../packages/core/src/tutoring.js');
-const { rank, evaluate, swapCandidates, groupByTutor, diffRankings } = require('../packages/core/src/matching.js');
-const { createReservationStore } = require('../packages/core/src/booking.js');
-const cal = require('../packages/core/src/calendar.js');
+const { parseTutoringRequest, refine } = require('../../packages/core/src/tutoring.js');
+const { rank, evaluate, swapCandidates, groupByTutor, diffRankings } = require('../../packages/core/src/matching.js');
+const { createReservationStore } = require('../../packages/core/src/booking.js');
+const cal = require('../../packages/core/src/calendar.js');
 
 const NOW = new Date(2026, 8, 14, 9, 0).getTime();          // Mon 09:00
 const at = (day, h, m = 0) => new Date(2026, 8, day, h, m); // day of September

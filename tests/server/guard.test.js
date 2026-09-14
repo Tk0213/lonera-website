@@ -10,7 +10,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { checkUrl, isBlockedAddress, safeFetch } = require('../lib/net/guard');
+const { checkUrl, isBlockedAddress, safeFetch } = require('../../apps/server/src/net/guard');
 
 // no real DNS in tests: the resolver is injected
 const resolvesTo = (ip) => ({ lookup: async () => [{ address: ip, family: ip.includes(':') ? 6 : 4 }] });

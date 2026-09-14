@@ -15,9 +15,9 @@
       "autoPort": true
     },
     {
-      "name": "lonera-static",
+      "name": "lonera-prototype",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8934", "--bind", "127.0.0.1"],
+      "runtimeArgs": ["-m", "http.server", "8934", "--bind", "127.0.0.1", "--directory", "apps/prototype"],
       "port": 8934
     }
   ]

@@ -8,11 +8,11 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { busyFromIcs, expandWeekly, parseIcsDate } = require('../lib/availability/adapters/ics');
-const { windowsForDate } = require('../lib/availability/adapters/places');
-const { resolve, sliceFree, windowsFromDeclared, clearCache, TIER } = require('../lib/availability');
-const { effectiveTier, isBookable } = require('../lib/availability/tiers');
-const aiIntent = require('../lib/ai/intent');
+const { busyFromIcs, expandWeekly, parseIcsDate } = require('../../apps/server/src/availability/adapters/ics');
+const { windowsForDate } = require('../../apps/server/src/availability/adapters/places');
+const { resolve, sliceFree, windowsFromDeclared, clearCache, TIER } = require('../../apps/server/src/availability');
+const { effectiveTier, isBookable } = require('../../apps/server/src/availability/tiers');
+const aiIntent = require('../../apps/server/src/ai/intent');
 
 const H = 3600 * 1000;
 

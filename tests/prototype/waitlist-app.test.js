@@ -15,9 +15,9 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const server = require('../lib/waitlist');
+const server = require('../../apps/server/src/waitlist');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'app-preview.html'), 'utf8');
+const APP = fs.readFileSync(path.join(__dirname, '..', '..', 'apps', 'prototype', 'app-preview.html'), 'utf8');
 
 function lift(name, end) {
   const i = APP.indexOf(name);
