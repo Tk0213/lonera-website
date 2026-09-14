@@ -2,25 +2,23 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "lonera-static",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": [
-        "-m",
-        "http.server",
-        "8934",
-        "--bind",
-        "127.0.0.1"
-      ],
-      "port": 8934
+      "name": "lonera-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "web"],
+      "port": 5178
     },
     {
       "name": "lonera-server",
       "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "start"
-      ],
+      "runtimeArgs": ["start"],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "lonera-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8934", "--bind", "127.0.0.1"],
+      "port": 8934
     }
   ]
 }

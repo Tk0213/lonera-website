@@ -1,0 +1,11 @@
+{
+  "name": "@lonera/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Logic shared by the web app, the native app and the server. No Node built-ins, no DOM, no network.",
+  "exports": {
+    ".": "./src/index.js",
+    "./*": "./src/*.js"
+  }
+}

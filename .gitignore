@@ -12,3 +12,6 @@ _dspreview/
 
 # generated-image staging
 _gen/
+
+# Vite build output
+apps/web/dist/
