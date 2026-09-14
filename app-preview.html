@@ -479,6 +479,59 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 .ic-s{width:16px;height:16px;}
 .trust{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
 
+/* ---------- multi-service plan: one errand, several visits ---------- */
+.pl{position:absolute;inset:0;background:var(--bg);z-index:67;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateY(14px);
+  transition:opacity .24s ease-out,transform .28s cubic-bezier(.2,.9,.3,1);}
+.pl.on{opacity:1;pointer-events:auto;transform:none;}
+.pl-top{display:flex;align-items:center;justify-content:flex-end;padding:14px 14px 0;}
+.pl-head{padding:2px 22px 0;}
+.pl-head h2{margin:0;font-size:1.5rem;font-weight:800;letter-spacing:-.025em;line-height:1.15;}
+.pl-sub{margin:6px 0 0;font-size:.88rem;color:var(--text-2);line-height:1.5;}
+.pl-tally{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;}
+.pltag{font-size:.72rem;font-weight:800;padding:5px 9px;border-radius:999px;white-space:nowrap;}
+.pltag.ok{background:var(--ok-tint);color:var(--ok);}
+.pltag.b{background:#eaf1fb;color:#1a4d8f;}
+.pltag.off{background:var(--surface);color:#6a6a6a;}
+.pl-rows{flex:1;min-height:0;overflow-y:auto;padding:14px 20px 4px;scrollbar-width:none;
+  display:flex;flex-direction:column;gap:11px;overscroll-behavior-y:contain;}
+.pl-rows::-webkit-scrollbar{display:none;}
+/* Each visit is one card with its own tier badge. The badge repeats per row
+   rather than once for the plan, because the tiers genuinely differ inside
+   one errand and a single summary badge would average away the difference. */
+.plrow{border:1.5px solid var(--line);border-radius:var(--r-lg);padding:12px 13px 11px;}
+.plr-top{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.plr-svc{font-size:.95rem;font-weight:800;letter-spacing:-.01em;}
+.plr-top .pav{margin:0 0 0 auto;}
+.plr-biz{display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;
+  padding:0;text-align:left;transition:transform .14s ease-out;}
+.plr-biz:active{transform:scale(.97);}
+.plr-art{width:54px;height:54px;border-radius:13px;overflow:hidden;position:relative;flex-shrink:0;}
+.plr-bd{flex:1;min-width:0;display:block;}
+.plr-n{display:block;font-size:.95rem;font-weight:800;margin:0 0 3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.plr-m{display:block;font-size:.8rem;color:var(--text-2);font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.plr-foot{display:flex;align-items:center;gap:9px;margin-top:11px;
+  padding-top:10px;border-top:1px solid var(--line);}
+.plr-t{font-size:.92rem;font-weight:800;font-variant-numeric:tabular-nums;}
+.plr-t.off{font-weight:700;color:var(--text-2);}
+.plr-swap{margin-left:auto;border:1.5px solid var(--line);background:var(--bg);color:var(--text);
+  font-family:inherit;font-size:.82rem;font-weight:800;height:38px;padding:0 15px;border-radius:999px;
+  transition:transform .14s ease-out,border-color .14s ease-out;}
+.plr-swap:hover{border-color:var(--brand);} .plr-swap:active{transform:scale(.96);}
+.plr-none{margin:0;font-size:.88rem;color:var(--text-2);line-height:1.5;}
+.pl-go{flex-shrink:0;padding:11px 20px calc(var(--safe-b) + 10px);
+  border-top:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;gap:9px;}
+/* The mic stays reachable on this screen: adjusting an errand out loud
+   ("drop the electrician") is faster than editing three rows by hand. */
+.pl-mic{display:flex;align-items:center;justify-content:center;gap:8px;}
+.pl-mic.live{background:var(--text);color:#fff;border-color:var(--text);}
+.pl-mic.live .ic{color:#fff;}
+.whybtn{margin-left:auto;border:none;background:none;font-family:inherit;font-size:.8rem;
+  font-weight:800;color:var(--brand-ink);padding:6px 2px;min-height:32px;border-radius:9px;
+  text-decoration:underline;text-underline-offset:3px;transition:background .14s ease-out;}
+.whybtn:hover{background:var(--brand-tint);}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 /* Real phone: drop the mockup and become the app. The device already has a
    notch, a status bar and a home indicator, so drawing our own on top of them
@@ -581,6 +634,24 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <div class="vs-res" id="vsRes"></div>
       <div class="vs-go"><button class="btn pri" id="vsGo"></button></div>
     </div>
+    <div class="pl" id="pl">
+      <div class="pl-top">
+        <button class="vs-x" id="plX" aria-label="Close">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div class="pl-head">
+        <h2 id="plTitle"></h2>
+        <p class="pl-sub" id="plSub"></p>
+        <div class="pl-tally" id="plTally"></div>
+      </div>
+      <div class="pl-rows" id="plRows"></div>
+      <div class="pl-go">
+        <button class="btn pri" id="plGo"></button>
+        <button class="btn sec pl-mic" id="plMic">
+          <svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+          <span id="plMicT"></span></button>
+      </div>
+    </div>
     <div class="scrim" id="scrim"></div>
     <div class="sheet" id="sheet">
       <div class="grip"></div>
@@ -636,6 +707,8 @@ const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 
 /* ================= i18n ================= */
 const T={en:{
+ whyOrder:"Why this order?",whyTitle:"Why you see this order",whySub:"Lonera puts things you have opened before nearer the front.",whyNone:"Nothing yet. Open a few listings and this rail starts matching what you look for.",whyHousing:"Rentals are never ordered by language. Housing has to be offered on the same terms to everyone.",whyLocal:"This is counted on your phone only. It is never sent to us and never sold.",whyReset:"Clear what Lonera remembers",whyCleared:"Cleared",done:"Done",
+ plTitle:"Your errand",plSub:"{n} visits · {when} · {lang}",plAnyLang:"any language",plThisWeek:"this week",plSoon:"next opening",plLive:"live",plReqN:"to request",plAskN:"to ask",plSwap:"Swap",plWillAsk:"We will ask them for times",plNoMatch:"No {svc} on Lonera yet. We will still pass on your request.",plGoBook:"Book these times",plGoRequest:"Send all requests",plGoAsk:"Ask them all for times",plGoMixed:"Book the live times, request the rest",plAdjust:"Change something",plAdjustPh:"Say or type a change — \"drop the electrician\", \"make it Friday\"",plNone:"Name two or more services and I will line them up.",plUpdated:"Errand updated",plSwapped:"Switched to {n}",plSent:"Sent. You will hear back in this app.",plSentBooked:"All booked.",
  tabHome:"Home",tabBrowse:"Browse",tabSaved:"Saved",tabInbox:"Inbox",tabYou:"You",
  searchPh:"What do you need?",featuredNow:"Featured now",rowTrusted:"Trusted near you",rowToday:"Free today",rowJobs:"Jobs hiring now",rowMarket:"Buy and sell",rowGrocery:"Grocery deals",rowCommunity:"From the community",
  browseTitle:"Browse",browseSub:"Pick a category, or use the search bar below.",
@@ -702,6 +775,8 @@ const T={en:{
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
  vsNone:"Nothing matched. Try different words."
 },ko:{
+ whyOrder:"이 순서의 이유",whyTitle:"이 순서로 보이는 이유",whySub:"이전에 열어 본 항목을 앞쪽에 보여 드립니다.",whyNone:"아직 기록이 없습니다. 몇 개를 열어 보시면 관심사에 맞춰 정렬됩니다.",whyHousing:"렌탈은 언어로 정렬하지 않습니다. 주거는 모두에게 동일한 조건으로 제공되어야 합니다.",whyLocal:"이 정보는 휴대폰에만 저장됩니다. 저희에게 전송되거나 판매되지 않습니다.",whyReset:"저장된 관심사 삭제",whyCleared:"삭제되었습니다",done:"완료",
+ plTitle:"한 번에 처리",plSub:"방문 {n}건 · {when} · {lang}",plAnyLang:"언어 무관",plThisWeek:"이번 주",plSoon:"가장 빠른 시간",plLive:"실시간",plReqN:"요청 필요",plAskN:"문의 필요",plSwap:"변경",plWillAsk:"가능한 시간을 문의해 드립니다",plNoMatch:"아직 로네라에 {svc} 업체가 없습니다. 요청은 전달해 드립니다.",plGoBook:"이 시간으로 예약",plGoRequest:"전체 요청 보내기",plGoAsk:"전체 시간 문의하기",plGoMixed:"실시간은 예약, 나머지는 요청",plAdjust:"내용 변경",plAdjustPh:"변경 사항을 말하거나 입력하세요 — \"전기 빼줘\", \"금요일로\"",plNone:"서비스를 두 개 이상 말씀해 주세요.",plUpdated:"일정이 변경되었습니다",plSwapped:"{n}(으)로 변경했습니다",plSent:"전송되었습니다. 앱에서 답변을 받으실 수 있습니다.",plSentBooked:"모두 예약되었습니다.",
  tabHome:"홈",tabBrowse:"둘러보기",tabSaved:"저장됨",tabInbox:"받은함",tabYou:"내 정보",
  searchPh:"무엇이 필요하세요?",featuredNow:"지금 추천",rowTrusted:"믿을 수 있는 업체",rowToday:"오늘 가능",rowJobs:"지금 채용 중",rowMarket:"사고 팔기",rowGrocery:"장보기 할인",rowCommunity:"커뮤니티 소식",
  browseTitle:"둘러보기",browseSub:"카테고리를 고르시거나 아래 검색을 이용하세요.",
@@ -805,10 +880,25 @@ const BIZ=[
  {id:"prairie",av:"declared",vb:["id","lic"],lg:["English","Punjabi"],n:"Prairie Tutors",nk:"프레리 튜터스",c:"Tutoring",ck:"과외",p:"$28-55/hr",r:4.6,rv:37,a:"SE Calgary",g:"g6",sc:"book2",v:1,e:0,free:1,
   d:"Small group sessions, grades 6 to 12. Diploma exam prep.",dk:"6~12학년 소그룹 수업. 졸업 시험 대비."},
  {id:"chinook",av:"unknown",vb:["id","biz","lic","pay"],lg:["Mandarin","English"],n:"Chinook Tax and Bookkeeping",nk:"치눅 세무회계",c:"Taxes",ck:"세무",p:"$80-450",r:4.8,rv:41,a:"SE Calgary",g:"g3",sc:"work",v:1,e:1,free:0,
-  d:"Personal and small business returns. First consultation is free.",dk:"개인 및 소상공인 세금 신고. 첫 상담 무료."}
+  d:"Personal and small business returns. First consultation is free.",dk:"개인 및 소상공인 세금 신고. 첫 상담 무료."},
+ /* Plumbing and Electrical exist because the bundle feature is built around
+    trades that get called together. Two Korean-speaking options per service,
+    not one: with a single candidate per trade the planner is a lookup, not a
+    ranking. */
+ {id:"hanriver",av:"connected",vb:["id","biz","lic","ins"],lg:["Korean","English"],n:"Han River Plumbing",nk:"한강 배관",c:"Plumbing",ck:"배관",p:"$120-600",r:4.8,rv:37,a:"NW Calgary",g:"g5",sc:"tools",v:1,e:1,free:1,f:1,
+  d:"Licensed plumber. Leaks, drains and water heaters, same-week most weeks.",dk:"면허 배관공. 누수, 배수, 온수기. 대부분 당주 방문 가능."},
+ {id:"taeyang",av:"declared",vb:["id","biz","lic"],lg:["Korean","English"],n:"Taeyang Plumbing and Heating",nk:"태양 배관 난방",c:"Plumbing",ck:"배관",p:"$110-540",r:4.6,rv:22,a:"NE Calgary",g:"g1",sc:"tools",v:1,e:0,free:0,f:1,
+  d:"Plumbing and furnace work. Korean-speaking owner does the estimate himself.",dk:"배관 및 보일러 수리. 한국어 가능한 사장님이 직접 견적."},
+ {id:"mirae",av:"connected",vb:["id","biz","lic","ins"],lg:["Korean","English"],n:"Mirae Electric",nk:"미래 전기",c:"Electrical",ck:"전기",p:"$130-700",r:4.9,rv:29,a:"SW Calgary",g:"g6",sc:"tools",v:1,e:1,free:1,f:1,
+  d:"Licensed electrician. Panels, outlets and lighting. Permits handled.",dk:"면허 전기공. 배전반, 콘센트, 조명. 허가 대행."},
+ {id:"voltway",av:"declared",vb:["id","biz","lic"],lg:["English","Korean"],n:"Voltway Electrical",nk:"볼트웨이 전기",c:"Electrical",ck:"전기",p:"$125-650",r:4.5,rv:18,a:"City-wide",g:"g4",sc:"tools",v:1,e:0,free:0,f:0,
+  d:"Residential rewiring and inspections. Evening visits available.",dk:"주택 배선 및 점검. 저녁 방문 가능."},
+ {id:"sarang",av:"declared",vb:["id","biz","top"],lg:["Korean","English"],n:"Sarang Cleaning",nk:"사랑 청소",c:"Cleaning",ck:"청소",p:"$90-200",r:4.8,rv:44,a:"NW Calgary",g:"g3",sc:"clean2",v:1,e:0,free:0,f:1,
+  d:"Korean-speaking team. Regular and move-out cleans across the northwest.",dk:"한국어 가능한 팀. 정기 청소 및 이사 청소, 북서부 지역."}
 ];
 const CATS=[["Cleaning","청소","g3","clean"],["Rentals","렌탈","g5","home"],["Tutoring","과외","g6","book"],["Hair","미용","g2","hair"],
- ["Immigration","이민","g1","doc"],["Renovation","리노베이션","g4","tools"],["Dental","치과","g5","tooth"],["Catering","케이터링","g4","food"]];
+ ["Immigration","이민","g1","doc"],["Renovation","리노베이션","g4","tools"],["Dental","치과","g5","tooth"],["Catering","케이터링","g4","food"],
+ ["Plumbing","배관","g5","tools"],["Electrical","전기","g6","tools"],["Auto","자동차","g1","car"],["Taxes","세무","g3","work"]];
 const JOBS=[{n:"Kitchen prep cook",nk:"주방 프렙 쿡",c:"Home Table Catering",ck:"홈테이블 케이터링",p:"$19/hr",a:"City-wide",g:"g4",sc:"food"},
  {n:"Front desk assistant",nk:"프론트 데스크 보조",c:"Riverbend Dental",ck:"리버벤드 치과",p:"$21/hr",a:"SW Calgary",g:"g5",sc:"tooth"},
  {n:"Junior carpenter",nk:"주니어 목수",c:"TrueBuild",ck:"트루빌드",p:"$28-34/hr",a:"City-wide",g:"g1",sc:"tools"},
@@ -1088,8 +1178,9 @@ function viewHome(){
     ${heroRail()}
     ${RECENT.length?`<div class="rowtitle"><h3>${t("recentTitle")}</h3></div>
       <div class="rail">${RECENT.map(id=>BIZ.find(b=>b.id===id)).filter(Boolean).map(bizCard).join("")}</div>`:""}
-    <div class="rowtitle"><h3>${t("rowTrusted")}</h3></div>
-    <div class="rail">${BIZ.map(bizCard).join("")}</div>
+    <div class="rowtitle"><h3>${t("rowTrusted")}</h3>
+      <button class="whybtn" data-act="why">${t("whyOrder")}</button></div>
+    <div class="rail">${feedOrder(BIZ).map(bizCard).join("")}</div>
     <div class="rowtitle"><h3>${t("rowToday")}</h3></div>
     <div class="rail">${free.map(bizCard).join("")}</div>
     <div class="rowtitle"><h3>${t("rowGrocery")}</h3></div>
@@ -1411,6 +1502,7 @@ let cur="home";
 function openBiz(id){
   const b=BIZ.find(x=>x.id===id); if(!b) return;
   RECENT=[id].concat(RECENT.filter(x=>x!==id)).slice(0,8);
+  noteInterest(b.c);   // their own tap, counted on their own device
   viewHome();
   avGet(b);
   if(avTier(b)==="connected"){
@@ -1679,7 +1771,9 @@ const P_SERVICE=[
  ["Renovation",["renovat","basement","contractor","remodel","리노","공사"]],
  ["Auto",["mechanic","car repair","auto repair","tire","brake","정비","자동차"]],
  ["Taxes",["tax","accountant","bookkeep","세무","세금"]],
- ["Catering",["cater","party tray","케이터링"]]
+ ["Catering",["cater","party tray","케이터링"]],
+ ["Plumbing",["plumber","plumbing","leak","drain","pipe","toilet","water heater","배관","누수","수도"]],
+ ["Electrical",["electrician","electrical","wiring","outlet","breaker","panel","전기","배선","콘센트"]]
 ];
 const P_LANG=[["Korean",["korean","한국어","한인","한국말"]],
  ["Tagalog",["tagalog","filipino","필리핀"]],
@@ -1700,14 +1794,236 @@ function parseIntent(raw){
   if(s.includes("tomorrow")||s.includes("내일")) when=(todayIdx+1)%7;
   else if(s.includes("today")||s.includes("오늘")) when=todayIdx;
   else DAYWORDS.forEach((w,i)=>{if(w.some(x=>s.includes(x))) when=i;});
-  const service=pick(P_SERVICE), language=pick(P_LANG);
+  const language=pick(P_LANG);
+  /* Every service named, in the order they were said. "a plumber, a cleaner
+     and an electrician" is one errand with three parts, and collapsing it to
+     the first match is what made people search three times. */
+  const services=P_SERVICE
+    .map(([key,words])=>{
+      const at=words.map(w=>s.indexOf(w)).filter(i=>i>=0);
+      return at.length?{key,at:Math.min(...at)}:null;})
+    .filter(Boolean).sort((a,b)=>a.at-b.at).map(x=>x.key);
+  const service=services[0]||null;
+  const week=/this week|이번\s*주|주중/.test(s);
   let action=pick(P_ACTION);
   if(!action && service) action="find";
-  if(when!==null && service) action="book";          // a day named = they want a slot
-  return {raw:raw||"",service,language,when,action};
+  if((when!==null||week) && service) action="book";  // a day named = they want a slot
+  return {raw:raw||"",service,services,language,when,week,action};
+}
+/* ================= on-device interest ranking =================
+   Personalised ordering, built so that the legal shape is the architecture
+   rather than a policy document bolted on afterwards.
+
+   1. The profile never leaves the phone. Interests are counted from this
+      user's own taps and kept in localStorage. There is no profile on a
+      server to breach, subpoena, sell or hand over, and no third-party or
+      data-broker input at all - which is also what makes consent honest
+      under PIPEDA and Alberta's PIPA.
+
+   2. Language never ranks housing. In this app the interface language is a
+      close proxy for national origin, and using a proxy for a protected
+      ground to decide who sees a rental listing is discrimination whether or
+      not anyone intended it - this is what Meta was sued over and settled.
+      Housing is therefore ranked on the user's own category interest alone,
+      never on language. Everywhere else, matching a provider who speaks the
+      user's language is the entire point of the product.
+
+   3. The user can see it and erase it. Any ranking a person cannot inspect
+      is one they cannot challenge, so the order is explainable in one tap
+      and clearable in the same sheet. */
+const IKEY="lonera.interests";
+/* Protected grounds under the Alberta Human Rights Act and the Canadian
+   Human Rights Act reach housing and employment specifically. The jobs rail
+   is separate data and is left unranked entirely. */
+const NO_LANG_RANK=["Rentals"];
+const INTEREST_CAP=5;            // one browsing spree must not define someone
+
+let interests=(function(){
+  try{ const v=JSON.parse(localStorage.getItem(IKEY)||"{}");
+       return (v&&typeof v==="object"&&!Array.isArray(v))?v:{}; }
+  catch(e){ return {}; }         // private mode, cleared storage, blocked cookies
+})();
+function noteInterest(cat){
+  if(!cat) return;
+  interests[cat]=Math.min((interests[cat]||0)+1,INTEREST_CAP);
+  try{ localStorage.setItem(IKEY,JSON.stringify(interests)); }catch(e){}
+}
+function clearInterests(){
+  interests={};
+  try{ localStorage.removeItem(IKEY); }catch(e){}
+}
+function langPref(){ return lang==="ko"?"Korean":"English"; }
+function feedScore(b){
+  /* Clamp on read as well as on write: this number comes back out of
+     localStorage, which the user (or an older build) can put anything into,
+     and an uncapped count would let one category bury every other. */
+  let sc=Math.min(Math.max(interests[b.c]|0,0),INTEREST_CAP)*4;   // what they actually opened
+  if(!NO_LANG_RANK.includes(b.c) && (b.lg||[]).includes(langPref())) sc+=5;
+  if(avTier(b)==="connected") sc+=2;                       // a bookable time is more useful
+  return sc+b.r;
+}
+function feedOrder(list){ return list.slice().sort((a,b)=>feedScore(b)-feedScore(a)); }
+/* The explanation is part of the feature, not documentation of it. */
+function openWhy(){
+  const top=Object.entries(interests).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const label=c=>esc(lang==="ko"?((CATS.find(x=>x[0]===c)||[,c])[1]):c);
+  sheet(t("whyTitle"),t("whySub"),
+    (top.length
+      ? `<div class="trust">${top.map(([c,n])=>`<span class="vb b">${label(c)} ×${n}</span>`).join("")}</div>`
+      : `<p class="note">${t("whyNone")}</p>`)
+    + `<p class="note" style="margin-top:12px">${t("whyHousing")}</p>`
+    + `<p class="note" style="margin-top:10px">${t("whyLocal")}</p>`,
+    `<button class="btn sec" data-act="whyclear">${t("whyReset")}</button>
+     <button class="btn pri" data-act="close">${t("done")}</button>`);
+}
+
+/* ================= multi-service planner =================
+   "I need a plumber, a cleaner and an electrician this week who speaks
+   Korean" is one errand, not three searches. The planner picks one business
+   per trade and one time each, and no two visits land on the same slot.
+
+   It refuses to flatten the tiers. A connected business yields a real slot, a
+   declared one a time to request, and one with no schedule gets no time at
+   all and says so. Showing three confirmed times when two were guesses would
+   be the "Free today" bug again, three times over - and here it would cost
+   someone a day off work. */
+const PLAN_MAX=4;
+let plan=null;
+
+function planScore(b,want){
+  let sc=b.r;                                         // rating is the base
+  if(want && (b.lg||[]).includes(want)) sc+=6;        // language is the product
+  const tier=avTier(b);
+  sc+= tier==="connected"?3 : tier==="declared"?1.5 : 0;   // bookable beats askable
+  return sc;
+}
+function planCandidates(svc,want){
+  let pool=BIZ.filter(b=>b.c===svc);
+  if(want){
+    const spoken=pool.filter(b=>(b.lg||[]).includes(want));
+    if(spoken.length) pool=spoken;      // prefer the language, never return nothing
+  }
+  return pool.slice().sort((a,b)=>planScore(b,want)-planScore(a,want));
+}
+function planOpen(b){
+  if(!b) return [];
+  const st=avGet(b);
+  return (st.slots||[]).filter(x=>!(st.taken||[]).includes(x));
+}
+function buildPlan(p,keep){
+  const wanted=(p.services&&p.services.length?p.services:(p.service?[p.service]:[])).slice(0,PLAN_MAX);
+  if(!wanted.length) return null;
+  const rows=wanted.map(svc=>{
+    const list=planCandidates(svc,p.language);
+    /* a swap the user already made survives a re-plan */
+    const held=keep&&keep[svc]&&list.find(b=>b.id===keep[svc]);
+    const b=held||list[0]||null;
+    return {svc,b,list,open:planOpen(b),slot:null};
+  });
+  /* Most constrained first. A business with two open times has to choose
+     before one with ten, or the flexible one takes the slot they both wanted
+     and the tight one is left with nothing. */
+  const used=new Set();
+  rows.slice().sort((x,y)=>x.open.length-y.open.length).forEach(r=>{
+    r.slot=r.open.find(x=>!used.has(x))||null;
+    if(r.slot) used.add(r.slot);
+  });
+  const at=x=>x.slot?AV_SLOT_LABELS.indexOf(x.slot):99;   // unscheduled last
+  rows.sort((x,y)=>at(x)-at(y));
+  return {rows,language:p.language,when:p.when,week:!!p.week,raw:p.raw};
+}
+/* The language the user asked to be served in, named in the language they are
+   reading. "언어 Korean" was half-translated, which is exactly the seam this
+   app is supposed to hide. */
+const LANG_KO={Korean:"한국어",Tagalog:"타갈로그어",Mandarin:"중국어",Punjabi:"펀자브어",English:"영어"};
+function planLangLabel(x){ return !x ? t("plAnyLang") : (lang==="ko" ? (LANG_KO[x]||x) : x); }
+function planDayLabel(pl){
+  if(pl.when!==null&&pl.when!==undefined) return lang==="ko"?DAYS[pl.when][1]:DAYS[pl.when][0];
+  return t(pl.week?"plThisWeek":"plSoon");
+}
+function planTally(pl){
+  const n={connected:0,declared:0,unknown:0};
+  pl.rows.forEach(r=>{ if(r.b) n[r.slot?avTier(r.b):"unknown"]++; });
+  return n;
+}
+function paintPlan(){
+  if(!plan) return;
+  const pl=plan, day=planDayLabel(pl), n=planTally(pl);
+  $("plTitle").textContent=t("plTitle");
+  $("plSub").textContent=t("plSub")
+    .replace("{n}",pl.rows.length).replace("{when}",day)
+    .replace("{lang}",planLangLabel(pl.language));
+  const bit=(c,k,v)=>v?`<span class="pltag ${c}">${v} ${t(k)}</span>`:"";
+  $("plTally").innerHTML=bit("ok","plLive",n.connected)+bit("b","plReqN",n.declared)+bit("off","plAskN",n.unknown);
+
+  $("plRows").innerHTML=pl.rows.map(r=>{
+    const svcLabel=esc(lang==="ko"?(CATS.find(c=>c[0]===r.svc)||[,r.svc])[1]:r.svc);
+    if(!r.b) return `<div class="plrow"><div class="plr-top"><span class="plr-svc">${svcLabel}</span></div>
+      <p class="plr-none">${t("plNoMatch").replace("{svc}",svcLabel)}</p></div>`;
+    const tier=avTier(r.b), meta=avMeta(tier);
+    const time=r.slot
+      ? `<span class="plr-t">${day} · ${esc(r.slot)}</span>`
+      : `<span class="plr-t off">${t("plWillAsk")}</span>`;
+    const swap=r.list.length>1
+      ? `<button class="plr-swap" data-swap="${esc(r.svc)}">${t("plSwap")}</button>` : "";
+    return `<div class="plrow">
+      <div class="plr-top"><span class="plr-svc">${svcLabel}</span>
+        <span class="pav ${tier}">${t(meta.k)}</span></div>
+      <button class="plr-biz" data-biz="${esc(r.b.id)}">
+        <span class="plr-art ${r.b.g}">${art(r.b.sc)}</span>
+        <span class="plr-bd"><span class="plr-n">${esc(bn(r.b))}</span>
+          <span class="plr-m">★ ${r.b.r} · ${esc(r.b.a)} · ${esc(r.b.p)}</span></span>
+      </button>
+      <div class="plr-foot">${time}${swap}</div></div>`;
+  }).join("");
+
+  /* The CTA has to describe the mixture it is actually about to send, or it
+     promises a booking for visits nobody has confirmed yet. */
+  $("plGo").textContent = n.connected&&(n.declared||n.unknown) ? t("plGoMixed")
+    : n.connected ? t("plGoBook")
+    : n.declared  ? t("plGoRequest")
+    :               t("plGoAsk");
+  $("plMicT").textContent=t("plAdjust");
+}
+function openPlan(p,keep){
+  const built=buildPlan(p,keep);
+  if(!built){ toast(t("plNone")); return; }
+  plan=built; closeSheet(); if($("vs").classList.contains("on")) vsClose();
+  paintPlan();
+  $("pl").classList.add("on");
+}
+function closePlan(){ $("pl").classList.remove("on"); }
+
+/* ---- voice adjustment: the errand changes while you are looking at it ----
+   This reuses the voice-search screen rather than running a second recognizer:
+   that screen already takes speech and typing in the same field, so an
+   adjustment works even where the browser has no speech recognition at all. */
+/* An adjustment is a delta on the plan, not a new search: "drop the
+   electrician" has to keep the other two and the times already chosen. */
+function adjustPlan(text){
+  if(!plan||!text.trim()) return;
+  const raw=text.toLowerCase();
+  const p=parseIntent(text);
+  let svcs=plan.rows.map(r=>r.svc);
+  const drop=/\b(drop|remove|without|cancel|no more|빼|제외|취소)\b/.test(raw);
+  if(drop && p.services.length){
+    svcs=svcs.filter(x=>!p.services.includes(x));
+  } else if(p.services.length){
+    p.services.forEach(x=>{ if(!svcs.includes(x)) svcs.push(x); });
+  }
+  if(!svcs.length){ toast(t("plNone")); return; }
+  const keep={};
+  plan.rows.forEach(r=>{ if(r.b) keep[r.svc]=r.b.id; });
+  openPlan({raw:text,services:svcs,service:svcs[0],
+    language:p.language||plan.language,
+    when:p.when!==null?p.when:plan.when,
+    week:p.week||plan.week,action:"book"},keep);
+  toast(t("plUpdated"));
 }
 function runIntent(p){
   if(!p.raw.trim()){toast(t("nothingHeard"));return;}
+  /* Two or more trades is an errand, not a search: hand it to the planner. */
+  if(p.services && p.services.length>1){ openPlan(p); return; }
   if(p.action==="sell"){closeSheet();go("home");openForm("item");return;}
   if(p.action==="job"){closeSheet();go("home");toast(t("rowJobs"));return;}
   if(p.action==="ask"){closeSheet();go("community");openForm("ask");return;}
@@ -1800,10 +2116,12 @@ function vsState(){
   el.textContent = listening ? t("vsListening") : t("vsPaused");
   $("vs").classList.toggle("live",listening);
 }
-function vsOpen(){
+let vsAdjust=false;
+function vsOpen(adjust){
+  vsAdjust=!!adjust;
   vHeard="";
   const i=$("vsInput");
-  i.value=""; i.placeholder=t("vsPh");
+  i.value=""; i.placeholder=t(vsAdjust?"plAdjustPh":"vsPh");
   $("vsGo").innerHTML=ic("arrow");
   $("vsGo").setAttribute("aria-label",t("vsGo"));
   $("vsRes").innerHTML=""; $("vsChips").innerHTML="";
@@ -1814,11 +2132,14 @@ function vsOpen(){
 }
 function vsClose(){
   if(listening&&rec){try{rec.stop();}catch(e){}}
+  vsAdjust=false;
   $("vs").classList.remove("on");
 }
 function vsRun(){
   const q=($("vsInput").value||"").trim();
   if(!q) return;
+  /* In adjust mode the utterance edits the plan instead of starting a search. */
+  if(vsAdjust&&plan){ vsClose(); adjustPlan(q); return; }
   vHeard=q;
   if(listening&&rec){try{rec.stop();}catch(e){}}
   const p=parseIntent(q);
@@ -1829,6 +2150,34 @@ function vsRun(){
        <div class="rail">${list.map(bizCard).join("")}</div>`
     : `<div class="empty">${ic("help")}<p>${t("vsNone")}</p></div>`;
 }
+/* ---- plan screen wiring ---- */
+$("plX").onclick=closePlan;
+$("plRows").addEventListener("click",e=>{
+  const sw=e.target.closest("[data-swap]");
+  if(sw){
+    /* Swap cycles to the next-best candidate for that trade and re-solves the
+       times, because a different business has different openings. */
+    const svc=sw.dataset.swap, row=plan&&plan.rows.find(r=>r.svc===svc);
+    if(!row||row.list.length<2) return;
+    const i=row.list.findIndex(b=>b.id===row.b.id);
+    const next=row.list[(i+1)%row.list.length];
+    const keep={}; plan.rows.forEach(r=>{ if(r.b) keep[r.svc]=r.b.id; });
+    keep[svc]=next.id;
+    openPlan({raw:plan.raw,services:plan.rows.map(r=>r.svc),service:plan.rows[0].svc,
+      language:plan.language,when:plan.when,week:plan.week,action:"book"},keep);
+    toast(t("plSwapped").replace("{n}",bn(next)));
+    return;
+  }
+  const bz=e.target.closest("[data-biz]");
+  if(bz){ closePlan(); openBiz(bz.dataset.biz); }
+});
+$("plGo").onclick=()=>{
+  if(!plan) return;
+  const n=planTally(plan);
+  closePlan();
+  toast(n.connected&&!n.declared&&!n.unknown ? t("plSentBooked") : t("plSent"));
+};
+$("plMic").onclick=()=>vsOpen(true);
 $("chatBack").onclick=closeChat;
 $("chatSend").onclick=sendChat;
 $("chatIn").addEventListener("input",e=>{
@@ -1949,6 +2298,8 @@ document.addEventListener("click",e=>{
       JOINED.includes(id)?JOINED=JOINED.filter(x=>x!==id):JOINED.push(id);
       viewCommunity(); closeSheet(); toast(t("tJoined")); break;
     }
+    case "why": openWhy(); break;
+    case "whyclear": clearInterests(); closeSheet(); paint(); toast(t("whyCleared")); break;
     case "close": closeSheet(); break;
   }
 });

@@ -191,10 +191,31 @@ test('places periods become windows only for the matching weekday', () => {
 /* ------------------------------------------------------------------ ai intent */
 
 test('a hallucinated service is dropped, not passed through', () => {
-  const out = aiIntent.sanitize({ service: 'Plumbing', language: 'Korean', action: 'book' });
-  assert.equal(out.service, null, 'Plumbing is not one of our categories');
+  // Roofing is deliberately not a Lonera category. Plumbing used to stand in
+  // here and became real when the planner shipped, so the test was asserting
+  // the opposite of its own name until the category list was checked.
+  const out = aiIntent.sanitize({ service: 'Roofing', language: 'Korean', action: 'book' });
+  assert.equal(out.service, null, 'Roofing is not one of our categories');
+  assert.deepEqual(out.services, []);
   assert.equal(out.language, 'Korean');
   assert.equal(out.action, 'book');
+});
+
+test('every service in a multi-trade request survives, in order', () => {
+  const out = aiIntent.sanitize({ services: ['Plumbing', 'Cleaning', 'Electrical'], language: 'Korean' });
+  assert.deepEqual(out.services, ['Plumbing', 'Cleaning', 'Electrical']);
+  assert.equal(out.service, 'Plumbing', 'the first is still exposed for single-service callers');
+});
+
+test('a service list is cleaned without losing the valid entries', () => {
+  const out = aiIntent.sanitize({ services: ['Plumbing', 'Roofing', 'Plumbing', 'Hair', 'Auto', 'Taxes', 'Dental'] });
+  assert.deepEqual(out.services, ['Plumbing', 'Hair', 'Auto', 'Taxes'],
+    'invented dropped, duplicate collapsed, capped at four');
+});
+
+test('a non-array services field does not throw or leak', () => {
+  assert.deepEqual(aiIntent.sanitize({ services: 'Plumbing; DROP TABLE' }).services, []);
+  assert.deepEqual(aiIntent.sanitize({ services: [null, 7, {}] }).services, []);
 });
 
 test('an unknown action falls back to find', () => {
