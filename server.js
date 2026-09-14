@@ -11,12 +11,85 @@
 
 const express = require('express');
 const path = require('path');
+const fs = require('node:fs');
 const crypto = require('crypto');
 
 const availability = require('./lib/availability');
 const aiIntent = require('./lib/ai/intent');
 const businesses = require('./lib/businesses');
 const waitlist = require('./lib/waitlist');
+
+/* ------------------------------------------------------------- page assembly
+ *
+ * Two problems solved in one place, at startup.
+ *
+ * 1. app-preview.html is an artifact *body*: no doctype, no <head>. The
+ *    artifact host supplies those. Served raw by this server it got neither,
+ *    which meant no viewport meta - so the mobile media queries never fired
+ *    and the app rendered at desktop width on a phone, with the bottom control
+ *    deck off screen. It also parsed in quirks mode. So the document is
+ *    assembled here rather than shipped half-built.
+ *
+ * 2. The CSP carried script-src 'unsafe-inline', which gives away most of the
+ *    value of having a CSP: it means any injected <script> executes. None of
+ *    these pages use inline event handlers or javascript: URLs (checked), so
+ *    their inline scripts are allowed by hash instead. Each page names the
+ *    exact scripts that belong to it and nothing else runs - an injected
+ *    script has no matching hash. This is the part of CSP that stops XSS,
+ *    and it is now strict.
+ *
+ *    style-src still carries 'unsafe-inline', deliberately, and it is worth
+ *    being exact about why rather than leaving a TODO. CSP hashes cover
+ *    <style> *elements* but not style *attributes*, and the app renders 57
+ *    of those inside its templates. Verified by measurement: with style-src
+ *    on hashes alone the browser blocked 96 inline styles and the layout came
+ *    apart, while every script still ran. The alternatives are 'unsafe-hashes'
+ *    with a hash per attribute value - which cannot cover the two that are
+ *    built from variables - or moving all 57 into classes, a refactor touching
+ *    every view in a 2MB file with real regression risk in each one.
+ *
+ *    The residual risk is bounded and specific: an attacker who could already
+ *    inject markup could style the page, and CSS-based exfiltration is a
+ *    known class of attack. What makes that acceptable here is that there is
+ *    no injection path to reach it - every interpolation goes through esc(),
+ *    there is no user-generated HTML, no credential form, and no token in the
+ *    DOM to read. Moving those attributes into classes is the way to close it
+ *    properly, and it is a refactor rather than a header change.
+ *
+ * Hashes are computed from the assembled bytes, so they cannot drift from
+ * what is served: there is no build step to forget to run.
+ */
+const HEAD = [
+  '<!doctype html>',
+  '<html lang="en">',
+  '<head>',
+  '<meta charset="utf-8">',
+  '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">',
+  '<meta name="color-scheme" content="light">',
+  '<meta name="theme-color" content="#ffffff">',
+  '<meta name="referrer" content="no-referrer">',
+  '<title>Lonera</title>',
+  '<style>:root{color-scheme:light}html,body{margin:0;padding:0}img{max-width:100%}</style>',
+  '</head>',
+  '<body>',
+].join('\n');
+
+/** sha256 of an inline block, in the form a CSP expects. */
+function cspHash(text) {
+  return `'sha256-${crypto.createHash('sha256').update(text, 'utf8').digest('base64')}'`;
+}
+
+/** Read one page, assemble it if it is a bare body, and hash its inline blocks. */
+function preparePage(file) {
+  const raw = fs.readFileSync(path.join(__dirname, file), 'utf8');
+  const isBody = !/^\s*<!doctype/i.test(raw) && !/<html[\s>]/i.test(raw);
+  const html = isBody ? `${HEAD}\n${raw}\n</body>\n</html>\n` : raw;
+  const scripts = [];
+  const re = /<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi;
+  let m;
+  while ((m = re.exec(html)) !== null) scripts.push(cspHash(m[1]));
+  return { html, scripts, wrapped: isBody };
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,10 +117,35 @@ app.disable('etag');         // API answers are no-store; an ETag only invites c
  * remote script, no framing, no object, images limited to self and data: URIs
  * (which is exactly how the app embeds its photography).
  */
+/** The shared part of every policy; the inline allowances are added per page. */
+function csp(scriptHashes = []) {
+  return [
+    "default-src 'self'",
+    `script-src 'self' ${scriptHashes.join(' ')}`.trim(),
+    // No hashes here, and that is not an oversight: per CSP, a hash or nonce
+    // in a directive makes the browser IGNORE 'unsafe-inline' in that same
+    // directive. Listing both blocked every style attribute while looking
+    // permissive - the sheet photo collapsed to 0px and the browse grid lost
+    // its columns. It is one or the other, so style-src is 'unsafe-inline'
+    // alone until those attributes become classes. script-src keeps its
+    // hashes and no 'unsafe-inline', which is where the protection matters.
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data:",
+    "connect-src 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    "base-uri 'none'",
+  ].join('; ');
+}
+
 app.use((req, res, next) => {
+  // Endpoints and anything without its own page policy get the strictest one:
+  // no inline anything. Pages overwrite this with their own hashes below.
   res.setHeader('Content-Security-Policy', [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",   // TODO: drop once the inline app script moves to a file
+    "script-src 'self'",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data:",
@@ -123,11 +221,27 @@ const PUBLIC_FILES = {
   '/thumbnail.png': 'thumbnail.png',
 };
 
+/* Prepared once at startup: assembling a 2MB document per request would be
+   the slowest thing this server does. */
+const PAGES = new Map();
+for (const file of new Set(Object.values(PUBLIC_FILES))) {
+  if (file.endsWith('.html')) PAGES.set(file, preparePage(file));
+}
+
 for (const [route, file] of Object.entries(PUBLIC_FILES)) {
   app.get(route, (req, res) => {
-    res.sendFile(path.join(__dirname, file), {
-      headers: { 'Cache-Control': PROD ? 'public, max-age=300' : 'no-store' },
-    });
+    res.setHeader('Cache-Control', PROD ? 'public, max-age=300' : 'no-store');
+    if (!PAGES.has(file)) return res.sendFile(path.join(__dirname, file));
+    /* Outside production, re-read on each request. Preparing the page once is
+       right for a served deployment - assembling 2MB per request would be the
+       slowest thing here - but in development it silently serves the file as
+       it was at boot, so an edit appears to have done nothing and the CSP
+       hash no longer matches what you are looking at. That cost me a
+       debugging detour; it should not cost the next person one. */
+    const page = PROD ? PAGES.get(file) : preparePage(file);
+    res.setHeader('Content-Security-Policy', csp(page.scripts));
+    res.type('html');
+    return res.send(page.html);
   });
 }
 

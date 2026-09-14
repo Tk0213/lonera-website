@@ -459,7 +459,11 @@ def build(css, imgs):
         'looking at it is struck through and labelled, never silently removed - '
         'the disappearance is the thing the user has to believe.</p>'
         '<div class="ds-row"><button class="slot gone">2:30 PM<i>just taken</i></button>'
-        '<button class="slot">3:00 PM</button></div>',
+        '<button class="slot">3:00 PM</button></div>'
+        '<p class="ds-note" style="margin-top:14px">A slot the standby queue won '
+        'has to read as neither open nor taken, or the one moment the queue '
+        'exists for passes unnoticed.</p>'
+        '<div class="ds-row"><button class="slot won">2:30 PM<i>yours</i></button></div>',
         T + "\n" + R(".btn", ".slot"))
 
     return C
