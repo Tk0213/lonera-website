@@ -17,9 +17,12 @@ export default defineConfig({
     // return visit re-downloads only what actually changed.
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          motion: ['motion'],
+        // A function, not an object: Vite 8 dropped the object form. Splitting
+        // the vendors means a return visit re-downloads only what changed.
+        manualChunks(id) {
+          if (/node_modules\/(react|react-dom|scheduler)\//.test(id)) return 'react';
+          if (/node_modules\/(motion|motion-dom|motion-utils|framer-motion)\//.test(id)) return 'motion';
+          return undefined;
         },
       },
     },
