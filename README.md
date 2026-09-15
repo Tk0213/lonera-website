@@ -1,156 +1,125 @@
 # Lonera
 
-A bilingual (English / Korean) local-services marketplace for Calgary's newcomer
-communities — Korean, Filipino, South Asian and Chinese.
+A bilingual (English / Korean) local-services marketplace for Calgary's
+newcomer communities — Korean, Filipino, South Asian and Chinese.
 
 Founders: TK Lim, Connor Kim.
 
-Everything here is a prototype. The businesses, reviews, jobs, listings and
-statistics are fictional demo data; nothing connects to a real backend.
+**Everything here is a prototype.** Businesses, ratings, reviews, jobs and
+dashboard figures are invented sample data. The app says so on first open.
 
-## What is in the repo
+## Layout
 
-| File | What it is |
-| --- | --- |
-| `index.html` | The marketing site. Bilingual, accessible, older-user first. |
-| `dashboard.html` | The provider-facing dashboard for the site. |
-| `app-preview.html` | The mobile app prototype. The main piece of work. |
-| `server.js` | Express static server, so the three pages can be served locally. |
-| `graphify-out/` | Knowledge-graph output from `/graphify` over this codebase. |
+```
+apps/
+  web/         the React app (Vite). The product.
+  server/      the API: availability, AI intent parsing, standby queue,
+               and the static pages below
+  site/        index.html (marketing site), dashboard.html (provider view)
+  prototype/   app-preview.html — the original single-file prototype
+packages/
+  core/        logic shared by every app and the server
+db/            schema.sql — Postgres schema (written, not yet run)
+design-system/ generated Claude Design cards, plus hand-written directions
+scripts/       build and wrap helpers
+tests/         core/ · server/ · prototype/ — grouped by what they test
+```
+
+Nothing but configuration and documentation lives at the root. New code goes
+in the folder that owns it; see `CLAUDE.md` for the rules.
 
 ## Running it
 
 ```bash
-npm install
-npm start
+npm install          # workspaces: @lonera/core, @lonera/server, @lonera/web
+npm start            # API + static pages on http://localhost:3000
+npm run web          # the React app on http://localhost:5178 (proxies /api to 3000)
+npm test             # 130 tests, no network required
 ```
 
-Then open <http://localhost:3000> for the site, `/dashboard` for the provider
-view, and `/app-preview.html` for the app prototype.
-
-`app-preview.html` is written as an artifact body — no `<!doctype>`, `<html>`
-or `<head>` of its own, because the artifact host supplies them. Served on its
-own by a plain static server it will render without a charset (Korean turns to
-mojibake) and without a viewport meta (media queries never fire). That is a
-harness gap, not a bug in the file. Wrap it if you need to open it directly:
+Other tasks:
 
 ```bash
-python3 -c "
-import io; b=io.open('app-preview.html',encoding='utf-8').read()
-io.open('app-harness.html','w',encoding='utf-8').write(
-  '<!doctype html><html><head><meta charset=utf8>'
-  '<meta name=viewport content=\"width=device-width,initial-scale=1\">'
-  '</head><body>\n'+b+'\n</body></html>')"
+npm run web:build    # production build of the React app
+npm run prototype    # wrap the single-file prototype so a static server can open it
+npm run design       # regenerate design-system/ from the prototype's own CSS
+npm audit --omit=dev # production dependencies
 ```
 
-`app-harness.html` is gitignored.
+Requires **Node 22.12 or newer**: the CommonJS server imports the ESM core
+package, which needs `require(esm)`.
 
-## The app prototype
+## The three front ends, and why there are three
 
-One self-contained HTML file. No framework, no build step, no network calls.
-State lives in memory; there is no persistence between reloads.
+| | What it is | State |
+| --- | --- | --- |
+| `apps/web` | React + Vite. Imports `@lonera/core`. Real image files, code splitting, one scroll position per tab. | Home, Browse, business sheet with availability and standby, the multi-service planner. Community, Saved and You are placeholders. |
+| `apps/prototype` | One self-contained HTML file, no build step. The original and still the most complete screen-by-screen build: messages, community, verification, the provider dashboard. | Kept as the reference and the shareable artifact. Carries its own copy of some logic, which is why two test files check the copies agree. |
+| `apps/site` | The marketing site and provider dashboard, served by the API. | Static. |
 
-**Layout.** Every control sits in the bottom third, reachable one-handed. The
-toolbar is a floating island — inset from the edges, rounded, translucent with
-a backdrop blur — and content scrolls underneath it.
+`apps/prototype/app-preview.html` is written as an artifact *body* — no
+doctype, no `<head>`, because the artifact host supplies them. Opened directly
+it has no charset (Korean turns to mojibake) and no viewport meta (the mobile
+media queries never fire). `npm run prototype` writes a wrapped copy beside it:
 
-**Six tabs.** Home, Browse, Community, Saved, Inbox, You. A seventh view, the
-business dashboard, is reached from You rather than the tab bar.
+```bash
+npm run prototype
+python3 -m http.server 8934 --bind 127.0.0.1 --directory apps/prototype
+open http://127.0.0.1:8934/app-harness.html
+```
 
-**Voice search.** The mic opens a full-screen search that starts listening
-immediately and transcribes as you speak. Enter ranks results left to right.
-The parser reads four facets — service, language, day, action — so
-*"find a korean doctor near me and make an appointment with anyone who is
-available tomorrow"* resolves to the Korean-speaking clinic with tomorrow
-preselected. A named service is a requirement, not a hint: asking for a
-dentist never returns a rental just because it shares a language.
+The server already wraps it: `/app` is a complete document.
 
-**Messages.** Apple-style conversations: grouped bubbles with tails, delivery
-stamps, an auto-growing compose bar, a typing indicator and a reply.
+## What is actually real
 
-**Notification island.** Floats above the search bar rather than at the top of
-the screen, so notifications stay in the same thumb zone as everything else.
+Real, and tested:
 
-**Verification.** One badge vocabulary shared by people and businesses — ID
-verified, Business verified, Licensed, Insured, Payment protected, New member,
-Top rated — plus your own verification status and what is still outstanding.
+- **Availability tiers.** A business is `connected` (a calendar feed, the only
+  source that can be called live), `declared` (hours they typed in) or
+  `unknown` (nothing published). Nothing claims to be live without a feed.
+- **iCal parsing**, with recurrence, cancellations and a streaming size cap.
+- **An SSRF guard** on every outbound fetch, because feed URLs come from
+  businesses. Cloud metadata, loopback and private ranges are refused, and
+  every redirect hop is re-checked.
+- **The standby queue.** Join a line for a taken slot; a cancellation goes to
+  whoever was first, in a fixed order that timing cannot change.
+- **Tutoring intent** → hard constraints and soft preferences, in both
+  languages. Hard constraints filter, soft ones score, and a filtered slot is
+  never scored back in.
+- **Reservations**: hold, verify against the provider live, then confirm.
+  Idempotent, and it fails closed when a provider cannot be reached.
+- **Calendar events**: `.ics` with a stable UID and a rising SEQUENCE, plus a
+  Google event body with a deterministic id so a retry cannot duplicate.
+- **On-device interest ranking**, where language never ranks housing.
 
-**Business dashboard.** Weekly profile visits as a hero figure with a delta,
-three stat tiles, a seven-day column chart, the queue of people who requested
-a job with accept/decline, and invoices with status.
+Not real yet:
 
-**Community.** Neighbour-run groups — soccer, running, hiking, newcomers
-coffee, Korean church, Filipino home cooks — with join state and a Q&A board.
+- No database. `db/schema.sql` is written but has never been run.
+- No accounts, no auth, no persistence. Reloading resets everything.
+- No calendar connections: no OAuth, no webhooks, no calendar writes.
+- No payments.
+- Verification badges are decorative. Nothing is checked.
+- The AI layer has no API key configured, so it falls back to the local
+  parser. That fallback is the floor by design, not a stopgap.
 
-**Scrolling.** Rubber-band overscroll at both ends, implemented rather than
-left to the browser so Android behaves like iOS. Pulling past the top
-dissolves the colour there into page white and springs back.
+## Known gaps worth stating plainly
 
-## Images
+- **Speech recognition has never run against a real microphone.** The wiring
+  is standard and the typed paths are all verified, but every development
+  browser in use blocked microphone access.
+- **`db/schema.sql` is unverified.** No Postgres was available where it was
+  written.
+- **Vite's dev server has two open advisories** (path traversal in dev, and a
+  Windows-only one). Production dependencies are clean; fixing the dev ones
+  needs a major Vite upgrade.
+- The prototype is a 2 MB single file. That is inherent to its format — the
+  React app serves the same photographs as real files instead.
 
-Thirty photographs from [Pexels](https://www.pexels.com), embedded as base64
-data URIs in the stylesheet.
+## Documents
 
-They are embedded rather than linked because the artifact host's CSP blocks
-every remote image origin — an `<img src="https://…">` renders blank with no
-error. The photo CSS is loaded in a late `<style>` so first paint lands on the
-gradient placeholders underneath; this keeps DOMContentLoaded around 90ms
-despite the page being roughly 1.9MB.
-
-Pexels' licence permits commercial and non-commercial use with no attribution
-required. Two photographs were rejected during selection and replaced: one
-grocery shot was wall-to-wall third-party brand packaging, and one clinic shot
-was a full-frontal portrait of an identifiable person, which should not be the
-face of a fictional business.
-
-## Design decisions worth knowing
-
-**Palette.** White ground with an Airbnb-style rose accent. `--brand` for
-fills and large glyphs, `--brand-ink` (5.4:1) for small text, `--brand-btn`
-for buttons where white text needs 4.6:1.
-
-**Contrast.** Body text is 15.9:1, secondary 7.0:1. The hero scrim was tuned
-twice by measurement: at one point the headline's top edge sat at scrim alpha
-0.155 — dark text on bare photograph. It now sits on 0.93 white or better
-regardless of which photo is behind it.
-
-**Touch targets.** 52px standard, nothing below the 24px WCAG minimum. The
-audience skews older, so the floor is deliberately generous.
-
-**Motion.** One press scale (0.96) everywhere, every transition names its
-easing, and no state change is carried by motion alone. The listening state,
-for instance, changes fill, adds a ring, swaps the glyph and updates the
-label — so it survives `prefers-reduced-motion` switching the pulse off.
-
-**Bilingual.** All copy runs through a translation table keyed `en` / `ko`.
-Headings show one language at a time and follow the Language setting; your own
-typed messages are never translated.
-
-## Research behind the later changes
-
-Some of the app's behaviour comes from published benchmark data rather than
-taste — chiefly [Baymard's mobile app UX benchmark](https://baymard.com/blog/mobile-app-ux-trends)
-of 30 leading commerce apps.
-
-- A submit control sits beside the search field. 90% of benchmarked apps have none.
-- The query survives the search so it can be refined. 33% discard it.
-- Autocomplete matches categories and businesses, deduped and capped at five.
-- Listings carry same-category cross-sells. 31% of apps have none, while 76% of
-  users look at them and 59% specifically to check for a better option. Where a
-  category has no second provider the section is retitled honestly rather than
-  padded with unrelated businesses.
-- Every business carries two written reviews. A star average with nothing
-  behind it is the thinnest trust signal a marketplace can have.
-
-## Known gaps
-
-- **Speech recognition is untested against a real microphone.** The Web Speech
-  API wiring is standard and every tap and type path is verified, but the
-  development browser blocked mic access throughout, so recognition itself has
-  never run.
-- No backend, no auth, no persistence. Reloading resets everything.
-- Not published to any app store. `app-preview.html` is a web prototype of a
-  native app, not a native app.
+- `CLAUDE.md` — conventions, the design-system loop, and the traps.
+- The booking-engine architecture write-up covers calendar integration,
+  live availability, matching and double-booking prevention.
 
 ## Licence
 
