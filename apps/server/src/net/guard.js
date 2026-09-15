@@ -197,6 +197,8 @@ async function safeFetch(raw, { fetchImpl = globalThis.fetch, signal, resolver, 
       return { ok: false, error: err && err.name === 'AbortError' ? 'timed out' : 'unreachable' };
     }
     if (res.status >= 300 && res.status < 400) {
+      // An unread redirect body keeps its connection open; release it.
+      try { if (res.body && typeof res.body.cancel === 'function') await res.body.cancel(); } catch { /* ignore */ }
       const loc = res.headers && typeof res.headers.get === 'function' ? res.headers.get('location') : null;
       if (!loc) return { ok: false, error: 'redirect without a location' };
       try {

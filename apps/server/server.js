@@ -20,7 +20,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const availability = require('./src/availability');
 const aiIntent = require('./src/ai/intent');
 const businesses = require('./src/businesses');
-const waitlist = require('./src/waitlist');
+const { waitlist } = require('@lonera/core');
 
 /* ------------------------------------------------------------- page assembly
  *

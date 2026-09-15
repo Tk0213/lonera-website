@@ -144,10 +144,18 @@ export function createReservationStore({
     // A retried request after a dropped connection gets the original answer,
     // not a second booking and not a spurious "hold expired".
     if (byIdem.has(ik)) {
+      // A key names one request. Reused for a different hold it is a client
+      // bug, and answering "ok" with the other booking left this hold unbooked
+      // while the user was told it had succeeded.
+      if (byIdem.get(ik) !== reservationId) return { ok: false, reason: 'idempotency_key_reused' };
       const done = rows.get(byIdem.get(ik));
       return { ok: true, reservation: { ...done }, replayed: true };
     }
-    if (inflight.has(ik)) return inflight.get(ik);
+    if (inflight.has(ik)) {
+      const pending = inflight.get(ik);
+      if (pending.reservationId !== reservationId) return { ok: false, reason: 'idempotency_key_reused' };
+      return pending.promise;
+    }
 
     const run = (async () => {
       sweep();
@@ -171,6 +179,14 @@ export function createReservationStore({
 
       /* Everything below re-checks what was true before the await. */
       sweep();
+      if (r.status === 'confirmed') {
+        // Another confirm of this same hold - almost always a double tap - won
+        // while this one waited on the provider. The booking exists and is this
+        // user's, so this is a replay. It used to answer "hold expired", telling
+        // someone their booking failed when it had succeeded.
+        byIdem.set(ik, r.id);
+        return { ok: true, reservation: { ...r }, replayed: true };
+      }
       if (r.status !== 'held' || r.version !== heldVersion || r.expiresAt <= clock()) {
         return { ok: false, reason: 'hold_expired' };
       }
@@ -195,7 +211,7 @@ export function createReservationStore({
       return { ok: true, reservation: { ...r } };
     })();
 
-    inflight.set(ik, run);
+    inflight.set(ik, { reservationId, promise: run });
     try { return await run; } finally { inflight.delete(ik); }
   }
 

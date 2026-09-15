@@ -15,7 +15,10 @@
  * promotes a guess: `bookable` is true only when a fresh calendar feed said so.
  */
 
-const { TIER, effectiveTier, isBookable } = require('./tiers');
+const {
+  tiers: { TIER, effectiveTier, isBookable },
+  slots: { sliceFree, windowsFromDeclared },
+} = require('@lonera/core');
 const { fetchIcs } = require('./adapters/ics');
 const { fetchOpeningHours } = require('./adapters/places');
 
@@ -24,43 +27,6 @@ const DEFAULT_HORIZON_DAYS = 7;
 const CACHE_TTL_MS = 60 * 1000; // a minute: live enough to be true, long enough to not hammer feeds
 
 const cache = new Map(); // bizId -> { at, payload }
-
-/** Cut [startMs,endMs) into slot-sized steps, dropping any that collide with busy. */
-function sliceFree(openWindows, busy, slotMs, nowMs) {
-  const slots = [];
-  for (const [ws, we] of openWindows) {
-    for (let t = ws; t + slotMs <= we; t += slotMs) {
-      if (t < nowMs) continue; // never offer a slot in the past
-      const clash = busy.some(([bs, be]) => t < be && t + slotMs > bs);
-      if (!clash) slots.push(t);
-    }
-  }
-  return slots;
-}
-
-/**
- * Build open windows from declared recurring hours.
- * `hours` is { 0..6: [["09:00","17:00"], ...] } keyed by JS getDay().
- */
-function windowsFromDeclared(hours, date) {
-  const spec = hours && hours[String(date.getDay())];
-  if (!Array.isArray(spec)) return [];
-  const out = [];
-  for (const pair of spec) {
-    if (!Array.isArray(pair) || pair.length !== 2) continue;
-    const mk = (hhmm) => {
-      const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm));
-      if (!m) return null;
-      const d = new Date(date);
-      d.setHours(+m[1], +m[2], 0, 0);
-      return d.getTime();
-    };
-    const s = mk(pair[0]);
-    const e = mk(pair[1]);
-    if (s != null && e != null && e > s) out.push([s, e]);
-  }
-  return out;
-}
 
 function daysFrom(nowMs, n) {
   const out = [];
@@ -88,7 +54,11 @@ async function resolve(biz, opts = {}) {
     return { tier: TIER.UNKNOWN, bookable: false, slots: [], sources: [], reason: 'no business' };
   }
 
-  const hit = !opts.noCache && cache.get(biz.id);
+  // Keyed by horizon too: a 1-day answer is not a 30-day answer. Keyed by id
+  // alone, the first request's horizon was served back to every other one
+  // for the next minute.
+  const cacheKey = `${biz.id}|${horizon}`;
+  const hit = !opts.noCache && cache.get(cacheKey);
   if (hit && nowMs - hit.at < CACHE_TTL_MS) return { ...hit.payload, cached: true };
 
   const days = daysFrom(nowMs, horizon);
@@ -131,6 +101,7 @@ async function resolve(biz, opts = {}) {
       windowStartMs: nowMs,
       windowEndMs: nowMs + horizon * 24 * 3600 * 1000,
       fetchImpl: opts.fetchImpl,
+      resolver: opts.resolver,   // injectable DNS, so tests never touch the network
     });
     sources.push({ kind: 'ics', ok: res.ok, error: res.error, events: res.events, skipped: res.skipped });
     if (res.ok) {
@@ -166,7 +137,7 @@ async function resolve(biz, opts = {}) {
       : tier === TIER.DECLARED ? 'hours the business gave us, not live'
       : 'no schedule published anywhere we can read',
   };
-  cache.set(biz.id, { at: nowMs, payload });
+  cache.set(cacheKey, { at: nowMs, payload });
   return payload;
 }
 

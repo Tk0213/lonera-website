@@ -131,21 +131,25 @@ def card(group, title, note, body, css, extra=""):
 
 
 def photo(name, px=300, q=55):
-    """A hard-downscaled still, only for cards that are meaningless without one."""
-    src = os.path.join(ROOT, "..", "img", name)
+    """A downscaled still, only for cards that are meaningless without one.
+
+    Reads the app's own photographs in apps/web/public/photos. It used to look
+    for an img/ folder beside the repository that existed on no machine, so
+    every photo card silently fell back to a bare gradient. A missing photo now
+    stops the build instead of degrading quietly.
+    """
+    src = os.path.join(ROOT, "apps", "web", "public", "photos", name)
+    if not os.path.exists(src):
+        raise SystemExit("missing photo for a design-system card: %s" % os.path.relpath(src, ROOT))
     tmp = "/tmp/_ds_%s" % name
-    for cand in (src, os.path.join(ROOT, "img", name)):
-        if os.path.exists(cand):
-            subprocess.run(
-                ["sips", "-Z", str(px), "--setProperty", "formatOptions", str(q),
-                 cand, "--out", tmp],
-                capture_output=True,
-            )
-            if os.path.exists(tmp):
-                d = open(tmp, "rb").read()
-                os.remove(tmp)
-                return "data:image/jpeg;base64," + base64.b64encode(d).decode()
-    return ""  # missing photo degrades to the gradient bed underneath
+    try:
+        subprocess.run(["sips", "-Z", str(px), "--setProperty", "formatOptions", str(q),
+                        src, "--out", tmp], capture_output=True, check=True)
+        data = open(tmp, "rb").read()
+        os.remove(tmp)
+    except (OSError, subprocess.CalledProcessError):
+        data = open(src, "rb").read()   # no sips outside macOS: embed the original
+    return "data:image/jpeg;base64," + base64.b64encode(data).decode()
 
 
 # ------------------------------------------------------------------ the cards

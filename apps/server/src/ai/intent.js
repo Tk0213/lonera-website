@@ -23,28 +23,12 @@
 const gemini = require('./providers/gemini');
 const openai = require('./providers/openai');
 
-const SERVICES = ['Clinic', 'Dental', 'Immigration', 'Cleaning', 'Hair', 'Tutoring',
-  'Rentals', 'Renovation', 'Auto', 'Taxes', 'Catering', 'Plumbing', 'Electrical'];
-
-/** One request can name several trades. Beyond this it stops being an errand. */
-const MAX_SERVICES = 4;
-const LANGUAGES = ['Korean', 'Tagalog', 'Mandarin', 'Punjabi', 'English'];
-const ACTIONS = ['find', 'book', 'sell', 'job', 'ask'];
-
-const SYSTEM = `You turn a person's request into one JSON object for a local-services marketplace in Calgary serving newcomer communities.
-
-Return ONLY this shape, no prose:
-{"services":<array of 1-4 from ${SERVICES.join('|')}, in the order the person named them, or []>,
- "language":<one of ${LANGUAGES.join('|')} or null>,
- "action":<one of ${ACTIONS.join('|')}>,
- "whenText":<a short phrase such as "tomorrow", "friday morning", or null>,
- "urgent":<true|false>}
-
-Rules:
-- List every service the request needs, in the order they were named: "a plumber, a cleaner and an electrician" is ["Plumbing","Cleaning","Electrical"], not one of them. Never invent a category.
-- language is the language the person wants to be served in, not the language they typed.
-- action "book" only if they asked for an appointment or a time; otherwise "find".
-- Do not add fields. Do not explain.`;
+/* The enums, the prompt, the sanitizer and the JSON parsing are shared with
+   every app through @lonera/core. What stays here is what only a server can
+   do: call a model with an API key. */
+const {
+  SERVICES, LANGUAGES, ACTIONS, SYSTEM, sanitize, parseJsonish,
+} = require('@lonera/core').intent;
 
 const PROVIDERS = { gemini, openai };
 
@@ -56,46 +40,6 @@ function providerOrder(preferred) {
   if (envPref && PROVIDERS[envPref] && !order.includes(envPref)) order.push(envPref);
   for (const name of ['gemini', 'openai']) if (!order.includes(name)) order.push(name);
   return order;
-}
-
-/** Keep only values we actually recognise. Anything else is dropped. */
-function sanitize(raw) {
-  if (!raw || typeof raw !== 'object') return null;
-  const pick = (v, allowed) =>
-    typeof v === 'string' && allowed.includes(v) ? v : null;
-  const whenText = typeof raw.whenText === 'string' && raw.whenText.length <= 40
-    ? raw.whenText.replace(/[<>]/g, '').trim() || null
-    : null;
-  const action = pick(raw.action, ACTIONS);
-  /* Accept either shape: `services` is what we ask for, `service` is what a
-     model returns when it ignores the instruction. Unknown values are dropped
-     rather than passed through, so a hallucinated trade cannot reach the
-     planner and silently become a visit on someone's calendar. */
-  const listed = Array.isArray(raw.services) ? raw.services
-    : (raw.service ? [raw.service] : []);
-  const services = [];
-  for (const v of listed) {
-    const ok = pick(v, SERVICES);
-    if (ok && !services.includes(ok)) services.push(ok);
-    if (services.length >= MAX_SERVICES) break;
-  }
-  return {
-    services,
-    service: services[0] || null,
-    language: pick(raw.language, LANGUAGES),
-    action: action || 'find',
-    whenText,
-    urgent: raw.urgent === true,
-  };
-}
-
-/** Strip a ```json fence if a provider adds one despite being asked not to. */
-function parseJsonish(text) {
-  const t = String(text || '').trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
-  try { return JSON.parse(t); } catch { /* fall through */ }
-  const m = /\{[\s\S]*\}/.exec(t);
-  if (m) { try { return JSON.parse(m[0]); } catch { /* give up */ } }
-  return null;
 }
 
 /**

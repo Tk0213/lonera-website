@@ -11,10 +11,14 @@ const assert = require('node:assert/strict');
 const { busyFromIcs, expandWeekly, parseIcsDate } = require('../../apps/server/src/availability/adapters/ics');
 const { windowsForDate } = require('../../apps/server/src/availability/adapters/places');
 const { resolve, sliceFree, windowsFromDeclared, clearCache, TIER } = require('../../apps/server/src/availability');
-const { effectiveTier, isBookable } = require('../../apps/server/src/availability/tiers');
+const { effectiveTier, isBookable } = require('../../packages/core/src/index.js').tiers;
 const aiIntent = require('../../apps/server/src/ai/intent');
 
 const H = 3600 * 1000;
+
+/* Tests inject DNS. Two resolver tests used to look up example.com for real,
+   so they only passed with an internet connection. */
+const publicDns = { lookup: async () => [{ address: '93.184.216.34', family: 4 }] };
 
 function ics(body) {
   return `BEGIN:VCALENDAR\r\nVERSION:2.0\r\n${body}\r\nEND:VCALENDAR\r\n`;
@@ -152,7 +156,7 @@ test('a live feed produces bookable slots with the busy time removed', async () 
 
   const out = await resolve(
     { id: 'live', icsUrl: 'https://example.com/cal.ics', declaredHours: { 1: [['09:00', '12:00']] } },
-    { nowMs: now, horizonDays: 1, fetchImpl: fakeFetch, noCache: true });
+    { nowMs: now, horizonDays: 1, fetchImpl: fakeFetch, noCache: true, resolver: publicDns });
 
   assert.equal(out.tier, TIER.CONNECTED);
   assert.equal(out.bookable, true);
@@ -165,7 +169,7 @@ test('an unreachable feed degrades to declared instead of failing the request', 
   const boom = async () => { throw new Error('network down'); };
   const out = await resolve(
     { id: 'degraded', icsUrl: 'https://example.com/cal.ics', declaredHours: { 1: [['09:00', '17:00']] } },
-    { fetchImpl: boom, noCache: true });
+    { fetchImpl: boom, noCache: true, resolver: publicDns });
   assert.equal(out.tier, TIER.DECLARED);
   assert.equal(out.bookable, false);
   assert.ok(out.sources.some((s) => s.kind === 'ics' && !s.ok), 'the failure is reported, not hidden');
@@ -176,6 +180,19 @@ test('a non-https feed is refused', async () => {
   const out = await resolve({ id: 'insecure', icsUrl: 'http://example.com/cal.ics' }, { noCache: true });
   assert.ok(out.sources.some((s) => s.kind === 'ics' && /https/.test(s.error || '')));
   assert.equal(out.bookable, false);
+});
+
+test('the cache keeps a 1-day answer and a 30-day answer apart', async () => {
+  clearCache();
+  const every = Object.fromEntries([0, 1, 2, 3, 4, 5, 6].map((d) => [d, [['09:00', '17:00']]]));
+  const biz = { id: 'horizon', declaredHours: every };
+  const now = new Date(2026, 8, 14, 8, 0).getTime();
+  const one = await resolve(biz, { nowMs: now, horizonDays: 1 });
+  const thirty = await resolve(biz, { nowMs: now, horizonDays: 30 });
+  assert.ok(thirty.slots.length > one.slots.length, `1 day gave ${one.slots.length}, 30 days gave ${thirty.slots.length}`);
+  assert.equal(Boolean(thirty.cached), false, 'a different horizon is a different question');
+  const again = await resolve(biz, { nowMs: now + 1000, horizonDays: 1 });
+  assert.equal(again.cached, true, 'the same question within a minute is still cached');
 });
 
 /* -------------------------------------------------------------------- places */

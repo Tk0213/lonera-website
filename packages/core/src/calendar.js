@@ -193,11 +193,16 @@ export function nextCalendarOp(booking, link = {}) {
   const sequence = link.sequence ?? -1;
   const live = booking.status === 'confirmed';
 
+  // A write that failed after the event was created still has an event to
+  // update or delete. A failed first insert has nothing: retrying it as an
+  // update would patch an event that does not exist, forever.
+  const exists = state === 'created' || (state === 'failed' && Boolean(link.externalId));
+
   if (!live) {
-    if (state === 'created') return { op: 'delete', sequence: sequence + 1 };
+    if (exists) return { op: 'delete', sequence: sequence + 1 };
     return { op: 'noop' };
   }
-  if (state === 'none' || state === 'deleted') return { op: 'insert', sequence: 0 };
+  if (!exists) return { op: 'insert', sequence: 0 };
   if (booking.version > syncedVersion) return { op: 'update', sequence: sequence + 1 };
   return { op: 'noop' };
 }

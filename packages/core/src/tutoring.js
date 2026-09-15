@@ -73,6 +73,40 @@ const SUBJECT_WORDS = Object.entries(SUBJECTS)
   .flatMap(([key, s]) => s.words.map((w) => ({ key, w })))
   .sort((x, y) => y.w.length - x.w.length);
 
+/* "Speaks English" asks for a language of instruction, not English lessons. */
+const ENGLISH_LANG_SRC = String.raw`\b(?:speaks?|speaking|spoken|talks?)\s+english\b|\benglish[- ]speaking\b|\bin english\b|영어로|영어 가능|영어 하는`;
+const ENGLISH_LANG = new RegExp(ENGLISH_LANG_SRC);
+const escapeRe = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Subjects named in a clause, in the order they appear.
+ *
+ * Longer words claim their span first, so "organic chemistry" is never also
+ * read as "chemistry" and 유기화학 never also as 화학. The survivors are then
+ * ordered by position. The first version ordered them by word length instead,
+ * which made "english speaking math tutor" a request for English lessons,
+ * because "english" is longer than "math".
+ */
+function subjectsIn(clause) {
+  const taken = [];
+  const hits = [];
+  let m;
+  const lang = new RegExp(ENGLISH_LANG_SRC, 'g');
+  while ((m = lang.exec(clause)) !== null) taken.push([m.index, m.index + m[0].length]);
+  for (const { key, w } of SUBJECT_WORDS) {
+    const re = new RegExp(`(^|[^a-z])${escapeRe(w)}(?![a-z])`, 'g');
+    while ((m = re.exec(clause)) !== null) {
+      const start = m.index + m[1].length;
+      const end = start + w.length;
+      if (!taken.some(([a, b]) => start < b && a < end)) {
+        taken.push([start, end]);
+        hits.push({ key, at: start });
+      }
+    }
+  }
+  return [...new Set(hits.sort((a, b) => a.at - b.at).map((h) => h.key))];
+}
+
 export const PURPOSES = {
   exam_prep: ['exam', 'test', 'midterm', 'final', 'diploma', 'quiz', 'prepare for', '시험', '수능'],
   homework: ['homework', 'assignment', 'problem set', '숙제', '과제'],
@@ -159,8 +193,9 @@ function times(clause, periodHint) {
     }
     out.push({ prep: prep || null, minutes: h * 60 + min, text: m[0].trim() });
   }
-  // Korean: 오후 6시, 저녁 7시 반, 6시 30분
-  const ko = /(오전|오후|저녁|아침)?\s*(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분|\s*(반))?\s*(이후|이전|전|후|부터|까지)?/g;
+  // Korean: 오후 6시, 저녁 7시 반, 6시 30분. (?!간) keeps 3시간 - three hours -
+  // from being read as three o'clock.
+  const ko = /(오전|오후|저녁|아침)?\s*(\d{1,2})\s*시(?!간)(?:\s*(\d{1,2})\s*분|\s*(반))?\s*(이후|이전|전|후|부터|까지)?/g;
   while ((m = ko.exec(clause)) !== null) {
     const [, part, hRaw, mRaw, half, rel] = m;
     let h = Number(hRaw);
@@ -204,14 +239,7 @@ export function parseTutoringRequest(text) {
 
     /* subject: the first (most general) subject named is the need; a more
        specific one named in a preference clause is a specialty wish. */
-    const found = [];
-    let rest = ` ${clause} `;
-    for (const { key, w } of SUBJECT_WORDS) {
-      if (hasWord(rest, w)) {
-        found.push(key);
-        rest = rest.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), ' ');
-      }
-    }
+    const found = subjectsIn(clause);
     for (const key of found) {
       if (stated === 'soft' && subject && (isAncestor(subject, key) || key === subject)) {
         specialty = key;
@@ -248,8 +276,22 @@ export function parseTutoringRequest(text) {
     }
 
     /* times */
-    for (const tm of times(clause, periodHint)) {
+    const clock = times(clause, periodHint);
+    for (let i = 0; i < clock.length; i += 1) {
+      const tm = clock[i];
       const p = tm.prep;
+      const next = clock[i + 1];
+      /* "between 5 and 7", "from 4 to 6": one range, not two times. Read one
+         number at a time, the second became a competing target and lost to the
+         first, so "between 5 and 7 pm" meant "5 pm, ideally". */
+      if ((p === 'between' || p === 'from') && next && (next.prep === 'and' || next.prep === 'to')
+          && next.minutes > tm.minutes) {
+        const kind = stated === 'hard' ? 'hard' : 'soft';
+        add({ type: 'notBefore', value: tm.minutes, kind, weight: 8, source: clause });
+        add({ type: 'notAfter', value: next.minutes, kind, weight: 8, source: clause });
+        i += 1;
+        continue;
+      }
       if (p === 'after' || p === 'from') {
         // "after 7" in a negative clause is an upper bound: can't do after 7.
         add({ type: neg ? 'notAfter' : 'notBefore', value: tm.minutes,
@@ -275,6 +317,9 @@ export function parseTutoringRequest(text) {
     }
 
     /* language of instruction */
+    if (ENGLISH_LANG.test(clause)) {
+      add({ type: 'language', value: 'English', kind: stated === 'hard' ? 'hard' : 'soft', weight: 10, source: clause });
+    }
     for (const [lang, words] of P_LANG) {
       if (words.some((w) => clause.includes(w)) && !/korean lessons|learn korean|한국어 수업/.test(clause)) {
         add({ type: 'language', value: lang, kind: stated === 'hard' ? 'hard' : 'soft', weight: 10, source: clause });

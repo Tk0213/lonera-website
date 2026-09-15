@@ -416,3 +416,85 @@ test('1. the sync decision: insert, update on change, delete on cancel, otherwis
   assert.deepEqual(cal.nextCalendarOp({ ...booked, status: 'cancelled' }, { state: 'none' }), { op: 'noop' },
     'never create an event for a booking that is already cancelled');
 });
+
+/* ============================================= fixes from the code review */
+
+test('review: Korean hours are a duration, not a clock time', () => {
+  const p = parseTutoringRequest('3시간 미적분 과외');
+  assert.ok(!p.constraints.some((c) => c.type === 'target'), '3시간 is three hours, not 3 PM');
+  assert.equal(p.durationMin, 180);
+  assert.equal(parseTutoringRequest('오후 3시 미적분 과외').constraints.find((c) => c.type === 'target').value, 15 * 60,
+    'an actual 3 o\'clock still parses');
+});
+
+test('review: "english speaking" names a language, not a subject', () => {
+  let p = parseTutoringRequest('english speaking math tutor');
+  assert.equal(p.subject, 'math');
+  assert.equal(p.language, 'English');
+  p = parseTutoringRequest('calculus tutor who speaks english');
+  assert.equal(p.subject, 'calculus');
+  assert.equal(p.language, 'English');
+  p = parseTutoringRequest('I need an english tutor for my essay');
+  assert.equal(p.subject, 'english', 'English lessons are still a subject');
+  assert.equal(p.language, null);
+});
+
+test('review: subjects are read in the order they are said', () => {
+  assert.equal(parseTutoringRequest('math tutor, ideally strong in calculus').subject, 'math');
+  // 유기화학 (organic chemistry) contains 화학 (chemistry). Read once, it is
+  // organic chemistry - the same as the English "organic chemistry tutor" -
+  // with no second, broader subject counted from inside the same word.
+  const ko = parseTutoringRequest('유기화학 과외');
+  assert.equal(ko.subject, 'organic_chemistry');
+  assert.equal(ko.specialty, null);
+  assert.equal(parseTutoringRequest('organic chemistry tutor').subject, ko.subject, 'Korean and English agree');
+});
+
+test('review: "between 5 and 7 pm" and "from 4 to 6" are ranges', () => {
+  let p = parseTutoringRequest('calculus tutor between 5 and 7 pm');
+  const by = Object.fromEntries(p.constraints.map((c) => [c.type, c]));
+  assert.equal(by.notBefore.value, 17 * 60);
+  assert.equal(by.notAfter.value, 19 * 60);
+  assert.equal(by.target, undefined, 'no competing target');
+  p = parseTutoringRequest('I can only do from 4 to 6 pm, calculus');
+  const kinds = Object.fromEntries(p.constraints.map((c) => [c.type, c.kind]));
+  assert.equal(kinds.notBefore, 'hard');
+  assert.equal(kinds.notAfter, 'hard');
+});
+
+test('review: an idempotency key reused for a different hold is refused', async () => {
+  const { s } = store();
+  const a = s.hold({ ...five, userId: 'A' });
+  const b = s.hold({ tutorId: 'calc', userId: 'A', start: +at(16, 17), end: +at(16, 18) });
+  await s.confirm({ reservationId: a.reservation.id, userId: 'A', idempotencyKey: 'K', verify: free });
+  const reused = await s.confirm({ reservationId: b.reservation.id, userId: 'A', idempotencyKey: 'K', verify: free });
+  assert.equal(reused.ok, false);
+  assert.equal(reused.reason, 'idempotency_key_reused');
+  assert.equal(s.get(b.reservation.id).status, 'held', 'still held, and the user was not told it booked');
+});
+
+test('review: the slower of two taps on one hold is told it succeeded', async () => {
+  const { s } = store();
+  const a = s.hold({ ...five, userId: 'A' });
+  let release;
+  const slow = () => new Promise((r) => { release = () => r({ free: true }); });
+  const first = s.confirm({ reservationId: a.reservation.id, userId: 'A', idempotencyKey: 'tap1', verify: slow });
+  const second = await s.confirm({ reservationId: a.reservation.id, userId: 'A', idempotencyKey: 'tap2', verify: free });
+  release();
+  const slower = await first;
+  assert.equal(second.ok, true);
+  assert.equal(slower.ok, true, 'the booking exists and is theirs');
+  assert.equal(slower.replayed, true);
+  assert.equal(slower.reservation.id, second.reservation.id);
+});
+
+test('review: a failed calendar insert is retried as an insert', () => {
+  const b = { id: 'r9', start: 0, end: 3600000, status: 'confirmed', version: 2 };
+  assert.deepEqual(cal.nextCalendarOp(b, { state: 'failed', sequence: -1, syncedVersion: -1 }),
+    { op: 'insert', sequence: 0 }, 'nothing was created, so there is nothing to update');
+  assert.deepEqual(cal.nextCalendarOp({ ...b, status: 'cancelled' },
+    { state: 'failed', externalId: 'ev1', sequence: 1, syncedVersion: 1 }), { op: 'delete', sequence: 2 },
+    'a failed update still leaves an event that a cancellation must remove');
+  assert.deepEqual(cal.nextCalendarOp({ ...b, version: 3 },
+    { state: 'failed', externalId: 'ev1', sequence: 1, syncedVersion: 2 }), { op: 'update', sequence: 2 });
+});

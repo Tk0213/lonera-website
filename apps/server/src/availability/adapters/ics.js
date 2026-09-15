@@ -128,38 +128,79 @@ function busyFromIcs(raw, windowStartMs, windowEndMs) {
 }
 
 /**
+ * Read a response body, giving up past `limit` bytes.
+ *
+ * `await res.text()` followed by a length check is not a limit: the whole body
+ * is already in memory when the check runs, so a hostile feed could send
+ * gigabytes and take the process down on its way to being rejected. This
+ * counts bytes as they arrive and cancels the stream once it passes the cap.
+ */
+async function readCapped(res, limit) {
+  const body = res && res.body;
+  if (!body || typeof body.getReader !== 'function') {
+    // Only test doubles and very old runtimes lack a stream.
+    const text = String(await res.text());
+    return Buffer.byteLength(text, 'utf8') > limit ? null : text;
+  }
+  const reader = body.getReader();
+  const parts = [];
+  let total = 0;
+  for (;;) {
+    // eslint-disable-next-line no-await-in-loop
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > limit) {
+      try { await reader.cancel(); } catch { /* already closed */ }
+      return null;
+    }
+    parts.push(value);
+  }
+  const all = new Uint8Array(total);
+  let at = 0;
+  for (const p of parts) { all.set(p, at); at += p.byteLength; }
+  return new TextDecoder('utf-8').decode(all);
+}
+
+/**
  * Fetch and parse a calendar feed. Never throws: a source that is down must
  * degrade the business to a lower tier, not take down the request.
  */
-async function fetchIcs(url, { windowStartMs, windowEndMs, fetchImpl = globalThis.fetch } = {}) {
+async function fetchIcs(url, {
+  windowStartMs, windowEndMs, fetchImpl = globalThis.fetch, resolver, timeoutMs = FETCH_TIMEOUT_MS,
+} = {}) {
   const started = Date.now();
+  const ctl = new AbortController();
+  // One timer for the whole exchange, body included. It used to be cleared as
+  // soon as the headers arrived, so a feed that answered promptly and then
+  // trickled its body could hold the request open indefinitely.
+  const timer = setTimeout(() => ctl.abort(), timeoutMs);
   try {
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), FETCH_TIMEOUT_MS);
-    let out;
-    try {
-      // Guarded: the URL belongs to the business, not to us, so it has to be
-      // proven publicly routable before and after every redirect. See
-      // lib/net/guard.js for what an unguarded fetch here would hand away.
-      out = await safeFetch(url, { fetchImpl, signal: ctl.signal });
-    } finally {
-      clearTimeout(timer);
-    }
+    // Guarded: the URL belongs to the business, not to us, so it has to be
+    // proven publicly routable before and after every redirect. See
+    // src/net/guard.js for what an unguarded fetch here would hand away.
+    const out = await safeFetch(url, { fetchImpl, signal: ctl.signal, resolver });
     if (!out.ok) return { ok: false, error: out.error, fetchedAt: started };
     const res = out.res;
     if (!res.ok) return { ok: false, error: `feed returned ${res.status}`, fetchedAt: started };
-    const text = await res.text();
-    if (typeof text === 'string' && text.length > MAX_BYTES) {
+
+    const declared = Number(res.headers && typeof res.headers.get === 'function'
+      ? res.headers.get('content-length') : NaN);
+    if (Number.isFinite(declared) && declared > MAX_BYTES) {
+      try { if (res.body && typeof res.body.cancel === 'function') await res.body.cancel(); } catch { /* ignore */ }
       return { ok: false, error: 'feed too large', fetchedAt: started };
     }
-    if (!/BEGIN:VCALENDAR/i.test(text)) {
-      return { ok: false, error: 'not an ical feed', fetchedAt: started };
-    }
+    const text = await readCapped(res, MAX_BYTES);
+    if (text === null) return { ok: false, error: 'feed too large', fetchedAt: started };
+    if (!/BEGIN:VCALENDAR/i.test(text)) return { ok: false, error: 'not an ical feed', fetchedAt: started };
+
     const { busy, events, skipped } = busyFromIcs(text, windowStartMs, windowEndMs);
     return { ok: true, busy, events, skipped, fetchedAt: Date.now() };
   } catch (err) {
     const msg = err && err.name === 'AbortError' ? 'feed timed out' : 'feed unreachable';
     return { ok: false, error: msg, fetchedAt: started };
+  } finally {
+    clearTimeout(timer);
   }
 }
 

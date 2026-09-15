@@ -15,7 +15,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const server = require('../../apps/server/src/waitlist');
+const server = require('../../packages/core/src/index.js').createWaitlist();
 
 const APP = fs.readFileSync(path.join(__dirname, '..', '..', 'apps', 'prototype', 'app-preview.html'), 'utf8');
 
