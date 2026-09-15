@@ -69,7 +69,11 @@ export function buildPlan(parsed, { held = {}, dayOf, tierOf } = {}) {
   });
 
   rows.sort((a, b) => (a.slot ? S.slotMinutes(a.slot) : 1e9) - (b.slot ? S.slotMinutes(b.slot) : 1e9));
-  return { rows, day, language: parsed.language, raw: parsed.raw };
+  // `when` and `week` travel with the plan so a swap re-plans the day that was
+  // asked for. Swap used to rebuild with when: null, quietly moving a
+  // "Tuesday" errand to whichever day scored best.
+  return { rows, day, language: parsed.language, raw: parsed.raw,
+    when: parsed.when ?? null, week: Boolean(parsed.week) };
 }
 
 export function tallyPlan(plan, tierOf) {

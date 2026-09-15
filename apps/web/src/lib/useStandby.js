@@ -10,7 +10,7 @@
  * line" has to mean the same thing after a repaint, and a queue that is always
  * empty teaches the user the wrong thing about how busy a slot is.
  */
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { createWaitlist, MAX_PER_USER } from '@lonera/core';
 
 const ME = 'me';
@@ -23,7 +23,7 @@ function seedCount(bizId, day, slot) {
 }
 
 export function useStandby() {
-  const wl = useRef(useMemo(() => createWaitlist(), [])).current;
+  const [wl] = useState(() => createWaitlist());
   const [version, bump] = useState(0);
   const seeded = useRef(new Set());
 

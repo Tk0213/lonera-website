@@ -1,55 +1,57 @@
 /**
  * Availability state, day by day.
  *
- * Three things this hook is careful about, each of them a bug that already
- * happened once in this project:
+ * Rules this hook holds, each of them a bug that happened once:
  *
- *   A slot is a time on a date. Keyed by day offset, never a bare clock label,
- *   because three "non-colliding" times on three different days read as one
- *   afternoon and are not one.
+ *   A slot is a time on a date. Keyed by day offset, never a bare clock label.
  *
- *   Only a real feed may be called live. `fromServer` is set when
- *   /api/availability answered; until then these times are a labelled
- *   stand-in and every surface that shows them says so. Claiming "straight
- *   from their calendar" over invented times is the exact dishonesty the
- *   tier model exists to prevent.
+ *   The server outranks the sample data. Once /api/availability answers, its
+ *   tier wins over the record's own `av`, and its slots replace the stand-in
+ *   for every day of the horizon - including days it says are empty. Filling
+ *   only the days that had slots left invented Saturday times showing beside
+ *   a server that said the business is closed on Saturday.
  *
- *   The live timer stops when nothing is watching. A background interval
- *   repainting a closed sheet is a leak, and it also keeps taking slots the
- *   user can no longer see.
+ *   Live changes are only simulated for a live calendar. Nothing can know a
+ *   slot was "just taken" at a business that only published usual hours, so
+ *   `watch` is for connected businesses and the caller enforces that.
+ *
+ *   Side effects stay out of state updaters. React may run an updater twice
+ *   (StrictMode does, deliberately), and handing a cancelled slot to the next
+ *   person in the standby line is a side effect: decided inside the updater,
+ *   one cancellation could reach two people.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { slots as S } from '@lonera/core';
 
 const TICK_MS = 9000;
-/** Half of ticks cancel rather than book, so the standby queue can fire. */
+/** Share of ticks that cancel rather than book, so the standby queue can fire. */
 const CANCEL_CHANCE = 0.45;
 
 const dayKey = (bizId, day) => `${bizId}|${day | 0}`;
+const sampleDay = (bizId, day, tier) => ({
+  open: tier === 'unknown' ? [] : S.sampleSlots(bizId, day), taken: [], won: [],
+});
 
 export function useAvailability() {
-  const [state, setState] = useState({});      // "biz|day" -> {open,taken,won}
-  const [fromServer, setFromServer] = useState({});
-  const [serverTier, setServerTier] = useState({});
+  const [state, setState] = useState({});             // "biz|day" -> {open,taken,won}
+  const [serverTier, setServerTier] = useState({});   // bizId -> tier the server reported
+  const stateRef = useRef(state);
   const timer = useRef(null);
 
-  const dayOf = useCallback((bizId, day, tier) => {
-    const k = dayKey(bizId, day);
-    const found = state[k];
-    if (found) return found;
-    return { open: tier === 'unknown' ? [] : S.sampleSlots(bizId, day), taken: [], won: [] };
-  }, [state]);
+  useEffect(() => { stateRef.current = state; }, [state]);
+
+  const dayOf = useCallback(
+    (bizId, day, tier) => state[dayKey(bizId, day)] || sampleDay(bizId, day, tier),
+    [state],
+  );
 
   /** Make sure a business/day exists in state before anything mutates it. */
   const ensure = useCallback((bizId, day, tier) => {
     const k = dayKey(bizId, day);
-    setState((prev) => (prev[k] ? prev : {
-      ...prev,
-      [k]: { open: tier === 'unknown' ? [] : S.sampleSlots(bizId, day), taken: [], won: [] },
-    }));
+    setState((prev) => (prev[k] ? prev : { ...prev, [k]: sampleDay(bizId, day, tier) }));
   }, []);
 
-  /** Try the real endpoint. Only a `connected` answer earns the live label. */
+  /** Ask the server. Its tier is recorded even when it has no slots to give. */
   const refresh = useCallback(async (biz) => {
     try {
       const r = await fetch(`/api/availability/${encodeURIComponent(biz.id)}`, {
@@ -58,15 +60,16 @@ export function useAvailability() {
       if (!r.ok) return false;
       const d = await r.json();
       if (!d || typeof d.tier !== 'string') return false;
-      if (!Array.isArray(d.slots) || !d.slots.length) return false;
-      // Real timestamps: file each under its own day rather than flattening
-      // them into one list of clock times.
+      setServerTier((prev) => ({ ...prev, [biz.id]: d.tier }));
+      if (!Array.isArray(d.slots)) return true;
+
       const today = S.dayAt(0).getTime();
       const byDay = {};
       for (const ms of d.slots) {
         const when = new Date(ms);
         if (Number.isNaN(+when)) continue;
-        const midnight = new Date(when); midnight.setHours(0, 0, 0, 0);
+        const midnight = new Date(when);
+        midnight.setHours(0, 0, 0, 0);
         const off = Math.round((midnight.getTime() - today) / 86400000);
         if (off < 0 || off >= S.HORIZON_DAYS) continue;
         const label = S.canonicalLabel(when);
@@ -74,17 +77,11 @@ export function useAvailability() {
       }
       setState((prev) => {
         const next = { ...prev };
-        for (const [off, list] of Object.entries(byDay)) {
-          next[dayKey(biz.id, off)] = { open: list.slice(0, 14), taken: [], won: [] };
+        for (let off = 0; off < S.HORIZON_DAYS; off += 1) {
+          next[dayKey(biz.id, off)] = { open: (byDay[off] || []).slice(0, 14), taken: [], won: [] };
         }
         return next;
       });
-      /* The server's answer outranks the record's own `av` field. bowriver is
-         marked connected in the sample data but has no ICS_URL configured, so
-         the resolver correctly reports `declared` - and the sheet should say
-         declared rather than carrying a live badge over requested times. */
-      setFromServer((prev) => ({ ...prev, [biz.id]: d.tier === 'connected' }));
-      setServerTier((prev) => ({ ...prev, [biz.id]: d.tier }));
       return true;
     } catch {
       return false;   // artifact CSP and offline both land here
@@ -92,37 +89,37 @@ export function useAvailability() {
   }, []);
 
   /**
-   * The behaviour the whole feature exists to show: a slot going while you
-   * are looking at it, and a cancellation reaching whoever was first in line.
+   * A slot going while you look at it, and a cancellation reaching whoever was
+   * first in line. Decided once per tick, outside any state updater.
    */
   const watch = useCallback((bizId, day, { onCancel } = {}) => {
     if (timer.current) clearInterval(timer.current);
+    const k = dayKey(bizId, day);
     timer.current = setInterval(() => {
-      setState((prev) => {
-        const k = dayKey(bizId, day);
-        const cur = prev[k];
-        if (!cur) return prev;
-        if (cur.taken.length && Math.random() < CANCEL_CHANCE) {
-          const [back, ...restTaken] = cur.taken;
-          const claimedByMe = onCancel ? onCancel(back) : false;
+      const cur = stateRef.current[k];
+      if (!cur) return;
+      if (cur.taken.length && Math.random() < CANCEL_CHANCE) {
+        const back = cur.taken[0];
+        const mine = onCancel ? Boolean(onCancel(back)) : false;
+        setState((prev) => {
+          const c = prev[k];
+          if (!c || c.taken[0] !== back) return prev;
+          const taken = c.taken.slice(1);
           return {
             ...prev,
-            [k]: claimedByMe
-              ? { ...cur, taken: restTaken, won: [back, ...cur.won] }
-              : { ...cur, taken: restTaken, open: [...cur.open, back].sort(S.bySlotTime) },
+            [k]: mine
+              ? { ...c, taken, won: [back, ...c.won] }
+              : { ...c, taken, open: [...c.open, back].sort(S.bySlotTime) },
           };
-        }
-        if (!cur.open.length) return prev;
-        const i = Math.floor(Math.random() * cur.open.length);
-        const gone = cur.open[i];
-        return {
-          ...prev,
-          [k]: {
-            ...cur,
-            open: cur.open.filter((_, n) => n !== i),
-            taken: [gone, ...cur.taken].slice(0, 3),
-          },
-        };
+        });
+        return;
+      }
+      if (!cur.open.length) return;
+      const gone = cur.open[Math.floor(Math.random() * cur.open.length)];
+      setState((prev) => {
+        const c = prev[k];
+        if (!c || !c.open.includes(gone)) return prev;
+        return { ...prev, [k]: { ...c, open: c.open.filter((x) => x !== gone), taken: [gone, ...c.taken].slice(0, 3) } };
       });
     }, TICK_MS);
   }, []);
@@ -131,21 +128,18 @@ export function useAvailability() {
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
   }, []);
 
-  // Nothing should outlive the component that asked for it.
   useEffect(() => unwatch, [unwatch]);
 
-  const take = useCallback((bizId, day, label) => {
-    setState((prev) => {
-      const k = dayKey(bizId, day);
-      const cur = prev[k];
-      if (!cur) return prev;
-      return { ...prev, [k]: { ...cur, open: cur.open.filter((x) => x !== label),
-        taken: [label, ...cur.taken].slice(0, 3) } };
-    });
-  }, []);
+  const tierOf = useCallback(
+    (biz) => (biz ? (serverTier[biz.id] || biz.av || 'unknown') : 'unknown'),
+    [serverTier],
+  );
+  const isLive = useCallback((bizId) => serverTier[bizId] === 'connected', [serverTier]);
+  /** True once the server has answered for this business - the times are not a stand-in. */
+  const answered = useCallback((bizId) => Boolean(serverTier[bizId]), [serverTier]);
 
-  return { dayOf, ensure, refresh, watch, unwatch, take,
-    isLive: (bizId) => Boolean(fromServer[bizId]),
-    /** The tier to believe: what the server said, else the sample record. */
-    tierOf: (biz) => (biz ? (serverTier[biz.id] || biz.av || 'unknown') : 'unknown') };
+  return useMemo(
+    () => ({ dayOf, ensure, refresh, watch, unwatch, tierOf, isLive, answered }),
+    [dayOf, ensure, refresh, watch, unwatch, tierOf, isLive, answered],
+  );
 }

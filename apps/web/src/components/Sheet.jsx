@@ -1,63 +1,46 @@
 /**
  * The bottom sheet every action opens in.
  *
- * Bottom, always, because the whole layout assumes one-thumb reach. Two things
- * the prototype had to be taught and this gets for free from AnimatePresence:
- * the sheet animates *out* before unmounting, and while closed it is not in
- * the DOM at all - so nothing inside a hidden sheet can be tabbed into, which
- * was a real bug found by testing rather than reading.
- *
- * Escape closes, focus moves to the heading on open and returns to whatever
- * opened it on close. Without that a keyboard or screen-reader user opens a
- * sheet and is still standing in the page behind it.
+ * Bottom, always, because the whole layout assumes one-thumb reach. While
+ * closed it is not in the DOM at all, so nothing inside a hidden sheet can be
+ * tabbed into. Escape and focus are handled by useLayer, which knows which
+ * layer is on top - `raised` puts a sheet above the full-screen plan.
  */
-import { useEffect, useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { durations, ease, useReducedMotion } from '../lib/motion.js';
+import { useLayer } from '../lib/useLayer.js';
 
-export default function Sheet({ open, onClose, title, sub, children, footer }) {
+export default function Sheet({ open, onClose, title, sub, children, footer, raised = false }) {
   const reduced = useReducedMotion();
   const headRef = useRef(null);
-  const returnTo = useRef(null);
+  useLayer(open, { onEscape: onClose, focusRef: headRef });
 
-  useEffect(() => {
-    if (!open) return undefined;
-    returnTo.current = document.activeElement;
-    const id = setTimeout(() => { try { headRef.current?.focus({ preventScroll: true }); } catch { /* */ } }, 60);
-    const onKey = (e) => {
-      if (e.key === 'Escape') { e.preventDefault(); onClose(); }
-    };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      clearTimeout(id);
-      document.removeEventListener('keydown', onKey);
-      const back = returnTo.current;
-      if (back && back.isConnected) setTimeout(() => { try { back.focus({ preventScroll: true }); } catch { /* */ } }, 30);
-    };
-  }, [open, onClose]);
-
-  const t = reduced ? { duration: 0 } : { duration: durations.sheet, ease };
+  const enter = reduced ? { duration: 0 } : { duration: durations.sheet, ease };
+  const exit = reduced ? { duration: 0 } : { duration: durations.sheet * 0.65, ease };
+  const layer = raised ? ' top' : '';
 
   return (
     <AnimatePresence>
       {open && (
-        <>
+        <Fragment key="layer">
           <motion.div
-            className="scrim on"
+            className={`scrim on${layer}`}
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: durations.sheet * 0.65 } }}
-            transition={t}
+            exit={{ opacity: 0, transition: exit }}
+            transition={enter}
           />
           <motion.div
-            className="sheet on"
+            className={`sheet on${layer}`}
             role="dialog"
             aria-modal="true"
+            aria-label={typeof title === 'string' ? title : undefined}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: '100%', transition: { duration: durations.sheet * 0.65, ease } }}
-            transition={t}
+            exit={{ y: '100%', transition: exit }}
+            transition={enter}
           >
             <div className="grip" />
             <div className="sheet-body">
@@ -67,7 +50,7 @@ export default function Sheet({ open, onClose, title, sub, children, footer }) {
             </div>
             {footer && <div className="sheet-foot">{footer}</div>}
           </motion.div>
-        </>
+        </Fragment>
       )}
     </AnimatePresence>
   );

@@ -6,7 +6,7 @@
  * rather than a gap. `missingKeys()` exists so a test can say so.
  */
 
-export const T={en:{
+export const T={en:{swapTitle:"Other options for {svc}",swapSub:"Ranked for your request. Your current choice stays until you pick another.",swapCurrent:"Current",swapNoTime:"No open time that day",inboxEmpty:"Nothing here yet. Requests and bookings you send show up here.",comingSoon:"This part of the app is not built yet.",
  plLogBooked:"Booked: {when}. We will remind you the day before.",plLogRequested:"Requested {when}. They confirm before it is booked.",plLogAsked:"Asked what times they have. Reply comes here.",
  wlJoin:"Join the line",wlAhead:"{n} ahead",wlYoureNth:"You are {n} in line",wlLeave:"leave",wlLeft:"Left the line",wlJoined:"You are {n} in line. We will take it if it frees up.",wlMax:"You can stand in {n} lines at once. Leave one first.",wlGotIt:"yours",wlOrdSuffix:"",wlClaimedTitle:"A time opened up",wlClaimedMsg:"{time} at {biz} was cancelled. It is yours.",
  previewNote:"Preview build. The businesses, ratings, reviews and times here are examples, not real Calgary listings.",
@@ -78,7 +78,7 @@ export const T={en:{
  vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
  vsNone:"Nothing matched. Try different words."
-},ko:{
+},ko:{swapTitle:"{svc} 다른 선택지",swapSub:"요청에 맞춰 정렬했습니다. 다른 곳을 고르기 전까지 현재 선택이 유지됩니다.",swapCurrent:"현재 선택",swapNoTime:"그날은 가능한 시간이 없습니다",inboxEmpty:"아직 없습니다. 보낸 요청과 예약이 여기에 표시됩니다.",comingSoon:"아직 준비 중인 화면입니다.",
  plLogBooked:"{when} 예약 완료. 하루 전에 알려드립니다.",plLogRequested:"{when} 요청됨. 업체 확인 후 확정됩니다.",plLogAsked:"가능한 시간을 문의했습니다. 답변은 여기로 옵니다.",
  wlJoin:"대기 신청",wlAhead:"{n}명 대기",wlYoureNth:"대기 {n}번",wlLeave:"취소",wlLeft:"대기를 취소했습니다",wlJoined:"대기 {n}번입니다. 자리가 나면 잡아드립니다.",wlMax:"동시에 {n}개까지 대기할 수 있습니다. 하나를 취소해 주세요.",wlGotIt:"확정",wlOrdSuffix:"번째",wlClaimedTitle:"자리가 났습니다",wlClaimedMsg:"{biz} {time} 예약이 취소되어 회원님께 배정되었습니다.",
  previewNote:"미리보기 버전입니다. 여기 나오는 업체, 평점, 후기, 시간은 실제가 아닌 예시입니다.",

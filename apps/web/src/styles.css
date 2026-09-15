@@ -634,3 +634,8 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
 /* Focus is visible everywhere, once. The prototype set this per component and
    missed the new screens. */
 :focus-visible{outline:2.5px solid var(--brand);outline-offset:2px;}
+
+/* A sheet raised above a full-screen layer: Swap over the plan. Without this
+   the plan (z 67) covered the sheet (z 60) and Swap opened invisibly. */
+.scrim.top{z-index:71;}
+.sheet.top{z-index:72;}

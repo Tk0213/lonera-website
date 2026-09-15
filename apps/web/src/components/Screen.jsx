@@ -1,33 +1,41 @@
 /**
  * One tab's content, with its scroll position kept.
  *
- * This is the part of "smoother" that has nothing to do with animation. The
- * prototype rebuilt all eight views on any change and shared one scroll
- * container, so switching tabs and coming back put you at the top of a list
- * you had scrolled halfway down. Each screen keeps its own scroller and its
- * own offset, which is what makes moving between tabs feel like returning
- * rather than reloading.
+ * The offset is recorded as the user scrolls. The first version read
+ * scrollTop in an effect cleanup - which runs after React has already removed
+ * the node, when scrollTop is always 0 - so every tab reopened at the top of a
+ * list the user had scrolled halfway down, while the comment claimed it kept
+ * their place.
+ *
+ * The fade lives here, on the scroller itself. It used to sit on a wrapper
+ * with display: contents, which has no box, so the opacity never rendered.
  */
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
+import { motion } from 'motion/react';
+import { durations, ease, useReducedMotion } from '../lib/motion.js';
 
 const offsets = new Map();
 
 export default function Screen({ id, active, children }) {
   const ref = useRef(null);
+  const reduced = useReducedMotion();
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return undefined;
-    if (active) {
-      el.scrollTop = offsets.get(id) || 0;
-    }
-    return () => { if (el) offsets.set(id, el.scrollTop); };
+  useLayoutEffect(() => {
+    if (active && ref.current) ref.current.scrollTop = offsets.get(id) || 0;
   }, [id, active]);
 
   if (!active) return null;
   return (
-    <div className="screen" ref={ref} id={`v-${id}`}>
+    <motion.div
+      ref={ref}
+      className="screen"
+      id={`v-${String(id).split(':')[0]}`}
+      onScroll={(e) => offsets.set(id, e.currentTarget.scrollTop)}
+      initial={reduced ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={reduced ? { duration: 0 } : { duration: durations.swap, ease }}
+    >
       <div className="view">{children}</div>
-    </div>
+    </motion.div>
   );
 }
