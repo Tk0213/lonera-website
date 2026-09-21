@@ -20,6 +20,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const availability = require('./src/availability');
 const aiIntent = require('./src/ai/intent');
 const businesses = require('./src/businesses');
+const { expandV6 } = require('./src/net/guard');
 const { waitlist } = require('@lonera/core');
 
 /* ------------------------------------------------------------- page assembly
@@ -113,12 +114,11 @@ app.disable('etag');         // API answers are no-store; an ETag only invites c
  * whole of what the app needs and a dependency we do not add is a dependency
  * we do not have to patch.
  *
- * The CSP is strict-dynamic-free on purpose - the pages carry inline <style>
- * and inline <script>, so 'unsafe-inline' for those two is load-bearing until
- * the app is refactored to external files. It is written out explicitly so the
- * trade is visible instead of implied. Everything else is locked down: no
- * remote script, no framing, no object, images limited to self and data: URIs
- * (which is exactly how the app embeds its photography).
+ * Scripts: no 'unsafe-inline'. Each page's own inline scripts are allowed by
+ * their SHA-256 hash (see csp() below), so an injected <script> or onerror=
+ * handler does not run. Styles do keep 'unsafe-inline', for the reason given
+ * in csp(). Everything else is locked down: no remote script, no framing, no
+ * object, no connections off-site, images limited to self and data: URIs.
  */
 /** The shared part of every policy; the inline allowances are added per page. */
 function csp(scriptHashes = []) {
@@ -194,11 +194,29 @@ app.use((err, req, res, next) => {
  * in a prototype. Behind more than one instance this needs to move to a shared
  * store, which is noted rather than silently assumed.
  */
+/**
+ * Who a rate limit counts as one caller.
+ *
+ * An IPv6 address is not one caller: a home connection is routinely handed a
+ * whole /64, which is 2^64 addresses. Keyed on the full address, anyone on
+ * IPv6 could rotate through them and never meet a limit - the AI routes would
+ * be as good as unmetered. So IPv6 is counted per /64, the smallest block an
+ * ISP assigns, and an IPv4-mapped address is counted as the IPv4 it is.
+ */
+function clientKey(ip) {
+  const raw = String(ip || '');
+  const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(raw);
+  if (mapped) return mapped[1];
+  if (!raw.includes(':')) return raw;
+  const groups = expandV6(raw.toLowerCase().split('%')[0]);
+  return groups ? `${groups.slice(0, 4).map((g) => g.toString(16)).join(':')}::/64` : raw;
+}
+
 function rateLimit({ windowMs, max, key = 'global' }) {
   const hits = new Map();
   setInterval(() => hits.clear(), windowMs).unref();
   return (req, res, next) => {
-    const id = `${key}:${req.ip}`;
+    const id = `${key}:${clientKey(req.ip)}`;
     const n = (hits.get(id) || 0) + 1;
     hits.set(id, n);
     if (n > max) {
@@ -377,11 +395,17 @@ function readSlotArgs(req, res) {
   if (!businesses.get(bizId)) { res.status(404).json({ error: 'unknown business' }); return null; }
   const day = Number(req.body && req.body.day);
   if (!Number.isInteger(day) || day < 0 || day > 30) { res.status(400).json({ error: 'bad day' }); return null; }
-  const slot = req.body && req.body.slot;
-  if (typeof slot !== 'string' || !slot.trim() || slot.length > 24) {
+  /* Only the canonical label every client sends ("9:30 AM"). Anything looser
+     let a caller open lines under any 24 characters at all - "zzz", "25:99" -
+     which cost nothing to create and clutter the queue.
+     This checks the shape, not the business's hours: a line for a real-looking
+     time the business never offers stays empty, because a release only ever
+     comes from a slot that actually freed. */
+  const slot = typeof (req.body && req.body.slot) === 'string' ? req.body.slot.trim() : '';
+  if (!/^(1[0-2]|[1-9]):[0-5]\d (AM|PM)$/.test(slot)) {
     res.status(400).json({ error: 'bad slot' }); return null;
   }
-  return { bizId, day, slot: slot.trim() };
+  return { bizId, day, slot };
 }
 
 app.post('/api/standby/:bizId/join', standbyLimit, standbyGate, (req, res) => {
@@ -436,3 +460,4 @@ if (require.main === module) {
 module.exports = app;
 /* exported for tests: the signature check is the whole of the queue's integrity */
 module.exports.identify = identify;
+module.exports.clientKey = clientKey;

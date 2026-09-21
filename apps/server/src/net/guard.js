@@ -213,4 +213,4 @@ async function safeFetch(raw, { fetchImpl = globalThis.fetch, signal, resolver, 
   return { ok: false, error: 'too many redirects' };
 }
 
-module.exports = { safeFetch, checkUrl, isBlockedAddress, BLOCKED_HOSTS, MAX_REDIRECTS };
+module.exports = { safeFetch, checkUrl, isBlockedAddress, expandV6, BLOCKED_HOSTS, MAX_REDIRECTS };
