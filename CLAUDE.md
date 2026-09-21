@@ -15,6 +15,8 @@ apps/site/        Static marketing site and provider dashboard.
 apps/prototype/   app-preview.html, the single-file prototype.
 packages/core/    Everything two or more apps must agree on.
 db/               SQL. Nothing else.
+docs/architecture/  Target architecture + decision records (ADRs). A change
+                  that contradicts an ADR updates the ADR in the same commit.
 design-system/    Generated cards + hand-written directions.
 scripts/          Build and wrap helpers.
 tests/            core/ · server/ · prototype/, mirroring what they test.

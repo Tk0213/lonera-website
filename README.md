@@ -118,6 +118,8 @@ Not real yet:
 ## Documents
 
 - `CLAUDE.md` — conventions, the design-system loop, and the traps.
+- `docs/architecture/` — the target platform architecture and the eleven
+  decisions behind it, each with its reasons and what would change it.
 - The booking-engine architecture write-up covers calendar integration,
   live availability, matching and double-booking prevention.
 
