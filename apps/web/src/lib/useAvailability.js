@@ -5,8 +5,9 @@
  *
  *   A slot is a time on a date. Keyed by day offset, never a bare clock label.
  *
- *   The server outranks the sample data. Once /api/availability answers, its
- *   tier wins over the record's own `av`, and its slots replace the stand-in
+ *   The server outranks the sample data - but only as far as it can prove.
+ *   Once /api/availability answers, the tier core accepts from it (never the
+ *   raw string it sent) wins over the record's own `av`, and its slots replace the stand-in
  *   for every day of the horizon - including days it says are empty. Filling
  *   only the days that had slots left invented Saturday times showing beside
  *   a server that said the business is closed on Saturday.
@@ -21,7 +22,7 @@
  *   one cancellation could reach two people.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { slots as S } from '@lonera/core';
+import { slots as S, tiers as T } from '@lonera/core';
 
 const TICK_MS = 9000;
 /** Share of ticks that cancel rather than book, so the standby queue can fire. */
@@ -59,8 +60,14 @@ export function useAvailability() {
       });
       if (!r.ok) return false;
       const d = await r.json();
-      if (!d || typeof d.tier !== 'string') return false;
-      setServerTier((prev) => ({ ...prev, [biz.id]: d.tier }));
+      /* The response is a claim until core says it carries its own proof: a
+         "connected" tier with no fresh fetchedAt is demoted, and a tier
+         outside the vocabulary is refused outright. Found by forging this
+         response in the browser - the app printed "straight from this
+         business's calendar" over times the server had invented. */
+      const tier = T.acceptTier(d);
+      if (!tier) return false;
+      setServerTier((prev) => ({ ...prev, [biz.id]: tier }));
       if (!Array.isArray(d.slots)) return true;
 
       const today = S.dayAt(0).getTime();

@@ -590,6 +590,57 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
   font-weight:800;color:var(--brand-ink);padding:6px 8px;min-height:44px;border-radius:9px;
   text-decoration:underline;text-underline-offset:3px;transition:background .14s ease-out;}
 .whybtn:hover{background:var(--brand-tint);}
+/* ---------- full-screen search ----------
+   Opened by tapping the deck field. Built for the oldest hands and eyes we
+   expect: one 68px input at 1.5rem, examples as 60px targets, and a 96px
+   microphone centred at the bottom with language beside it. Nothing here is
+   smaller than 48px or lighter than 1rem. */
+.searchfull{position:absolute;inset:0;background:var(--bg);z-index:68;display:flex;flex-direction:column;}
+.sf-top{display:flex;justify-content:flex-end;padding:10px 12px 0;flex-shrink:0;}
+.sf-cancel{min-height:var(--tap);padding:0 20px;border-radius:999px;border:1.5px solid var(--line);
+  background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;font-weight:700;
+  transition:border-color .14s ease-out,background .14s ease-out;}
+.sf-cancel:hover,.sf-cancel:focus-visible{border-color:var(--brand);background:var(--surface);}
+.sf-form{flex:1;display:flex;flex-direction:column;min-height:0;padding:10px 18px calc(var(--safe-b) + 4px);}
+.sf-field{display:flex;align-items:center;gap:6px;flex-shrink:0;
+  border:2px solid var(--line);border-radius:20px;background:var(--surface);padding:0 8px 0 18px;
+  transition:border-color .16s ease-out;}
+.sf-field:focus-within{border-color:var(--brand);}
+.sf-input{flex:1;min-width:0;height:68px;background:none;border:none;outline:none;font-family:inherit;
+  font-size:1.5rem;font-weight:700;letter-spacing:-.02em;color:var(--text);}
+.sf-input::placeholder{color:#6a6a6a;font-weight:600;}
+.sf-clear{width:48px;height:48px;flex-shrink:0;border-radius:50%;border:none;background:var(--surface-2);
+  color:var(--text-2);font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.sf-clear:hover{background:var(--line);color:var(--text);}
+.sf-hint{margin:14px 2px 0;font-size:1.02rem;line-height:1.45;font-weight:600;color:var(--text-2);flex-shrink:0;}
+.sf-examples{margin-top:16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0;}
+.sf-exlabel{margin:0 2px;font-size:1rem;font-weight:700;color:var(--text-2);}
+.sf-ex{text-align:left;min-height:60px;padding:13px 16px;border-radius:16px;border:1.5px solid var(--line);
+  background:var(--bg);color:var(--text);font-family:inherit;font-size:1.08rem;font-weight:600;line-height:1.35;
+  transition:border-color .14s ease-out,background .14s ease-out,transform .14s ease-out;}
+.sf-ex:hover,.sf-ex:focus-visible{border-color:var(--brand);background:var(--brand-tint);}
+.sf-ex:active{transform:scale(.99);}
+/* search · microphone · language, with the microphone in the middle of the
+   screen rather than the middle of a group: the outer columns are equal. */
+.sf-controls{margin-top:auto;padding-top:18px;flex-shrink:0;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;justify-items:center;gap:10px;}
+.sf-side{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 4px;border:none;
+  background:none;color:var(--text);font-family:inherit;border-radius:16px;min-width:76px;}
+.sf-sideglyph{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-size:1.02rem;font-weight:800;
+  transition:border-color .14s ease-out,background .14s ease-out,transform .14s ease-out;}
+.sf-side:hover .sf-sideglyph,.sf-side:focus-visible .sf-sideglyph{border-color:var(--brand);background:var(--brand-tint);}
+.sf-side:active .sf-sideglyph{transform:scale(.96);}
+.sf-sidelabel{font-size:.86rem;font-weight:700;color:var(--text-2);}
+.sf-mic{width:96px;height:96px;border-radius:50%;background:var(--brand-btn);color:#fff;border:none;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(227,28,95,.36);}
+.sf-mic.live{background:var(--text);box-shadow:0 0 0 4px var(--brand-tint);animation:pulse 1.3s infinite;}
+.sf-miclabel{margin:10px 0 0;text-align:center;font-size:1rem;font-weight:700;color:var(--text-2);flex-shrink:0;}
+/* the deck field is a button that opens the screen above, not an input */
+.sd-open{flex:1;min-width:0;height:46px;background:none;border:none;text-align:left;font-family:inherit;
+  font-size:1rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sd-open.ph{color:#767676;font-weight:500;}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 /* Real phone: drop the mockup and become the app. The device already has a
    notch, a status bar and a home indicator, so drawing our own on top of them

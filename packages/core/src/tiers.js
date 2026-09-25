@@ -58,3 +58,34 @@ export function effectiveTier(tier, fetchedAtMs, nowMs = Date.now()) {
 export function isBookable(tier) {
   return Boolean(TIER_RULES[tier] && TIER_RULES[tier].bookable);
 }
+
+/**
+ * What a client is allowed to believe from an availability response.
+ *
+ * A tier arriving over the network is a claim, not evidence, and "live,
+ * straight from this business's calendar" is the strongest claim this product
+ * makes. Tested by forging the response: a payload that simply said
+ * `{tier:"connected"}` made the app print that sentence over invented times.
+ *
+ * So the claim has to carry its proof. `fetchedAt` is stamped only when a
+ * calendar feed actually answered, and CONNECTED without a fresh one demotes
+ * to DECLARED through the same rule a stale feed takes. A tier outside the
+ * vocabulary is not translated into the nearest guess - it is refused, and the
+ * caller keeps whatever it had.
+ *
+ * Returns null for "believe nothing here".
+ *
+ * A device clock behind the server's by more than the freshness window will
+ * demote a genuinely live feed. That direction is deliberate: understating
+ * shows "usual hours" where it could have said live, and the opposite books
+ * somebody into a slot that was taken an hour ago.
+ */
+export function acceptTier(payload, nowMs = Date.now()) {
+  if (!payload || typeof payload !== 'object') return null;
+  const claimed = payload.tier;
+  if (typeof claimed !== 'string' || !Object.prototype.hasOwnProperty.call(TIER_RULES, claimed)) {
+    return null;
+  }
+  const at = Number(payload.fetchedAt);
+  return effectiveTier(claimed, Number.isFinite(at) && at > 0 ? at : null, nowMs);
+}

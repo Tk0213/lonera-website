@@ -76,6 +76,8 @@ export const T={en:{swapTitle:"Other options for {svc}",swapSub:"Ranked for your
  catNoneSub:"Try another category, or ask the community.",
  catGrocery:"Grocery deals",backBrowse:"All categories",
  vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
+ searchCancel:"Cancel",searchClear:"Clear",searchTry:"Or tap an example",searchSpeakHint:"Tap the big button and say what you need",
+ searchEx1:"I need a plumber this week",searchEx2:"Korean-speaking dentist",searchEx3:"Plumber, cleaner and electrician this week",
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
  vsNone:"Nothing matched. Try different words."
 },ko:{swapTitle:"{svc} 다른 선택지",swapSub:"요청에 맞춰 정렬했습니다. 다른 곳을 고르기 전까지 현재 선택이 유지됩니다.",swapCurrent:"현재 선택",swapNoTime:"그날은 가능한 시간이 없습니다",inboxEmpty:"아직 없습니다. 보낸 요청과 예약이 여기에 표시됩니다.",comingSoon:"아직 준비 중인 화면입니다.",
@@ -148,6 +150,8 @@ export const T={en:{swapTitle:"Other options for {svc}",swapSub:"Ranked for your
  catNoneSub:"다른 카테고리를 보시거나 커뮤니티에 물어보세요.",
  catGrocery:"장보기 할인",backBrowse:"전체 카테고리",
  vsListening:"듣고 있어요. 말씀해 주세요.",vsPaused:"입력 후 엔터를 눌러 주세요",
+ searchCancel:"취소",searchClear:"지우기",searchTry:"또는 예시를 눌러 보세요",searchSpeakHint:"큰 버튼을 누르고 필요한 것을 말씀하세요",
+ searchEx1:"이번 주에 배관공이 필요해요",searchEx2:"한국어 하는 치과",searchEx3:"이번 주 배관공, 청소, 전기 기사",
  vsPh:"필요한 것을 말씀하세요",vsGo:"결과 보기",vsResults:"가장 알맞은 곳",
  vsNone:"맞는 결과가 없어요. 다르게 말해 보세요."
 }};

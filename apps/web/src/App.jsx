@@ -24,6 +24,7 @@ import Rail from './components/Rail.jsx';
 import Sheet from './components/Sheet.jsx';
 import BusinessSheet from './components/BusinessSheet.jsx';
 import PlanScreen from './components/PlanScreen.jsx';
+import SearchScreen from './components/SearchScreen.jsx';
 import Photo from './components/Photo.jsx';
 
 const PREVIEW_KEY = 'lonera.previewAck';
@@ -62,6 +63,7 @@ function Shell() {
   const [tab, setTab] = useState('home');
   const [category, setCategory] = useState(null);
   const [query, setQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [sheetBiz, setSheetBiz] = useState(null);
   const [swapService, setSwapService] = useState(null);
   const [notes, setNotes] = useState([]);
@@ -111,11 +113,13 @@ function Shell() {
     })[0]);
   }, [openPlan, planOpts, showToast, t, openBiz, interests, serveLanguage, availability.tierOf]);
 
+  /* Voice fills the field as it hears, and a final result runs the search and
+     closes the search screen - so speaking and typing end in the same place. */
   const speech = useSpeech({
     lang,
     onResult: (text, isFinal) => {
       setQuery(text);
-      if (isFinal && text.trim()) runQuery(text);
+      if (isFinal && text.trim()) { setSearchOpen(false); runQuery(text); }
     },
     onUnavailable: () => showToast(t('tNoVoice')),
   });
@@ -295,13 +299,22 @@ function Shell() {
           tab={tab}
           onTab={(k) => { if (k === 'browse' && tab === 'browse') setCategory(null); setTab(k); }}
           query={query}
-          onQuery={setQuery}
-          onSubmit={() => runQuery(query)}
+          onOpenSearch={() => setSearchOpen(true)}
           listening={speech.listening}
           onMic={speech.toggle}
           unread={Math.max(0, notes.length - seen)}
           island={island}
           onIslandClose={() => { hideIsland(); setTab('inbox'); }}
+        />
+
+        <SearchScreen
+          open={searchOpen}
+          query={query}
+          onQuery={setQuery}
+          onClose={() => setSearchOpen(false)}
+          onSubmit={(text) => { setSearchOpen(false); runQuery(text); }}
+          listening={speech.listening}
+          onMic={speech.toggle}
         />
 
         <BusinessSheet
