@@ -289,7 +289,19 @@ button{font-family:inherit;cursor:pointer;}
 .vs-mic.live .vmic{opacity:0;scale:.25;filter:blur(4px);}
 .vs-mic.live .vstop{opacity:1;scale:1;filter:blur(0px);}
 .vs-mic .vicon{width:34px;height:34px;}
-.vs-miclabel{margin:10px 0 0;text-align:center;font-size:1rem;font-weight:700;color:var(--text-2);}
+.vs-miclabel{margin:0;text-align:center;font-size:1rem;font-weight:700;color:var(--text-2);}
+.vs-run{margin-bottom:12px;}
+.vs-run .ic{width:20px;height:20px;}
+/* Cancel sits in the bottom right, beside the language button, where the
+   thumb already is. It was a 44px ✕ in the far top corner: the hardest
+   place on a big phone to reach, and the easiest to miss. */
+.vs-foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:10px;}
+.vs-cancel{justify-self:end;display:inline-flex;align-items:center;gap:6px;min-height:44px;
+  padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);
+  color:var(--text);font-family:inherit;font-size:.92rem;font-weight:700;
+  transition:border-color .14s ease-out,background .14s ease-out,transform .14s ease-out;}
+.vs-cancel:hover,.vs-cancel:focus-visible{border-color:var(--brand);background:var(--surface);}
+.vs-cancel:active{transform:scale(.96);}
 /* suggestions, moved out of the 46px deck strip and into readable rows */
 .vs-sugg{padding:8px 22px 0;display:flex;flex-direction:column;gap:8px;}
 .vs-sugg button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;min-height:60px;
@@ -701,11 +713,8 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
           <svg class="ic" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
       </div>
     </div>
-    <div class="vs" id="vs" role="dialog" aria-modal="true" aria-label="Voice search" aria-hidden="true">
-      <div class="vs-top">
-        <button class="vs-x" id="vsX" aria-label="Close">
-          <svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-      </div>
+    <div class="vs" id="vs" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true">
+      <div class="vs-top"></div>
       <div class="vs-body">
         <p class="vs-state"><span class="vs-wave"><i></i><i></i><i></i><i></i></span>
           <span id="vsState"></span></p>
@@ -715,9 +724,10 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
       <div class="vs-sugg" id="vsSugg"></div>
       <div class="vs-res" id="vsRes"></div>
       <div class="vs-go">
+        <button class="btn pri vs-run" id="vsGo"></button>
         <div class="vs-controls">
-          <button class="vs-side" id="vsGo">
-            <span class="vs-sideglyph" id="vsGoG"></span><span class="vs-sidelabel" id="vsGoT"></span>
+          <button class="vs-side" id="vsType">
+            <span class="vs-sideglyph" id="vsTypeG"></span><span class="vs-sidelabel" id="vsTypeT"></span>
           </button>
           <button class="vs-mic" id="vMic" aria-labelledby="vMicT" aria-pressed="false">
             <span class="vicon">
@@ -729,7 +739,14 @@ label.lb{display:block;font-size:.85rem;font-weight:800;margin:12px 0 6px;}
             <span class="vs-sideglyph" id="vsLangG"></span><span class="vs-sidelabel" id="vsLangT"></span>
           </button>
         </div>
-        <p class="vs-miclabel" id="vMicT"></p>
+        <div class="vs-foot">
+          <span></span>
+          <p class="vs-miclabel" id="vMicT"></p>
+          <button class="vs-cancel" id="vsX">
+            <svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            <span id="vsXT"></span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="pl" id="pl" role="dialog" aria-modal="true" aria-labelledby="plTitle" aria-hidden="true">
@@ -876,6 +893,7 @@ const T={en:{
  catGrocery:"Grocery deals",backBrowse:"All categories",
  vsListening:"Listening. Speak now.",vsPaused:"Tap the box and press enter",
  vsPh:"Say what you need",vsGo:"Show results",vsResults:"Best matches",
+ vsType:"Type",vsTypeHint:"Type it instead",vsCancel:"Cancel",
  vsNone:"Nothing matched. Try different words."
 },ko:{
  plLogBooked:"{when} 예약 완료. 하루 전에 알려드립니다.",plLogRequested:"{when} 요청됨. 업체 확인 후 확정됩니다.",plLogAsked:"가능한 시간을 문의했습니다. 답변은 여기로 옵니다.",
@@ -948,6 +966,7 @@ const T={en:{
  catGrocery:"장보기 할인",backBrowse:"전체 카테고리",
  vsListening:"듣고 있어요. 말씀해 주세요.",vsPaused:"입력 후 엔터를 눌러 주세요",
  vsPh:"필요한 것을 말씀하세요",vsGo:"결과 보기",vsResults:"가장 알맞은 곳",
+ vsType:"입력",vsTypeHint:"키보드로 입력하기",vsCancel:"취소",
  vsNone:"맞는 결과가 없어요. 다르게 말해 보세요."
 }};
 let lang="en", scale=1;
@@ -1173,7 +1192,8 @@ const I={
  group:'<circle cx="9" cy="8.4" r="3.3"/><path d="M2.6 19.6c0-3.3 2.9-5.5 6.4-5.5s6.4 2.2 6.4 5.5"/><path d="M16.2 5.6a3.3 3.3 0 010 6.4M17.6 14.6c2.4.6 3.9 2.4 3.9 5"/>',
  mic:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',
  stopsq:'<rect x="6.5" y="6.5" width="11" height="11" rx="3"/>',
- search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/>'
+ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/>',
+ keyboard:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 9.5h0M10 9.5h0M13.5 9.5h0M17 9.5h0M6.5 13h0M10 13h0M13.5 13h0M17 13h0M8.5 16h7"/>'
 };
 const ic=(n,c)=>`<svg class="ic ${c||''}" viewBox="0 0 24 24" aria-hidden="true">${I[n]}</svg>`;
 
@@ -2487,9 +2507,13 @@ function vsOpen(adjust,opts){
 }
 /** Labels for the bottom row, in the language showing right now. */
 function paintVsControls(){
-  const g=$("vsGoG"); if(g) g.innerHTML=ic("search");
-  const gt=$("vsGoT"); if(gt) gt.textContent=t("vsGo");
-  const go=$("vsGo"); if(go) go.setAttribute("aria-label",t("vsGo"));
+  const go=$("vsGo");
+  if(go){ go.innerHTML=ic("search")+"<span></span>"; go.lastChild.textContent=t("vsGo"); }
+  const tg=$("vsTypeG"); if(tg) tg.innerHTML=ic("keyboard");
+  const tt=$("vsTypeT"); if(tt) tt.textContent=t("vsType");
+  const tb=$("vsType"); if(tb) tb.setAttribute("aria-label",t("vsTypeHint"));
+  const xt=$("vsXT"); if(xt) xt.textContent=t("vsCancel");
+  const xb=$("vsX"); if(xb) xb.setAttribute("aria-label",t("vsCancel"));
   /* Both the mark and the word name the language you GET by pressing it.
      The deck button shows the current language; one of each read as a
      contradiction on a screen this size. */
@@ -2666,8 +2690,22 @@ function openSearchScreen(){
   if($("vs").classList.contains("on")) return;
   vsOpen(false,{typing:true,text:($("q").value||"").trim()});
 }
-$("q").addEventListener("focus",openSearchScreen);
+/* Deliberately NOT on focus. Closing the screen puts focus back on this
+   field, so a focus handler reopened it the instant Cancel was pressed -
+   the screen could not be left at all. Click and Enter/Space open it;
+   returning focus does not. */
 $("q").addEventListener("click",openSearchScreen);
+$("q").addEventListener("keydown",e=>{
+  if(e.key==="Enter"||e.key===" "||e.key==="Spacebar"){ e.preventDefault(); openSearchScreen(); }
+});
+/* Speaking is the fast way in, typing is the sure one. The field is
+   focused when the screen opens, but a phone only raises its keyboard
+   for a focus it can tie to a tap - so this button is that tap. */
+$("vsType").onclick=()=>{
+  const i=$("vsInput");
+  if(listening&&rec){try{rec.stop();}catch(e){}}
+  try{ i.focus(); i.setSelectionRange(i.value.length,i.value.length); }catch(e){}
+};
 $("qlang").onclick=openLang;
 $("vsLang").onclick=()=>setLang(lang==="ko"?"en":"ko");
 $("vMic").onclick=()=>toggleMic();
